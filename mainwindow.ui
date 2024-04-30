@@ -6,33 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>712</width>
-    <height>682</height>
+    <width>730</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>银行账户管理系统</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
+   <iconset>
     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">QWidget#centralwidget
+{
+border-image: url(:/resources/bank.jpg);
+}</string>
    </property>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>80</y>
+      <x>190</x>
+      <y>110</y>
       <width>321</width>
       <height>91</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>20</pointsize>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -128,6 +132,7 @@
        <property name="font">
         <font>
          <pointsize>12</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -167,6 +172,7 @@
        <property name="font">
         <font>
          <pointsize>12</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -233,14 +239,12 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>712</width>
+     <width>730</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
  </widget>
- <resources>
-  <include location="img.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
