@@ -43,6 +43,7 @@ else()
     else()
         add_executable(BMSystem
             ${PROJECT_SOURCES}
+            img.qrc
         )
     endif()
 
