@@ -26,8 +26,8 @@
    <string>银行账户管理系统</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
-    <normaloff>:/resources/icon.png</normaloff>:/resources/icon.png</iconset>
+   <iconset>
+    <normaloff>:/resources/logo.png</normaloff>:/resources/logo.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget#centralwidget{
@@ -91,8 +91,14 @@
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
 }</string>
        </property>
+       <property name="text">
+        <string/>
+       </property>
        <property name="maxLength">
         <number>14</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -118,11 +124,17 @@
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
 }</string>
        </property>
+       <property name="text">
+        <string/>
+       </property>
        <property name="maxLength">
         <number>16</number>
        </property>
        <property name="echoMode">
         <enum>QLineEdit::Password</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -154,17 +166,25 @@
          <pointsize>14</pointsize>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
 	background-color: rgb(100, 162, 185);
 	color: rgb(56, 74, 87);
 	color: rgb(59, 76, 89);
     border: 2px solid #64a2b9; /* 设置边框宽度和颜色 */
-    border-radius: 10px;       /* 设置边框圆角的半径 */
+    border-radius: 15px;       /* 设置边框圆角的半径 */
     background-color:#64a2b9; /* 设置背景色 */
     color: white;              /* 设置文本颜色 */
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
-}</string>
+}
+QPushButton:pressed {
+    background-color: #c0c0c0; /* 更暗的背景色表示按下状态 */
+    border-style: inset;       /* 按钮边框样式改为内嵌 */
+}
+</string>
        </property>
        <property name="text">
         <string>登录</string>
@@ -190,17 +210,25 @@
          <pointsize>14</pointsize>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
 	background-color: rgb(100, 162, 185);
 	color: rgb(56, 74, 87);
 	color: rgb(59, 76, 89);
     border: 2px solid #64a2b9; /* 设置边框宽度和颜色 */
-    border-radius: 10px;       /* 设置边框圆角的半径 */
+    border-radius: 15px;       /* 设置边框圆角的半径 */
     background-color:#64a2b9; /* 设置背景色 */
     color: white;              /* 设置文本颜色 */
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
-}</string>
+}
+QPushButton:pressed {
+    background-color: #c0c0c0; /* 更暗的背景色表示按下状态 */
+    border-style: inset;       /* 按钮边框样式改为内嵌 */
+}
+</string>
        </property>
        <property name="text">
         <string>注册</string>
@@ -208,6 +236,19 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QWidget" name="logo" native="true">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>80</y>
+      <width>100</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/resources/logo.webp);</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -221,8 +262,6 @@
    </property>
   </widget>
  </widget>
- <resources>
-  <include location="img.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

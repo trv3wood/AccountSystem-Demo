@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>resources/icon.png</file>
         <file>resources/background.jpg</file>
+        <file>resources/logo.webp</file>
     </qresource>
 </RCC>
