@@ -30,40 +30,14 @@
     <normaloff>:/resources/icon.png</normaloff>:/resources/icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QWidget#centralwidget{
+	border-image: url(:/resources/background.jpg);
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);
-
-</string>
+    <string notr="true"/>
    </property>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>380</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>370</y>
-      <width>171</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
@@ -95,25 +69,6 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelAccount">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>账号</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QLineEdit" name="idInput">
        <property name="sizePolicy">
@@ -138,28 +93,6 @@
        </property>
        <property name="maxLength">
         <number>14</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelPasswd">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string>密码</string>
        </property>
       </widget>
      </item>
@@ -223,11 +156,12 @@
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
+	background-color: rgb(100, 162, 185);
 	color: rgb(56, 74, 87);
 	color: rgb(59, 76, 89);
-    border: 2px solid #b6b6b6; /* 设置边框宽度和颜色 */
+    border: 2px solid #64a2b9; /* 设置边框宽度和颜色 */
     border-radius: 10px;       /* 设置边框圆角的半径 */
-    background-color: #384a57 ; /* 设置背景色 */
+    background-color:#64a2b9; /* 设置背景色 */
     color: white;              /* 设置文本颜色 */
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
 }</string>
@@ -258,11 +192,12 @@
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
+	background-color: rgb(100, 162, 185);
 	color: rgb(56, 74, 87);
 	color: rgb(59, 76, 89);
-    border: 2px solid #b6b6b6; /* 设置边框宽度和颜色 */
+    border: 2px solid #64a2b9; /* 设置边框宽度和颜色 */
     border-radius: 10px;       /* 设置边框圆角的半径 */
-    background-color: #384a57 ; /* 设置背景色 */
+    background-color:#64a2b9; /* 设置背景色 */
     color: white;              /* 设置文本颜色 */
     padding: 5px;              /* 设置内边距，保持文本与边框的距离 */
 }</string>
@@ -273,25 +208,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QFrame" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>60</y>
-      <width>271</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/resources/bank.jpg);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
