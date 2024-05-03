@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "loginwindow.h"
+#include "./ui_loginwindow.h"
 #include <QGraphicsEffect>
 
 MainWindow::MainWindow(QWidget *parent)

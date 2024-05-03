@@ -16,9 +16,9 @@ set(TS_FILES BMSystem_zh_CN.ts)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        loginwindow.cpp
+        loginwindow.h
+        loginwindow.ui
         ${TS_FILES}
 )
 
