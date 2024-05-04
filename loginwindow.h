@@ -6,7 +6,7 @@
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class LoginWindow; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -29,6 +29,6 @@ public:
     //     qDebug() << "New size:" << width << "x" << height;
     // }
 private:
-    Ui::MainWindow *ui;
+    Ui::LoginWindow *ui;
 };
 #endif // LOGINWINDOW_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>LoginWindow</class>
+ <widget class="QMainWindow" name="LoginWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -37,6 +37,7 @@
 QPushButton {
 	border-radius: 20px;
 	font: 10pt &quot;Microsoft YaHei UI&quot;;
+	color: black;
 }
 QPushButton:pressed {
 	background-color: rgba(255, 255, 255, 150);/* 更暗的背景色表示按下状态 */
