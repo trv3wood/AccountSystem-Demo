@@ -16,6 +16,7 @@ private:
     QString m_passwd; // 密码
     QString m_location; // 常住地址
     unsigned m_id; // 身份证号码，用户的唯一标识
+    QString time;//记录操作时间
 
     unsigned m_balance; // 余额，有溢出风险，后期用gmplib或自己实现
     double m_interestRate; // 利率，精度问题，后期用gmplib或自己实现
@@ -60,7 +61,23 @@ public:
     /// @param amount 转账金额
     /// @note 未完成，分配给 Muscle
     /// @note 派生类的转账限额不同，需要重写
-    virtual void transfer(Account& to, unsigned amount);
+    virtual void transfer(Account& to, unsigned amount)
+    {
+       if (m_balance >= amount) {
+           m_balance -= amount;
+           to.m_balance += amount;
+           QDateTime currentTime = QDateTime::currentDateTime();
+           time = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+           #if ACCOUNT_DEBUG == 1
+           qDebug() << "Transfer successful!";
+           #endif
+       }
+       else {
+          #if ACCOUNT_DEBUG == 1
+          qDebug() << "Insufficient balance for transfer.";
+          #endif
+       }
+};
 
     /// @brief 存款
     /// @param amount 存款金额
