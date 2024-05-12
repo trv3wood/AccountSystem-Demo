@@ -77,4 +77,4 @@ CMakeLists.txt.user*
 build/
 
 # user data
-.dat
+*.dat
