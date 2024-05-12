@@ -2,8 +2,9 @@
 #include <openssl/sha.h>
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
-#include <stdexcept>
 #endif
+#include<QString>
+#include<string>
 using bms::Account;
 
 QString Account::name() const { return m_name; }
@@ -42,11 +43,25 @@ QString Account::hashSHA256(const QString& passwd) {
 Account::Account(const QString& name, const QString& passwd, const QString& location, unsigned id): m_name(name), m_location(location), m_id(id) 
     // TODO: 生成随机 16 位卡号
     {
-        m_cardNumber = qstring generateCardNumber();
-        hashSHA256(const QString& m_passwd);
+        m_cardNumber = QString generateCardNumber();
+        hashSHA256(QString& m_passwd);
+            #if ACCOUNT_DEBUG == 1
+        QString origin = m_cardNumber;
+        #endif
+        // TODO: 将计算密码哈希值
+        hashSHA256(passwd);
+        // 测试代码
+        #if ACCOUNT_DEBUG == 1
+        U8ENCODING
+        qDebug() << "Account::Account()" << m_name << m_passwd << m_location;
+        if (passwd == m_passwd) {
+            throw std::invalid_argument("can not store password in plain text!");
+        } 
+        assert(m_cardNumber != origin);
+        #endif
     };
-qstring generateCardNumber() {
-    qstring m_cardNumber;
+QString Account:: generateCardNumber() {
+    QString m_cardNumber;
     const int length = 16;
     //随机数生成器
     std::random_device rd;
@@ -55,23 +70,11 @@ qstring generateCardNumber() {
     std::uniform_int_distribution<> dis(0, 9);
 
     for (int i = 0; i < length; i++) {
-        m_cardNumber += std::to_string(dis(gen));
+        QString tmp = std::to_string(dis(gen));
+        m_cardNumber += tmp;
     }
     };
-    #if ACCOUNT_DEBUG == 1
-    int origin = m_cardNumber;
-    #endif
-    // TODO: 将计算密码哈希值
-    m_passwd = hashSHA256(passwd);
-    // 测试代码
-    #if ACCOUNT_DEBUG == 1
-    U8ENCODING
-    qDebug() << "Account::Account()" << m_name << m_passwd << m_location;
-    if (passwd == m_passwd) {
-        throw std::invalid_argument("can not store password in plain text!");
-    } 
-    assert(m_cardNumber != origin);
-    #endif
+
 }
 
 #if ACCOUNT_DEBUG == 1

@@ -22,7 +22,7 @@ private:
     unsigned m_balance; // 余额，有溢出风险，后期用gmplib或自己实现
     double m_interestRate; // 利率，精度问题，后期用gmplib或自己实现
 
-    string m_cardNumber; // 卡号，由系统生成，用于交易和识别
+    QString m_cardNumber; // 卡号，由系统生成，用于交易和识别
 
 public:
     Account() {}
@@ -77,7 +77,7 @@ private:
     /// @brief 生成随机卡号
     /// @return 卡号 16 位
     /// @note 未完成，分配给 Sour_xuanzi
-    string generateCardNumber();
+    QString generateCardNumber();
 
     /// @brief 计算密码哈希值
     /// @param passwd 用户密码
