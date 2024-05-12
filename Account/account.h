@@ -9,6 +9,8 @@
 #endif
 
 #include <QtCore/QString>
+#include<random>
+#include<string>
 namespace bms { class Account; }
 class bms::Account {
 private:
@@ -20,7 +22,7 @@ private:
     unsigned m_balance; // 余额，有溢出风险，后期用gmplib或自己实现
     double m_interestRate; // 利率，精度问题，后期用gmplib或自己实现
 
-    int m_cardNumber; // 卡号，由系统生成，用于交易和识别
+    string m_cardNumber; // 卡号，由系统生成，用于交易和识别
 
 public:
     Account() {}
@@ -32,6 +34,7 @@ public:
     /// @note 生成卡号和密码哈希值，未完成，分配给 Sour_xuanzi
     /// @note 考虑加密用户信息
     Account(const QString& name, const QString& passwd, const QString& location, unsigned id);
+
 
     QString name() const;
     QString passwd() const;
@@ -74,7 +77,7 @@ private:
     /// @brief 生成随机卡号
     /// @return 卡号 16 位
     /// @note 未完成，分配给 Sour_xuanzi
-    unsigned generateCardNumber();
+    string generateCardNumber();
 
     /// @brief 计算密码哈希值
     /// @param passwd 用户密码

@@ -39,9 +39,25 @@ QString Account::hashSHA256(const QString& passwd) {
 }
 
 // To: Sour_xuanzi
-Account::Account(const QString& name, const QString& passwd, const QString& location, unsigned id): m_name(name), m_location(location), m_id(id) {
+Account::Account(const QString& name, const QString& passwd, const QString& location, unsigned id): m_name(name), m_location(location), m_id(id) 
     // TODO: 生成随机 16 位卡号
+    {
+        m_cardNumber = qstring generateCardNumber();
+        hashSHA256(const QString& m_passwd);
+    };
+qstring generateCardNumber() {
+    qstring m_cardNumber;
+    const int length = 16;
+    //随机数生成器
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    //卡号字符范围
+    std::uniform_int_distribution<> dis(0, 9);
 
+    for (int i = 0; i < length; i++) {
+        m_cardNumber += std::to_string(dis(gen));
+    }
+    };
     #if ACCOUNT_DEBUG == 1
     int origin = m_cardNumber;
     #endif
