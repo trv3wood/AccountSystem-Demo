@@ -6,9 +6,9 @@
 
 class User : public bms::Serializable {
 public:
-    User(const QString& name = "", int age = 0) : m_name(name), m_age(age) {
-        QString userFileName = name + ".dat";
-        QFile file(userFileName);
+    User(const QString& name = "", int age = 0) :
+    m_name(name), m_dataFilePath(name + ".dat"), m_age(age) {
+        QFile file(m_dataFilePath);
         serialize(file);
     }
     User(QFile& file) {
@@ -18,7 +18,16 @@ public:
         QFile file(fileInfo.filePath());
         deserialize(file);
     }
+    User(const QString& dataFilePath) : m_dataFilePath(dataFilePath) {
+        QFile file(dataFilePath);
+        deserialize(file);
+    }
 
+    friend std::ostream& operator<<(std::ostream& os, const User& user) {
+        os << user.m_name.toStdString() << " " << user.m_age << " " << user.m_dataFilePath.toStdString();
+        return os;
+    }
+private:
     void serialize(QFile& file) const override {
         QDataStream ds;
         if (!file.open(QIODevice::WriteOnly)) {
@@ -40,13 +49,8 @@ public:
         return this;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const User& user) {
-        os << user.m_name.toStdString() << " " << user.m_age;
-        return os;
-    }
-
-
 private:
     QString m_name;
+    QString m_dataFilePath;
     int m_age;
 };
