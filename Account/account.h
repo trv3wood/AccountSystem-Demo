@@ -77,9 +77,7 @@ public:
     /// @note 未完成，分配给 Maco
     void deposit(unsigned amount);
 
-#if ACCOUNT_DEBUG == 1
     void display() const;
-#endif
 private:
     /// @brief 生成随机卡号
     /// @return 卡号 16 位

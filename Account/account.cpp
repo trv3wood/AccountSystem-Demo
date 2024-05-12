@@ -100,11 +100,8 @@ QString Account::generateCardNumber() {
     return cardNumber;
 }
 
-
-#if ACCOUNT_DEBUG == 1
 void Account::display() const {
     U8ENCODING
     qDebug() << m_name << ' ' << m_id << ' ' << m_passwd << ' ' << m_cardNumber
              << ' ' << m_location;
 }
-#endif
