@@ -29,11 +29,28 @@ void Account::setId(unsigned id) { m_id = id; }
 
 void Account::setInterestRate(double rate) { m_interestRate = rate; }
 
-QString Account::hashSHA256(const QString& passwd) {
+void Account::transfer(Account& to, unsigned amount) {
+    if (m_balance >= amount) {
+        m_balance -= amount;
+        to.m_balance += amount;
+        QDateTime currentTime = QDateTime::currentDateTime();
+        m_time = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+#if ACCOUNT_DEBUG == 1
+        qDebug() << "Transfer successful!";
+#endif
+    } else {
+        std::string msg = "Insufficient balance!";
+        msg += " Current balance: " + std::to_string(m_balance);
+        msg += " Transfer amount: " + std::to_string(amount);
+        throw std::invalid_argument(msg.c_str());
+    }
+}
+
+QString Account::hashSHA256(const QString& str) {
     unsigned char hash[SHA256_DIGEST_LENGTH];  // 32 字节的哈希值
     SHA256_CTX sha256;
     SHA256_Init(&sha256);
-    SHA256_Update(&sha256, passwd.toStdString().c_str(), passwd.length());
+    SHA256_Update(&sha256, str.toStdString().c_str(), str.length());
     SHA256_Final(hash, &sha256);
     char hex[2 * SHA256_DIGEST_LENGTH + 1];  // 64 字节的十六进制字符串
     for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
