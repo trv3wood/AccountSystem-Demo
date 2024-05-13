@@ -40,7 +40,7 @@ public:
     /// @param name 用户姓名
     /// @param passwd 用户密码
     /// @param location 用户常住地址
-    /// @note 生成卡号和密码哈希值，未完成，分配给 Sour_xuanzi
+    /// @note 生成卡号和密码哈希值，完成，分配给 Sour_xuanzi
     /// @note 考虑加密用户信息
     Account(const QString& name, const QString& passwd, const QString& location,
             const QString& id);
@@ -50,11 +50,9 @@ public:
     QString location() const;
     QString id() const;
 
-    // 未完成
     mpf_class balance() const;
     mpf_class interestRate() const;
     QString cardNumber() const;
-    // 未完成
 
     void setName(const QString& name);
     void setPasswd(const QString& passwd);

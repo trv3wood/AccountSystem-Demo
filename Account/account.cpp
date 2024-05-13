@@ -22,6 +22,12 @@ QString Account::location() const { return m_location; }
 
 QString Account::id() const { return m_id; }
 
+mpf_class Account::balance() const { return m_balance; }
+
+mpf_class Account::interestRate() const { return m_interestRate; }
+
+QString Account::cardNumber() const { return m_cardNumber; }
+
 void Account::setName(const QString& name) { m_name = name; }
 
 void Account::setPasswd(const QString& passwd) {
