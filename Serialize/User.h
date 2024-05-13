@@ -6,8 +6,8 @@
 
 class User : public bms::Serializable {
 public:
-    User(const QString& name = "", int age = 0) :
-    m_name(name), m_dataFilePath(name + ".dat"), m_age(age) {
+    User(const QString& name = "", int age = 0, double magicNum = 0.571032) :
+    m_name(name), m_dataFilePath(name + ".dat"), m_magicNumber(magicNum), m_age(age) {
         QFile file(m_dataFilePath);
         serialize(file);
     }
@@ -24,33 +24,15 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const User& user) {
-        os << user.m_name.toStdString() << " " << user.m_age << " " << user.m_dataFilePath.toStdString();
+        os << user.m_name.toStdString() << " " << user.m_dataFilePath.toStdString() << ' ' << user.m_magicNumber
+        << " " << user.m_age;
         return os;
     }
-private:
-    void serialize(QFile& file) const override {
-        QDataStream ds;
-        if (!file.open(QIODevice::WriteOnly)) {
-            throw std::runtime_error("Failed to open file for writing");
-        }
-        ds.setDevice(&file);
-        ds << m_name << m_age; 
-        file.close();
-    }
-
-    Serializable* deserialize(QFile& file) override {
-        if (!file.open(QIODevice::ReadOnly)) {
-            throw std::runtime_error("Failed to open file for reading");
-        }
-        QDataStream ds;
-        ds.setDevice(&file);
-        ds >> m_name >> m_age;
-        file.close();
-        return this;
-    }
+    SERIALIZE(m_name, m_dataFilePath, m_magicNumber, m_age)
 
 private:
     QString m_name;
     QString m_dataFilePath;
+    double m_magicNumber;
     int m_age;
 };
