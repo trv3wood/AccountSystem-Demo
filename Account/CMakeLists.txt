@@ -12,19 +12,31 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(OpenSSL REQUIRED)
 find_package(GTest REQUIRED)
 
-set(COMPILE_TEST_UNIT OFF)
-if(COMPILE_TEST_UNIT)
-    file(GLOB ACC_SRC ${CMAKE_SOURCE_DIR}/*.cpp)
-    add_executable(test ${ACC_SRC})
-    target_link_libraries(test PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-    target_link_libraries(test PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-    target_link_libraries(test PRIVATE GTest::GTest)
-else()
-    file(GLOB ACC_SRC ${CMAKE_SOURCE_DIR}/*.cpp)
-    # Remove test.cpp from the list
-    list(REMOVE_ITEM ACC_SRC ${CMAKE_SOURCE_DIR}/test.cpp)
+# 查找libgmpxx
+find_library(GMPXX_LIB gmpxx REQUIRED)
+if(NOT GMPXX_LIB)
+    message(FATAL_ERROR "libgmpxx not found")
+endif()
+# 查找libgmp
+find_library(GMP_LIB gmp REQUIRED)
+if(NOT GMP_LIB)
+    message(FATAL_ERROR "libgmp not found")
+endif()
 
-    add_library(${PROJECT_NAME} STATIC ${ACC_SRC})
-    target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-    target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+# 编译Account类的库
+set(COMPILE_TEST_UNIT ON)
+file(GLOB ACC_SRC ${CMAKE_SOURCE_DIR}/*.cpp)
+# 测试单元不包含在库中
+list(REMOVE_ITEM ACC_SRC ${CMAKE_SOURCE_DIR}/test.cpp)
+
+add_library(${PROJECT_NAME} STATIC ${ACC_SRC})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${GMPXX_LIB} ${GMP_LIB})
+
+if(COMPILE_TEST_UNIT)
+    # 编译测试单元
+    add_executable(test_unit test.cpp)
+    target_link_libraries(test_unit PRIVATE ${PROJECT_NAME})
+    target_link_libraries(test_unit PRIVATE GTest::GTest GTest::Main)
 endif()

@@ -8,12 +8,15 @@ int main() {
 
 // 测试例子
 TEST(Account, Constructor) {
-    bms::Account a("胡桃", "83457801y5891", "提瓦特 璃月 往生堂", 1234567890);
-    a.display();
+    bms::Account a("胡桃", "123456", "璃月 往生堂", "1234567890");
     EXPECT_EQ(a.name(), "胡桃" );
     bms::Account b;
     b.display();
+    EXPECT_EQ(b.name(), "");
+    b.setName("胡桃");
+    b.display();
 }
+
 
 /*
  * 请利用 Google Test 完成 Account 类的测试

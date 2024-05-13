@@ -1,6 +1,11 @@
 #include "account.h"
+
+#include <gmpxx.h>
 #include <openssl/sha.h>
+
 #include <QString>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 
 #if ACCOUNT_DEBUG == 1
@@ -15,7 +20,7 @@ QString Account::passwd() const { return m_passwd; }
 
 QString Account::location() const { return m_location; }
 
-unsigned Account::id() const { return m_id; }
+QString Account::id() const { return m_id; }
 
 void Account::setName(const QString& name) { m_name = name; }
 
@@ -25,11 +30,11 @@ void Account::setPasswd(const QString& passwd) {
 
 void Account::setLocation(const QString& location) { m_location = location; }
 
-void Account::setId(unsigned id) { m_id = id; }
+void Account::setId(const QString& id) { m_id = id; }
 
 void Account::setInterestRate(double rate) { m_interestRate = rate; }
 
-void Account::transfer(Account& to, unsigned amount) {
+void Account::transfer(Account& to, mpf_class amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
         to.m_balance += amount;
@@ -39,10 +44,11 @@ void Account::transfer(Account& to, unsigned amount) {
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        std::string msg = "Insufficient balance!";
-        msg += " Current balance: " + std::to_string(m_balance);
-        msg += " Transfer amount: " + std::to_string(amount);
-        throw std::invalid_argument(msg.c_str());
+        std::stringstream msg;
+        msg << "Transfer failed! " << m_name.toStdString()
+            << " has not enough money!\n"
+            << " Current balance: " << m_balance << " Amount: " << amount;
+        throw std::runtime_error(msg.str());
     }
 }
 
@@ -62,26 +68,12 @@ QString Account::hashSHA256(const QString& str) {
 
 // To: Sour_xuanzi
 Account::Account(const QString& name, const QString& passwd,
-                 const QString& location, unsigned id)
-    : m_name(name),
-      m_location(location),
-      m_id(id)
-{
-#if ACCOUNT_DEBUG == 1
-    QString origin = m_cardNumber;
-#endif
+                 const QString& location, const QString& id)
+    : m_name(name), m_location(location), m_id(id) {
     // TODO: 生成随机 16 位卡号
     m_cardNumber = generateCardNumber();
     // TODO: 将计算密码哈希值
     m_passwd = hashSHA256(passwd);
-// 测试代码
-#if ACCOUNT_DEBUG == 1
-    display();
-    if (passwd == m_passwd) {
-        throw std::invalid_argument("can not store password in plain text!");
-    }
-    assert(m_cardNumber != origin);
-#endif
 }
 
 QString Account::generateCardNumber() {
@@ -105,10 +97,9 @@ void Account::display() const {
     qDebug() << m_name << ' ' << m_id << ' ' << m_passwd << ' ' << m_cardNumber
              << ' ' << m_location;
 }
-/// @brief 存款
-   /// @param amount 存款金额
-   /// @note 未完成，分配给 Maco
-void Account::deposit(unsigned amount)
-{
+
+void Account::deposit(mpf_class amount) {
     m_balance += amount;
+    QDateTime currentTime = QDateTime::currentDateTime();
+    m_time = currentTime.toString("yyyy-MM-dd hh:mm:ss");
 }
