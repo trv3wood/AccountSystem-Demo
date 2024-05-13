@@ -64,3 +64,10 @@ void Account::display() const {
     qDebug() << m_name << ' ' << m_id << ' ' << m_passwd << ' ' << m_cardNumber << ' ' << m_location;
 }
 #endif
+/// @brief 存款
+   /// @param amount 存款金额
+   /// @note 未完成，分配给 Maco
+void Account::deposit(unsigned amount)
+{
+    m_balance += amount;
+}
