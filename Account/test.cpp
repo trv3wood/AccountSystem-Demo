@@ -10,10 +10,9 @@ int main() {
 TEST(Account, Constructor) {
     bms::Account a("胡桃", "123456", "璃月 往生堂", "1234567890");
     EXPECT_EQ(a.name(), "胡桃" );
-    bms::Account b;
-    b.display();
-    EXPECT_EQ(b.name(), "");
-    b.setName("胡桃");
+    a.display();
+    bms::Account b = a;
+    EXPECT_EQ(a.id(), b.id());
     b.display();
 }
 

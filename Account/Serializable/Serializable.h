@@ -1,5 +1,5 @@
-#ifndef SERIALIZE_SERIALIZABLE_H
-#define SERIALIZE_SERIALIZABLE_H
+#ifndef SERIALIZABLE_H
+#define SERIALIZABLE_H
 #include <iostream>
 #include <sstream>
 #include <QtCore/QDataStream>
@@ -7,12 +7,15 @@
 namespace bms {
     class Serializable {
     public:
+        virtual void basicSerialize(QFile& file) const = 0;
+        virtual Serializable* basicDeserialize(QFile& file) = 0;
         virtual void serialize(QFile& file) const = 0;
         virtual Serializable* deserialize(QFile& file) = 0;
+        virtual ~Serializable() = default;
     };
 }
 #define SERIALIZE(...) \
-    void serialize(QFile& file) const override { \
+    void basicSerialize(QFile& file) const override { \
         QDataStream ds; \
         if (!file.open(QIODevice::WriteOnly)) { \
             std::cerr << "Cannot open file for writing" << std::endl; \
@@ -23,7 +26,7 @@ namespace bms {
         serializeImpl(ds, __VA_ARGS__); \
         file.close();\
     } \
-    Serializable* deserialize(QFile& file) override { \
+    Serializable* basicDeserialize(QFile& file) override { \
         QDataStream ids; \
         if (!file.open(QIODevice::ReadOnly)) { \
             throw std::runtime_error("Failed to open file for reading"); \
@@ -53,4 +56,4 @@ private: \
         ids >> t; \
         deserializeImpl(ids, args...); \
     }
-#endif // SERIALIZE_SERIALIZABLE_H
+#endif // SERIALIZABLE_H

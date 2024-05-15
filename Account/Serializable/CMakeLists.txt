@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.5)
+project(serializers C CXX)
+find_package(GTest REQUIRED)
+find_library(GMP gmp REQUIRED)
+find_library(GMPXX gmpxx REQUIRED)
+find_package(Qt5Core REQUIRED)
+add_executable(test_serializers test.cpp)
+target_link_libraries(test_serializers GTest::GTest GTest::Main ${GMP} ${GMPXX} Qt5::Core)

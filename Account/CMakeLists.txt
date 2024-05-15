@@ -23,6 +23,8 @@ if(NOT GMP_LIB)
     message(FATAL_ERROR "libgmp not found")
 endif()
 
+add_subdirectory(../Serialize serializer)
+
 # 编译Account类的库
 set(COMPILE_TEST_UNIT ON)
 file(GLOB ACC_SRC ${CMAKE_SOURCE_DIR}/*.cpp)

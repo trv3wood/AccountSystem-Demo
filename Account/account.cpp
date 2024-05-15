@@ -4,8 +4,6 @@
 #include <openssl/sha.h>
 
 #include <QString>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 #if ACCOUNT_DEBUG == 1
@@ -40,21 +38,18 @@ void Account::setId(const QString& id) { m_id = id; }
 
 void Account::setInterestRate(double rate) { m_interestRate = rate; }
 
-void Account::transfer(Account& to, mpf_class amount) {
+void Account::transfer(Account& to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
         to.m_balance += amount;
-        QDateTime currentTime = QDateTime::currentDateTime();
-        m_time = currentTime.toString("yyyy-MM-dd hh:mm:ss");
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        std::stringstream msg;
-        msg << "Transfer failed! " << m_name.toStdString()
-            << " has not enough money!\n"
-            << " Current balance: " << m_balance << " Amount: " << amount;
-        throw std::runtime_error(msg.str());
+        std::string msg = "Transfer failed: amount(" + mpf_class2str(amount) +
+                          ") is more than balance(" + mpf_class2str(m_balance) +
+                          ")";
+        throw std::runtime_error(msg);
     }
 }
 
@@ -75,26 +70,49 @@ QString Account::hashSHA256(const QString& str) {
 // To: Sour_xuanzi
 Account::Account(const QString& name, const QString& passwd,
                  const QString& location, const QString& id)
-    : m_name(name), m_location(location), m_id(id) {
-    // TODO: 生成随机 16 位卡号
-    m_cardNumber = generateCardNumber();
-    // TODO: 将计算密码哈希值
-    m_passwd = hashSHA256(passwd);
-}
+    : m_name(name),
+      m_passwd(hashSHA256(passwd)),
+      m_location(location),
+      m_id(id),
+      m_cardNumber(generateCardNumber()),
+      m_balance(0),
+      m_interestRate(0) {}
 
 QString Account::generateCardNumber() {
     QString cardNumber;
-    const int length = 16;
-    // 随机数生成器
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    // 卡号字符范围
-    std::uniform_int_distribution<> dis(0, 9);
+    const int len = 16;
 
-    for (int i = 0; i < length; i++) {
-        QString tmp(std::to_string(dis(gen)).c_str());
-        cardNumber += tmp;
+    // 检查处理器是否支持 rdrand 指令
+    bool rdrandSupported = false;
+    unsigned int eax, ebx, ecx, edx;
+    __asm__ volatile("cpuid"
+                     : "=a"(eax), "=b"(ebx), "=c"(ecx), "=d"(edx)
+                     : "a"(1));
+    if (ecx & 0x40000000) {
+        rdrandSupported = true;
     }
+
+    if (rdrandSupported) {
+        // 使用 rdrand 生成随机数
+        while (cardNumber.length() < len) {
+            unsigned int cardNumberInt;
+            unsigned char success;
+            __asm__ volatile("rdrand %0; setc %1"
+                             : "=r"(cardNumberInt), "=qm"(success));
+            if (success) {
+                cardNumber += QString::number(cardNumberInt % 10);
+            }
+        }
+    } else {
+        // 使用标准库生成随机数
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 9);
+        for (int i = 0; i < len; ++i) {
+            cardNumber += QString::number(dis(gen));
+        }
+    }
+
     return cardNumber;
 }
 
@@ -104,8 +122,12 @@ void Account::display() const {
              << ' ' << m_location;
 }
 
-void Account::deposit(mpf_class amount) {
-    m_balance += amount;
-    QDateTime currentTime = QDateTime::currentDateTime();
-    m_time = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+void Account::deposit(const mpf_class& amount) { m_balance += amount; }
+
+std::string Account::mpf_class2str(const mpf_class& number) {
+    mp_exp_t expo;
+    std::string str = number.get_str(expo);
+    // 转换成标准浮点数
+    str.insert(expo, ".");
+    return str;
 }
