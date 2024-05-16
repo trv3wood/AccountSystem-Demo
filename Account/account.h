@@ -90,6 +90,7 @@ private:
 protected:
     /// @brief 计算密码哈希值
     /// @param str 用户密码
+    /// @param lenMultiplier 哈希值长度倍数
     /// @return 哈希值
     /// @note 使用了SHA256 算法 completed by Z_MAHO
     static QString hashSHA256(const QString& str, int lenMultiplier = 2);
