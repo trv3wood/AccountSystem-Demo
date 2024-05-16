@@ -8,6 +8,7 @@
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <QtCore/QFile>
 
 #define ACCOUNT_DEBUG 1
 #if ACCOUNT_DEBUG == 1
@@ -19,6 +20,7 @@
 
 namespace bms {
 class Account;
+const double defualtInterestRate = 0.01;
 }
 class bms::Account {
 protected:
@@ -28,11 +30,12 @@ protected:
     QString m_id;          // 身份证号码，用户的唯一标识
     QString m_cardNumber;  // 卡号，由系统生成，用于交易和识别
 
-    mpf_class m_balance = 0;   // 余额
+    mpf_class m_balance;   // 余额
     mpf_class m_interestRate;  // 利率
 
 public:
-    Account() {}
+    Account(): m_balance(0), m_interestRate(defualtInterestRate) {}
+    virtual ~Account() {}
 
     /// @brief 构造函数
     /// @param name 用户姓名
@@ -47,13 +50,14 @@ public:
     QString passwd() const;
     QString location() const;
     QString id() const;
+    QFile datafile() const;
 
     mpf_class balance() const;
     mpf_class interestRate() const;
     QString cardNumber() const;
 
     void setName(const QString& name);
-    void setPasswd(const QString& passwd);
+    virtual void setPasswd(const QString& passwd);
     void setLocation(const QString& location);
 
     /// @brief 设置用户的唯一标识
@@ -69,12 +73,12 @@ public:
     /// @param amount 转账金额
     /// @note 完成，分配给 Muscle
     /// @note 派生类的转账限额不同，需要重写
-    virtual void transfer(Account& to, const mpf_class& amount);
+    virtual void transfer(Account* to, const mpf_class& amount);
 
     /// @brief 存款
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
-    void deposit(const mpf_class& amount);
+    virtual void deposit(const mpf_class& amount);
 
     void display() const;
 
@@ -83,13 +87,13 @@ private:
     /// @return 卡号 16 位
     /// @note 完成，分配给 Sour_xuanzi
     static QString generateCardNumber();
-
+protected:
     /// @brief 计算密码哈希值
     /// @param str 用户密码
     /// @return 哈希值
     /// @note 使用了SHA256 算法 completed by Z_MAHO
-    static QString hashSHA256(const QString& str);
+    static QString hashSHA256(const QString& str, int lenMultiplier = 2);
 
-    static std::string mpf_class2str(const mpf_class& number);
+    static QString mpf_class2str(const mpf_class& number);
 };
 #endif

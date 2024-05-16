@@ -6,11 +6,12 @@
 #include <QtCore/QFile>
 namespace bms {
     class Serializable {
+    protected:
+        virtual void basicSerialize(QFile& file) const {};
+        virtual Serializable* basicDeserialize(QFile& file) { return nullptr; };
     public:
-        virtual void basicSerialize(QFile& file) const = 0;
-        virtual Serializable* basicDeserialize(QFile& file) = 0;
         virtual void serialize(QFile& file) const = 0;
-        virtual Serializable* deserialize(QFile& file) = 0;
+        virtual void deserialize(QFile& file) = 0;
         virtual ~Serializable() = default;
     };
 }

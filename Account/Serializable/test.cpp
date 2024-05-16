@@ -28,9 +28,8 @@ public:
         basicSerialize(file);
     }
 
-    bms::Serializable* deserialize(QFile& file) override {
+    void deserialize(QFile& file) override {
         basicDeserialize(file);
-        return this;
     }
 
     friend std::ostream& operator<<(std::ostream& os,
@@ -63,7 +62,7 @@ public:
         file.close();
     }
 
-    bms::Serializable* deserialize(QFile& file) override {
+    void deserialize(QFile& file) override {
         if (!file.open(QIODevice::ReadOnly)) {
             throw std::runtime_error("Cannot open file");
         }
@@ -74,7 +73,6 @@ public:
         b = mpz_class(bStr.toStdString());
         c = cStr.toStdString();
         file.close();
-        return this;
     }
 private:
     bms::Serializable* basicDeserialize(QFile& file) override {
