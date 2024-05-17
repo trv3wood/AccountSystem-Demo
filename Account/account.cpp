@@ -3,11 +3,12 @@
 #include <gmpxx.h>
 #include <openssl/sha.h>
 
+#include <QFile>
 #include <QString>
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <QFile>
+
 
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
@@ -29,7 +30,8 @@ mpf_class Account::interestRate() const { return m_interestRate; }
 
 QString Account::cardNumber() const { return m_cardNumber; }
 
-QFile Account::datafile() const { QString filename = hashSHA256(m_id, 1) + ".dat"; 
+QFile Account::datafile() const {
+    QString filename = hashSHA256(m_id, 1) + ".dat";
     return QFile(filename);
 }
 
@@ -126,9 +128,6 @@ QString Account::generateCardNumber() {
 
 void Account::display() const {
     U8ENCODING
-    // qDebug() << m_name << ' ' << m_id << ' ' << m_passwd << ' ' <<
-    // m_cardNumber
-    //          << ' ' << m_location;
     qDebug() << "Name: " << m_name << '\n'
              << "ID: " << m_id << '\n'
              << "Password: " << m_passwd << '\n'

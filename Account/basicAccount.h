@@ -17,5 +17,7 @@ public:
     void deserialize(QFile& file) override;
     void deposit(const mpf_class& amount) override;
     void setPasswd(const QString& passwd) override;
+
+    SERIALIZE(m_name, m_passwd, m_location, m_id, m_cardNumber); // 只能包括基本类型
 };
 }  // namespace bms

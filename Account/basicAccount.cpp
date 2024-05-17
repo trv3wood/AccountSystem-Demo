@@ -33,8 +33,8 @@ void BasicAccount::serialize(QFile& file) const {
     QDataStream ds;
     ds.setDevice(&file);
     ds.setVersion(QDataStream::Qt_5_15);
-    ds << m_name << m_passwd << m_location << m_id << m_cardNumber
-       << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
+    basicSerialize(ds, file);
+    ds << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
     file.close();
 }
 
@@ -46,8 +46,8 @@ void BasicAccount::deserialize(QFile& file) {
     ids.setDevice(&file);
     ids.setVersion(QDataStream::Qt_5_15);
     QString balance, interestRate;
-    ids >> m_name >> m_passwd >> m_location >> m_id >> m_cardNumber >>
-        balance >> interestRate;
+    basicDeserialize(ids, file);
+    ids >> balance >> interestRate;
     m_balance = balance.toStdString();
     m_interestRate = interestRate.toStdString();
     file.close();

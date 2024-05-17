@@ -12,6 +12,7 @@ public:
         acc.transfer(&acc2, 100);
         acc.transfer(&acc2, 2387423);
         acc2.display();
+        acc.display();
         acc2.datafile().remove();
         acc.datafile().remove();
     }

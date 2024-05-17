@@ -44,7 +44,9 @@ else()
         add_executable(BMSystem
             ${PROJECT_SOURCES}
             img.qrc
-            mainwindow.qml
+            dashboard.ui
+            dashboard.h
+
 
         )
     endif()
