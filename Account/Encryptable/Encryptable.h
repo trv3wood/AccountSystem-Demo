@@ -13,7 +13,7 @@ public:
     /// @brief 加密函数
     /// @note 用于加密用户信息
     /// @note TODO: 利用 encryptImpl() 实现加密
-    virtual void encrypt() = 0;
+    virtual QString encrypt() = 0;
     /// @brief 解密函数
     /// @note 用于解密用户信息
     /// @note TODO: 利用 decryptImpl() 实现解密
@@ -50,6 +50,8 @@ protected:
     int decryptImpl(unsigned char *ciphertext, int ciphertext_len,
                     unsigned char *key, unsigned char *iv,
                     unsigned char *plaintext);
+    ///加密单个数据成员                
+    QString preencrypt(QString plaintext);                
 private:
     /// @brief 处理错误
     void handleErrors(void) {

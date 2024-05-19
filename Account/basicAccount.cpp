@@ -75,4 +75,19 @@ BasicAccount::BasicAccount(QString name, QString passwd, QString location,
     serialize(file);
     file.close();
 }
+ QString BasicAccount:: encrypt() {
+      QString encryptresult;
+      encryptresult+= preencrypt(m_name);        // 用户姓名
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_passwd);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_location);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_id);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_cardNumber);
+
+      return encryptresult;
+}
+
 }  // namespace bms
