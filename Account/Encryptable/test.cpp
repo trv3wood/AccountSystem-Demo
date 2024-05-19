@@ -4,6 +4,7 @@
 #include <gmp.h>
 #include <gtest/gtest.h>
 #include "encryptable.h"
+#include <QtCore/QString>
 #include <gmpxx.h>
 class TestEncryptable : public bms::Encryptable {
 public:
@@ -31,8 +32,22 @@ public:
         msg = std::string((char *)plaintext, plaintext_len);
     }
 
+    void encryptQStr() {
+        unsigned char ciphertext[1024];
+        int ciphertext_len = encryptImpl((unsigned char *)text.toStdString().c_str(), text.toStdString().size(), key, iv, ciphertext);
+        msg = std::string((char *)ciphertext, ciphertext_len);
+    }
+
+    void decryptQStr() {
+        unsigned char plaintext[1024];
+        int plaintext_len = decryptImpl((unsigned char *)msg.c_str(), msg.size(), key, iv, plaintext);
+        msg = std::string((char *)plaintext, plaintext_len);
+        text = QString::fromStdString(msg);
+    }
+
     std::string msg;
     mpf_class num;
+    QString text;
 };
 
 void testMsg(const std::string &msg) {
@@ -64,6 +79,20 @@ void testNum(const mpf_class &num) {
     ASSERT_EQ(num.get_str(exp), decrypted.get_str(exp));
 }
 
+void testQstr(const QString &text) {
+    TestEncryptable test;
+    test.text = text;
+    test.encryptQStr();
+    std::string encrypted = test.msg;
+    test.decryptQStr();
+    QString decrypted = test.text;
+    std::cout << "Original: " << text.toStdString() << "\n"
+              << "Encrypted: " << encrypted << "\n"
+              << "Decrypted: " << decrypted.toStdString() << "\n";
+    ASSERT_NE(encrypted, decrypted.toStdString());
+    ASSERT_EQ(text, decrypted);
+}
+
 int main() {
     testing::InitGoogleTest();
     return RUN_ALL_TESTS();
@@ -85,4 +114,13 @@ TEST(encryptable, num) {
     testNum(num * 2);
     testNum(num / 2);
     testNum(num + 1);
+}
+
+TEST(encryptable, qstr) {
+    testQstr("Hello, world!");
+    testQstr("1145141919810");
+    testQstr("fhoeihfiehigg");
+    testQstr("我是山里灵活的狗");
+    testQstr("帅！otto! 帅！");
+    testQstr("Mamba out!");
 }
