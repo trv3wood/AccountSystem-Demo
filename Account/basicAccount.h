@@ -10,6 +10,7 @@ public:
 
 private:
     static const unsigned transferRestriction;
+    virtual QString predecrypt(const QString& a) = 0;
 
 public:
     void transfer(Account* to, const mpf_class& amount) override;
@@ -17,6 +18,8 @@ public:
     void deserialize(QFile& file) override;
     void deposit(const mpf_class& amount) override;
     void setPasswd(const QString& passwd) override;
+    void encrypt() override;
+    void decrypt() override;
 
     SERIALIZE(m_name, m_passwd, m_location, m_id, m_cardNumber); // 只能包括基本类型
 };

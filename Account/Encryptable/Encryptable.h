@@ -4,6 +4,7 @@
 #include <openssl/conf.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+#include <QtCore/QString>
 
 namespace bms {
 class Encryptable;
@@ -18,7 +19,6 @@ public:
     /// @note 用于解密用户信息
     /// @note TODO: 利用 decryptImpl() 实现解密
     virtual void decrypt() = 0;
-    
     /// @brief 密钥
     static unsigned char* key;
     /// @brief 初始化向量

@@ -75,4 +75,32 @@ BasicAccount::BasicAccount(QString name, QString passwd, QString location,
     serialize(file);
     file.close();
 }
+
+QString BasicAccount::predecrypt(const QString& plaintext) {
+    // Convert QString to QByteArray
+    QByteArray plaintextData = plaintext.toUtf8();
+
+    // Convert QByteArray to unsigned char*
+    unsigned char* plaintextPtr = reinterpret_cast<unsigned char*>(plaintextData.data());
+
+    // Calculate the length of the plaintext
+    int plaintextLen = plaintextData.size();
+
+    // Call the base class's encryptImpl method
+    unsigned char ciphertext[1024]; // Assuming maximum size
+    int ciphertextLen = decryptImpl(plaintextPtr, plaintextLen, Encryptable::key, Encryptable::iv, ciphertext);
+
+    // Convert the ciphertext to QString
+    QString encryptedText = QString::fromUtf8(reinterpret_cast<const char*>(ciphertext), ciphertextLen);
+
+    return encryptedText;
+}
+
+void BasicAccount::decrypt() {
+    m_name = predecrypt(m_name);
+    m_passwd = predecrypt(m_passwd);
+    m_location = predecrypt(m_location);
+    m_id = predecrypt(m_id);
+    m_cardNumber = predecrypt(m_cardNumber);
+}
 }  // namespace bms
