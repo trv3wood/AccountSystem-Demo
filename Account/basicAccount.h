@@ -3,7 +3,7 @@
 #include "account.h"
 
 namespace bms {
-class BasicAccount : public Account, public Serializable {
+class BasicAccount : public Account, public Serializable, public Encryptable {
 public:
     BasicAccount() = default;
     BasicAccount(QString name, QString passwd, QString location, QString id);
