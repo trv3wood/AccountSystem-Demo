@@ -83,3 +83,24 @@ int bms::Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
 
     return plaintext_len;
 }
+
+QString bms::Encryptable::preencrypt(QString plaintext)
+{
+        // Convert QString to QByteArray
+        QByteArray plaintextData = plaintext.toUtf8();
+        
+        // Convert QByteArray to unsigned char*
+        unsigned char* plaintextPtr = reinterpret_cast<unsigned char*>(plaintextData.data());
+        
+        // Calculate the length of the plaintext
+        int plaintextLen = plaintextData.size();
+        
+        // Call the base class's encryptImpl method
+        unsigned char ciphertext[1024]; // Assuming maximum size
+        int ciphertextLen = encryptImpl(plaintextPtr, plaintextLen, key, iv, ciphertext);
+        
+        // Convert the ciphertext to QString
+        QString encryptedText = QString::fromUtf8(reinterpret_cast<const char*>(ciphertext), ciphertextLen);
+        
+        return encryptedText;
+};  

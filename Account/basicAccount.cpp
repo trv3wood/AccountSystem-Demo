@@ -103,4 +103,20 @@ void BasicAccount::decrypt() {
     m_id = predecrypt(m_id);
     m_cardNumber = predecrypt(m_cardNumber);
 }
+
+QString BasicAccount:: encrypt() {
+      QString encryptresult;
+      encryptresult+= preencrypt(m_name);        // 用户姓名
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_passwd);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_location);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_id);
+      encryptresult+= " ";
+      encryptresult+= preencrypt(m_cardNumber);
+
+      return encryptresult;
+}
+
 }  // namespace bms
