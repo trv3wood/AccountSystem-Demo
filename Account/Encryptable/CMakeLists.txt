@@ -9,14 +9,15 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
 
-set(TEST ON)
+set(TEST OFF)
 list(FILTER SRC_LIST EXCLUDE REGEX "test.cpp")
 add_library(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(${PROJECT_NAME} ${GMP} ${GMPXX})
+target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core)
+
 if(TEST)
     add_executable(test test.cpp)
     target_link_libraries(test ${PROJECT_NAME})
     target_link_libraries(test GTest::GTest GTest::Main)
-    target_link_libraries(test Qt${QT_VERSION_MAJOR}::Core)
 endif()

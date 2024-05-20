@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <QtCore/QFile>
+#include "Serializable/Serializable.h"
 
 #define ACCOUNT_DEBUG 1
 #if ACCOUNT_DEBUG == 1
@@ -24,11 +25,11 @@ const double defualtInterestRate = 0.01;
 }
 class bms::Account {
 protected:
-    QString m_name;        // 用户姓名
-    QString m_passwd;      // 密码
-    QString m_location;    // 常住地址
-    QString m_id;          // 身份证号码，用户的唯一标识
-    QString m_cardNumber;  // 卡号，由系统生成，用于交易和识别
+    std::string m_name;        // 用户姓名
+    std::string m_passwd;      // 密码
+    std::string m_location;    // 常住地址
+    std::string m_id;          // 身份证号码，用户的唯一标识
+    std::string m_cardNumber;  // 卡号，由系统生成，用于交易和识别
 
     mpf_class m_balance;   // 余额
     mpf_class m_interestRate;  // 利率
@@ -43,28 +44,27 @@ public:
     /// @param location 用户常住地址
     /// @note 生成卡号和密码哈希值，完成，分配给 Sour_xuanzi
     /// @note 考虑加密用户信息
-    Account(const QString& name, const QString& passwd, const QString& location,
-            const QString& id);
+    Account(const std::string& name, const std::string& passwd,
+            const std::string& location, const std::string& id);
 
     QString name() const;
     QString passwd() const;
     QString location() const;
     QString id() const;
-    QFile datafile() const;
 
     mpf_class balance() const;
     mpf_class interestRate() const;
     QString cardNumber() const;
 
-    void setName(const QString& name);
-    virtual void setPasswd(const QString& passwd);
-    void setLocation(const QString& location);
+    void setName(const std::string& name);
+    virtual void setPasswd(const std::string& passwd);
+    void setLocation(const std::string& location);
 
     /// @brief 设置用户的唯一标识
     /// @param id 用户的唯一标识
     /// @note 完成
     /// @note 考虑加密，毕竟是身份证号码
-    void setId(const QString& id);
+    void setId(const std::string& id);
 
     void setInterestRate(double rate);
 
@@ -86,15 +86,15 @@ private:
     /// @brief 生成随机卡号
     /// @return 卡号 16 位
     /// @note 完成，分配给 Sour_xuanzi
-    static QString generateCardNumber();
+    static std::string generateCardNumber();
 protected:
     /// @brief 计算密码哈希值
     /// @param str 用户密码
     /// @param lenMultiplier 哈希值长度倍数
     /// @return 哈希值
     /// @note 使用了SHA256 算法 completed by Z_MAHO
-    static QString hashSHA256(const QString& str, int lenMultiplier = 2);
+    static std::string hashSHA256(const std::string& str, int lenMultiplier = 2);
 
-    static QString mpf_class2str(const mpf_class& number);
+    static std::string mpf_class2str(const mpf_class& number);
 };
 #endif
