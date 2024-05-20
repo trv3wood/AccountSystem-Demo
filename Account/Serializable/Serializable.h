@@ -6,36 +6,25 @@
 #include <QtCore/QFile>
 namespace bms {
     class Serializable {
+    protected:
+        virtual void basicSerialize(QDataStream& ds, QFile& file) const {};
+        virtual void basicDeserialize(QDataStream& ds, QFile& file) {};
     public:
-        virtual void basicSerialize(QFile& file) const = 0;
-        virtual Serializable* basicDeserialize(QFile& file) = 0;
         virtual void serialize(QFile& file) const = 0;
-        virtual Serializable* deserialize(QFile& file) = 0;
+        virtual void deserialize(QFile& file) = 0;
         virtual ~Serializable() = default;
     };
 }
 #define SERIALIZE(...) \
-    void basicSerialize(QFile& file) const override { \
-        QDataStream ds; \
-        if (!file.open(QIODevice::WriteOnly)) { \
-            std::cerr << "Cannot open file for writing" << std::endl; \
-            return; \
-        } \
+    void basicSerialize(QDataStream& ds, QFile& file) const override { \
         ds.setDevice(&file); \
         ds.setVersion(QDataStream::Qt_5_15); \
         serializeImpl(ds, __VA_ARGS__); \
-        file.close();\
     } \
-    Serializable* basicDeserialize(QFile& file) override { \
-        QDataStream ids; \
-        if (!file.open(QIODevice::ReadOnly)) { \
-            throw std::runtime_error("Failed to open file for reading"); \
-        } \
+    void basicDeserialize(QDataStream& ids, QFile& file) override { \
         ids.setDevice(&file); \
         ids.setVersion(QDataStream::Qt_5_15); \
         deserializeImpl(ids, __VA_ARGS__); \
-        file.close(); \
-        return this; \
     } \
 private: \
     template<typename T> \

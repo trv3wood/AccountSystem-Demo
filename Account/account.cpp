@@ -3,8 +3,12 @@
 #include <gmpxx.h>
 #include <openssl/sha.h>
 
+#include <QFile>
 #include <QString>
+#include <cstdlib>
+#include <iostream>
 #include <string>
+
 
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
@@ -26,6 +30,11 @@ mpf_class Account::interestRate() const { return m_interestRate; }
 
 QString Account::cardNumber() const { return m_cardNumber; }
 
+QFile Account::datafile() const {
+    QString filename = hashSHA256(m_id, 1) + ".dat";
+    return QFile(filename);
+}
+
 void Account::setName(const QString& name) { m_name = name; }
 
 void Account::setPasswd(const QString& passwd) {
@@ -38,28 +47,29 @@ void Account::setId(const QString& id) { m_id = id; }
 
 void Account::setInterestRate(double rate) { m_interestRate = rate; }
 
-void Account::transfer(Account& to, const mpf_class& amount) {
+void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
-        to.m_balance += amount;
+        to->m_balance += amount;
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        std::string msg = "Transfer failed: amount(" + mpf_class2str(amount) +
-                          ") is more than balance(" + mpf_class2str(m_balance) +
-                          ")";
-        throw std::runtime_error(msg);
+        QString msg = "Transfer failed: amount(" + mpf_class2str(amount) +
+                      ") is more than balance(" + mpf_class2str(m_balance) +
+                      ")";
+        qDebug() << msg << '\n';
     }
 }
 
-QString Account::hashSHA256(const QString& str) {
+QString Account::hashSHA256(const QString& str, int lenMultiplier) {
     unsigned char hash[SHA256_DIGEST_LENGTH];  // 32 字节的哈希值
     SHA256_CTX sha256;
     SHA256_Init(&sha256);
     SHA256_Update(&sha256, str.toStdString().c_str(), str.length());
     SHA256_Final(hash, &sha256);
-    char hex[2 * SHA256_DIGEST_LENGTH + 1];  // 64 字节的十六进制字符串
+    char hex[lenMultiplier * SHA256_DIGEST_LENGTH +
+             1];  // 64 字节的十六进制字符串
     for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
         sprintf(hex + 2 * i, "%02x", hash[i]);  // 两个字符表示一个字节
     }
@@ -75,8 +85,8 @@ Account::Account(const QString& name, const QString& passwd,
       m_location(location),
       m_id(id),
       m_cardNumber(generateCardNumber()),
-      m_balance(0),
-      m_interestRate(0) {}
+      m_balance("0.0"),
+      m_interestRate("0.01") {}
 
 QString Account::generateCardNumber() {
     QString cardNumber;
@@ -118,16 +128,28 @@ QString Account::generateCardNumber() {
 
 void Account::display() const {
     U8ENCODING
-    qDebug() << m_name << ' ' << m_id << ' ' << m_passwd << ' ' << m_cardNumber
-             << ' ' << m_location;
+    qDebug() << "Name: " << m_name << '\n'
+             << "ID: " << m_id << '\n'
+             << "Password: " << m_passwd << '\n'
+             << "Card Number: " << m_cardNumber << '\n'
+             << "Location: " << m_location;
+    std::cout << "Balance: " << m_balance << '\n'
+              << "Interest Rate: " << m_interestRate << "\n\n";
 }
 
 void Account::deposit(const mpf_class& amount) { m_balance += amount; }
 
-std::string Account::mpf_class2str(const mpf_class& number) {
-    mp_exp_t expo;
-    std::string str = number.get_str(expo);
-    // 转换成标准浮点数
-    str.insert(expo, ".");
-    return str;
+QString Account::mpf_class2str(const mpf_class& number) {
+    mp_exp_t exp;
+    std::string s = number.get_str(exp);
+    if (exp < 0) {
+        s = "0." + std::string(-exp - 1, '0') + s;
+    } else if (s.size() - 1 > exp && exp > 0) {
+        s.insert(exp, ".");
+    } else if (exp == 0) {
+        s.insert(0, "0.");
+    } else {
+        s += std::string(exp - s.size() + 1, '0');
+    }
+    return QString::fromStdString(s);
 }
