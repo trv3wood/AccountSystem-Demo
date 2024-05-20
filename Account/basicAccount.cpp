@@ -20,31 +20,27 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
         return;
     }
     Account::transfer(to, amount);
-    QString filename = "data/" + to->cardNumber() + ".dat";
-    QFile file(filename);
-    dynamic_cast<BasicAccount*>(to)->serialize(file);
-    file.close();
 }
 
 void BasicAccount::serialize(QFile& file) const {
-    if (!file.open(QIODevice::WriteOnly)) {
-        std::cerr << "Cannot open file for writing" << std::endl;
-        return;
-    }
+    // if (!file.open(QIODevice::WriteOnly)) {
+    //     std::cerr << "Cannot open file for writing" << std::endl;
+    //     return;
+    // }
     QDataStream ds;
     ds.setDevice(&file);
     ds.setVersion(QDataStream::Qt_5_15);
     ds << name() << passwd() << location() << id() << cardNumber()
     << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
-    file.close();
+    // file.close();
 }
 
 void BasicAccount::deserialize(QFile& file) {
     QDataStream ids;
-    if (!file.exists()) {
-        std::cerr << "File does not exist." << std::endl;
-        return;
-    }
+    // if (!file.exists()) {
+    //     std::cerr << "File does not exist." << std::endl;
+    //     return;
+    // }
     ids.setDevice(&file);
     ids.setVersion(QDataStream::Qt_5_15);
     QString name, passwd, location, id, cardNumber, balance, interestRate;
@@ -56,7 +52,7 @@ void BasicAccount::deserialize(QFile& file) {
     m_cardNumber = cardNumber.toStdString();
     m_balance = balance.toStdString();
     m_interestRate = interestRate.toStdString();
-    file.close();
+    // file.close();
 }
 
 void BasicAccount::setPasswd(const std::string& passwd) {
@@ -68,7 +64,7 @@ BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
     : Account(name, passwd, location, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = "data/" + m_cardNumber + ".dat";
+    m_datafile = m_name + ".dat";
 }
 
 void BasicAccount::decrypt() {
