@@ -1,4 +1,5 @@
 #include "Encryptable.h"
+#include <string>
 
 unsigned char *bms::Encryptable::iv = (unsigned char *)"1145141918102345";
 
@@ -84,42 +85,15 @@ int bms::Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
     return plaintext_len;
 }
 
-QString bms::Encryptable::preencrypt(const QString& plaintext) {
-        // Convert QString to QByteArray
-        QByteArray plaintextData = plaintext.toUtf8();
-        
-        // Convert QByteArray to unsigned char*
-        unsigned char* plaintextPtr = reinterpret_cast<unsigned char*>(plaintextData.data());
-        
-        // Calculate the length of the plaintext
-        int plaintextLen = plaintextData.size();
-        
-        // Call the base class's encryptImpl method
-        unsigned char ciphertext[1024]; // Assuming maximum size
-        int ciphertextLen = encryptImpl(plaintextPtr, plaintextLen, key, iv, ciphertext);
-        
-        // Convert the ciphertext to QString
-        QString encryptedText = QString::fromUtf8(reinterpret_cast<const char*>(ciphertext), ciphertextLen);
-        
-        return encryptedText;
-};  
-
-QString bms::Encryptable::predecrypt(const QString& plaintext) {
-    // Convert QString to QByteArray
-    QByteArray plaintextData = plaintext.toUtf8();
-
-    // Convert QByteArray to unsigned char*
-    unsigned char* plaintextPtr = reinterpret_cast<unsigned char*>(plaintextData.data());
-
-    // Calculate the length of the plaintext
-    int plaintextLen = plaintextData.size();
-
-    // Call the base class's encryptImpl method
+std::string bms::Encryptable::preEncrypt(const std::string& plaintext) {
     unsigned char ciphertext[1024]; // Assuming maximum size
-    int ciphertextLen = decryptImpl(plaintextPtr, plaintextLen, Encryptable::key, Encryptable::iv, ciphertext);
+    int plaintextLen = plaintext.size();
+    int ciphertextLen = encryptImpl((unsigned char*)plaintext.c_str(), plaintextLen, key, iv, ciphertext);
+    return std::string((char*)ciphertext, ciphertextLen);
+}
 
-    // Convert the ciphertext to QString
-    QString encryptedText = QString::fromUtf8(reinterpret_cast<const char*>(ciphertext), ciphertextLen);
-
-    return encryptedText;
+std::string bms::Encryptable::preDecrypt(const std::string& plaintext) {
+    unsigned char decrypted[1024]; // Assuming maximum size
+    int decryptedLen = decryptImpl((unsigned char*)plaintext.c_str(), plaintext.size(), key, iv, decrypted);
+    return std::string((char*)decrypted, decryptedLen);
 }

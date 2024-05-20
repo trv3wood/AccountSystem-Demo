@@ -51,9 +51,9 @@ protected:
                     unsigned char *key, unsigned char *iv,
                     unsigned char *plaintext);
     ///加密单个数据成员                
-    QString preencrypt(const QString& plaintext);                
+    std::string preEncrypt(const std::string& plaintext);                
 
-    QString predecrypt(const QString& plaintext);
+    std::string preDecrypt(const std::string& plaintext);
 private:
     /// @brief 处理错误
     void handleErrors(void) {
@@ -73,5 +73,6 @@ private:
         EVP_cleanup();
         ERR_free_strings();
     }
+    friend class TestEncryptable;
 };
 #endif

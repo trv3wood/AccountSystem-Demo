@@ -5,11 +5,11 @@
 #include <QString>
 #include <cstdlib>
 #include <iostream>
-#include <utility>
+#include <string>
 
+#include "Encryptable/Encryptable.h"
 #include "Serializable/Serializable.h"
 #include "account.h"
-
 
 namespace bms {
 const unsigned BasicAccount::transferRestriction = 5000;
@@ -20,7 +20,8 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
         return;
     }
     Account::transfer(to, amount);
-    QFile file(to->datafile());
+    QString filename = "data/" + to->cardNumber() + ".dat";
+    QFile file(filename);
     dynamic_cast<BasicAccount*>(to)->serialize(file);
     file.close();
 }
@@ -33,64 +34,70 @@ void BasicAccount::serialize(QFile& file) const {
     QDataStream ds;
     ds.setDevice(&file);
     ds.setVersion(QDataStream::Qt_5_15);
-    basicSerialize(ds, file);
-    ds << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
+    ds << name() << passwd() << location() << id() << cardNumber()
+    << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
     file.close();
 }
 
 void BasicAccount::deserialize(QFile& file) {
     QDataStream ids;
-    if (!file.open(QIODevice::ReadOnly)) {
-        throw std::runtime_error("Failed to open file for reading");
+    if (!file.exists()) {
+        std::cerr << "File does not exist." << std::endl;
+        return;
     }
     ids.setDevice(&file);
     ids.setVersion(QDataStream::Qt_5_15);
-    QString balance, interestRate;
-    basicDeserialize(ids, file);
-    ids >> balance >> interestRate;
+    QString name, passwd, location, id, cardNumber, balance, interestRate;
+    ids >> name >> passwd >> location >> id >> cardNumber >> balance >> interestRate;
+    m_name = name.toStdString();
+    m_passwd = passwd.toStdString();
+    m_location = location.toStdString();
+    m_id = id.toStdString();
+    m_cardNumber = cardNumber.toStdString();
     m_balance = balance.toStdString();
     m_interestRate = interestRate.toStdString();
     file.close();
 }
 
-void BasicAccount::deposit(const mpf_class& amount) {
-    Account::deposit(amount);
-    QFile file(datafile());
-    serialize(file);
-    file.close();
+void BasicAccount::setPasswd(const std::string& passwd) {
+    m_passwd = preEncrypt(hashSHA256(passwd));
 }
 
-void BasicAccount::setPasswd(const QString& passwd) {
-    m_passwd = hashSHA256(passwd);
-    QFile file(datafile());
-    serialize(file);
-    file.close();
+BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
+             const std::string& location, const std::string& id)
+    : Account(name, passwd, location, id) {
+    m_balance = 0;
+    m_interestRate = defualtInterestRate;
+    m_datafile = "data/" + m_cardNumber + ".dat";
 }
-
-BasicAccount::BasicAccount(QString name, QString passwd, QString location,
-                           QString id)
-    : Account(std::move(name), std::move(passwd), std::move(location),
-              std::move(id)) {
-    QFile file(datafile());
-    serialize(file);
-    file.close();
-}
-
 
 void BasicAccount::decrypt() {
-    m_name = predecrypt(m_name);
-    m_passwd = predecrypt(m_passwd);
-    m_location = predecrypt(m_location);
-    m_id = predecrypt(m_id);
-    m_cardNumber = predecrypt(m_cardNumber);
+    m_name = preDecrypt(m_name);
+    m_passwd = preDecrypt(m_passwd);
+    m_location = preDecrypt(m_location);
+    m_id = preDecrypt(m_id);
+    m_cardNumber = preDecrypt(m_cardNumber);
 }
 
 void BasicAccount::encrypt() {
-    m_name = preencrypt(m_name);
-    m_passwd = preencrypt(m_passwd);
-    m_location = preencrypt(m_location);
-    m_id = preencrypt(m_id);
-    m_cardNumber = preencrypt(m_cardNumber);
+    m_name = preEncrypt(m_name);
+    m_passwd = preEncrypt(m_passwd);
+    m_location = preEncrypt(m_location);
+    m_id = preEncrypt(m_id);
+    m_cardNumber = preEncrypt(m_cardNumber);
+}
+
+void BasicAccount::store() {
+    encrypt();
+    QFile file(m_datafile.c_str());
+    serialize(file);
+    file.close();
+}
+
+void BasicAccount::load(QFile& file) {
+    deserialize(file);
+    decrypt();
+    file.close();
 }
 
 }  // namespace bms
