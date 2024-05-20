@@ -76,25 +76,6 @@ BasicAccount::BasicAccount(QString name, QString passwd, QString location,
     file.close();
 }
 
-QString BasicAccount::predecrypt(const QString& plaintext) {
-    // Convert QString to QByteArray
-    QByteArray plaintextData = plaintext.toUtf8();
-
-    // Convert QByteArray to unsigned char*
-    unsigned char* plaintextPtr = reinterpret_cast<unsigned char*>(plaintextData.data());
-
-    // Calculate the length of the plaintext
-    int plaintextLen = plaintextData.size();
-
-    // Call the base class's encryptImpl method
-    unsigned char ciphertext[1024]; // Assuming maximum size
-    int ciphertextLen = decryptImpl(plaintextPtr, plaintextLen, Encryptable::key, Encryptable::iv, ciphertext);
-
-    // Convert the ciphertext to QString
-    QString encryptedText = QString::fromUtf8(reinterpret_cast<const char*>(ciphertext), ciphertextLen);
-
-    return encryptedText;
-}
 
 void BasicAccount::decrypt() {
     m_name = predecrypt(m_name);
@@ -104,19 +85,12 @@ void BasicAccount::decrypt() {
     m_cardNumber = predecrypt(m_cardNumber);
 }
 
-QString BasicAccount:: encrypt() {
-      QString encryptresult;
-      encryptresult+= preencrypt(m_name);        // 用户姓名
-      encryptresult+= " ";
-      encryptresult+= preencrypt(m_passwd);
-      encryptresult+= " ";
-      encryptresult+= preencrypt(m_location);
-      encryptresult+= " ";
-      encryptresult+= preencrypt(m_id);
-      encryptresult+= " ";
-      encryptresult+= preencrypt(m_cardNumber);
-
-      return encryptresult;
+void BasicAccount::encrypt() {
+    m_name = preencrypt(m_name);
+    m_passwd = preencrypt(m_passwd);
+    m_location = preencrypt(m_location);
+    m_id = preencrypt(m_id);
+    m_cardNumber = preencrypt(m_cardNumber);
 }
 
 }  // namespace bms

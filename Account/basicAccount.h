@@ -10,7 +10,6 @@ public:
 
 private:
     static const unsigned transferRestriction;
-    virtual QString predecrypt(const QString& a) = 0;
 
 public:
     void transfer(Account* to, const mpf_class& amount) override;
