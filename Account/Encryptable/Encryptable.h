@@ -11,14 +11,6 @@ class Encryptable;
 }
 class bms::Encryptable {
 public:
-    /// @brief 加密函数
-    /// @note 用于加密用户信息
-    /// @note TODO: 利用 encryptImpl() 实现加密
-    virtual void encrypt() = 0;
-    /// @brief 解密函数
-    /// @note 用于解密用户信息
-    /// @note TODO: 利用 decryptImpl() 实现解密
-    virtual void decrypt() = 0;
     /// @brief 密钥
     static unsigned char* key;
     /// @brief 初始化向量
@@ -38,7 +30,7 @@ protected:
     /// @param iv 初始化向量
     /// @param ciphertext 密文
     /// @return 密文长度
-    int encryptImpl(unsigned char *plaintext, int plaintext_len,
+    static int encryptImpl(unsigned char *plaintext, int plaintext_len,
                     unsigned char *key, unsigned char *iv,
                     unsigned char *ciphertext);
     /// @brief 解密实现
@@ -47,16 +39,12 @@ protected:
     /// @param key 密钥
     /// @param iv 初始化向量
     /// @param plaintext 明文
-    int decryptImpl(unsigned char *ciphertext, int ciphertext_len,
+    static int decryptImpl(unsigned char *ciphertext, int ciphertext_len,
                     unsigned char *key, unsigned char *iv,
                     unsigned char *plaintext);
-    ///加密单个数据成员                
-    std::string preEncrypt(const std::string& plaintext);                
-
-    std::string preDecrypt(const std::string& plaintext);
 private:
     /// @brief 处理错误
-    void handleErrors(void) {
+    static void handleErrors(void) {
         ERR_print_errors_fp(stderr);
         abort();
     }

@@ -10,8 +10,8 @@ namespace bms {
         virtual void basicSerialize(QDataStream& ds, QFile& file) const {};
         virtual void basicDeserialize(QDataStream& ds, QFile& file) {};
     public:
-        virtual void serialize(QFile& file) const = 0;
-        virtual void deserialize(QFile& file) = 0;
+        virtual void serialize(std::string& data) const = 0;
+        virtual void deserialize(const std::string& data) = 0;
         virtual ~Serializable() = default;
     };
 }

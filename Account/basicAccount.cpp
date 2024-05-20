@@ -4,11 +4,10 @@
 
 #include <QString>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <string>
 
-#include "Encryptable/Encryptable.h"
-#include "Serializable/Serializable.h"
 #include "account.h"
 
 namespace bms {
@@ -22,41 +21,23 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
     Account::transfer(to, amount);
 }
 
-void BasicAccount::serialize(QFile& file) const {
-    // if (!file.open(QIODevice::WriteOnly)) {
-    //     std::cerr << "Cannot open file for writing" << std::endl;
-    //     return;
-    // }
-    QDataStream ds;
-    ds.setDevice(&file);
-    ds.setVersion(QDataStream::Qt_5_15);
-    ds << name() << passwd() << location() << id() << cardNumber()
-    << mpf_class2str(m_balance) << mpf_class2str(m_interestRate);
-    // file.close();
+void BasicAccount::serialize(std::string& data) const {
+    data.clear();
+    data += m_name + '\n' + m_passwd + '\n' + m_location + '\n' + m_id + '\n' + m_cardNumber + '\n' + mpf_class2str(m_balance) + '\n' + mpf_class2str(m_interestRate) + '\n';
 }
 
-void BasicAccount::deserialize(QFile& file) {
-    QDataStream ids;
-    // if (!file.exists()) {
-    //     std::cerr << "File does not exist." << std::endl;
-    //     return;
-    // }
-    ids.setDevice(&file);
-    ids.setVersion(QDataStream::Qt_5_15);
-    QString name, passwd, location, id, cardNumber, balance, interestRate;
-    ids >> name >> passwd >> location >> id >> cardNumber >> balance >> interestRate;
-    m_name = name.toStdString();
-    m_passwd = passwd.toStdString();
-    m_location = location.toStdString();
-    m_id = id.toStdString();
-    m_cardNumber = cardNumber.toStdString();
-    m_balance = balance.toStdString();
-    m_interestRate = interestRate.toStdString();
-    // file.close();
-}
-
-void BasicAccount::setPasswd(const std::string& passwd) {
-    m_passwd = preEncrypt(hashSHA256(passwd));
+void BasicAccount::deserialize(const std::string& data) {
+    std::istringstream iss(data);
+    std::getline(iss, m_name);
+    std::getline(iss, m_passwd);
+    std::getline(iss, m_location);
+    std::getline(iss, m_id);
+    std::getline(iss, m_cardNumber);
+    std::string balance, interestRate;
+    std::getline(iss, balance);
+    std::getline(iss, interestRate);
+    m_balance = balance;
+    m_interestRate = interestRate;
 }
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
@@ -64,36 +45,49 @@ BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
     : Account(name, passwd, location, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = m_name + ".dat";
+    m_datafile = m_cardNumber + ".dat";
 }
 
-void BasicAccount::decrypt() {
-    m_name = preDecrypt(m_name);
-    m_passwd = preDecrypt(m_passwd);
-    m_location = preDecrypt(m_location);
-    m_id = preDecrypt(m_id);
-    m_cardNumber = preDecrypt(m_cardNumber);
-}
+void BasicAccount::store(const std::string& filename) {
+    std::ofstream outFile(filename, std::ios::binary);
+    if (!outFile) {
+        throw std::runtime_error("Cannot open file for writing");
+    }
 
-void BasicAccount::encrypt() {
-    m_name = preEncrypt(m_name);
-    m_passwd = preEncrypt(m_passwd);
-    m_location = preEncrypt(m_location);
-    m_id = preEncrypt(m_id);
-    m_cardNumber = preEncrypt(m_cardNumber);
-}
+    std::string data;
+    serialize(data);
 
-void BasicAccount::store() {
-    encrypt();
-    QFile file(m_datafile.c_str());
-    serialize(file);
-    file.close();
-}
+    int ciphertext_len = data.size() + EVP_MAX_BLOCK_LENGTH;
+    unsigned char* ciphertext = new unsigned char[ciphertext_len];
+    ciphertext_len = encryptImpl((unsigned char*)data.c_str(), data.size(), key, iv, ciphertext);
 
-void BasicAccount::load(QFile& file) {
-    deserialize(file);
-    decrypt();
-    file.close();
-}
+    outFile.write(reinterpret_cast<const char*>(&ciphertext_len), sizeof(ciphertext_len));
+    outFile.write(reinterpret_cast<const char*>(ciphertext), ciphertext_len);
 
-}  // namespace bms
+    delete[] ciphertext;
+    outFile.close();
+}  
+
+void BasicAccount::load(const std::string& filename) {
+    std::ifstream inFile(filename, std::ios::binary);
+    if (!inFile) {
+        throw std::runtime_error("Cannot open file for reading");
+    }
+
+    int ciphertext_len;
+    inFile.read(reinterpret_cast<char*>(&ciphertext_len), sizeof(ciphertext_len));
+
+    unsigned char* ciphertext = new unsigned char[ciphertext_len];
+    inFile.read(reinterpret_cast<char*>(ciphertext), ciphertext_len);
+
+    unsigned char* plaintext = new unsigned char[ciphertext_len + EVP_MAX_BLOCK_LENGTH];
+    int plaintext_len = decryptImpl(ciphertext, ciphertext_len, key, iv, plaintext);
+
+    std::string data((char*)plaintext, plaintext_len);
+    deserialize(data);
+
+    delete[] ciphertext;
+    delete[] plaintext;
+    inFile.close();
+}
+}// namespace bms

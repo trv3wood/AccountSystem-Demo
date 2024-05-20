@@ -53,10 +53,10 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        QString msg = "Transfer failed: amount(" + mpf_class2str(amount) +
+        std::string msg = "Transfer failed: amount(" + mpf_class2str(amount) +
                       ") is more than balance(" + mpf_class2str(m_balance) +
                       ")";
-        qDebug() << msg << '\n';
+        std::cerr << msg << '\n';
     }
 }
 
@@ -137,7 +137,10 @@ void Account::display() const {
 
 void Account::deposit(const mpf_class& amount) { m_balance += amount; }
 
-QString Account::mpf_class2str(const mpf_class& number) {
+std::string Account::mpf_class2str(const mpf_class& number) {
+    if (number == 0) {
+        return "0";
+    }
     mp_exp_t exp;
     std::string s = number.get_str(exp);
     if (exp < 0) {
@@ -149,5 +152,5 @@ QString Account::mpf_class2str(const mpf_class& number) {
     } else {
         s += std::string(exp - s.size() + 1, '0');
     }
-    return QString::fromStdString(s);
+    return s;
 }

@@ -9,7 +9,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SRC_LIST)
 
-set(TEST ON)
+set(TEST OFF)
 list(FILTER SRC_LIST EXCLUDE REGEX "test.cpp")
 add_library(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} OpenSSL::SSL OpenSSL::Crypto)

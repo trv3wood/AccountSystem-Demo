@@ -95,6 +95,6 @@ protected:
     /// @note 使用了SHA256 算法 completed by Z_MAHO
     static std::string hashSHA256(const std::string& str, int lenMultiplier = 2);
 
-    static QString mpf_class2str(const mpf_class& number);
+    static std::string mpf_class2str(const mpf_class& number);
 };
 #endif

@@ -1,5 +1,4 @@
 #include "Encryptable.h"
-#include <string>
 
 unsigned char *bms::Encryptable::iv = (unsigned char *)"1145141918102345";
 
@@ -83,17 +82,4 @@ int bms::Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
     EVP_CIPHER_CTX_free(ctx);
 
     return plaintext_len;
-}
-
-std::string bms::Encryptable::preEncrypt(const std::string& plaintext) {
-    unsigned char ciphertext[1024]; // Assuming maximum size
-    int plaintextLen = plaintext.size();
-    int ciphertextLen = encryptImpl((unsigned char*)plaintext.c_str(), plaintextLen, key, iv, ciphertext);
-    return std::string((char*)ciphertext, ciphertextLen);
-}
-
-std::string bms::Encryptable::preDecrypt(const std::string& plaintext) {
-    unsigned char decrypted[1024]; // Assuming maximum size
-    int decryptedLen = decryptImpl((unsigned char*)plaintext.c_str(), plaintext.size(), key, iv, decrypted);
-    return std::string((char*)decrypted, decryptedLen);
 }
