@@ -18,7 +18,7 @@ QString Account::name() const { return QString::fromStdString(m_name); }
 
 QString Account::passwd() const { return QString::fromStdString(m_passwd); }
 
-QString Account::location() const { return QString::fromStdString(m_location); }
+QString Account::phoneNum() const { return QString::fromStdString(m_phonenumber); }
 
 QString Account::id() const { return QString::fromStdString(m_id); }
 
@@ -37,7 +37,7 @@ void Account::setPasswd(const std::string& passwd) {
 }
 
 void Account::setLocation(const std::string& location) {
-    m_location = location;
+    m_phonenumber = location;
 }
 
 void Account::setId(const std::string& id) { m_id = id; }
@@ -64,7 +64,7 @@ Account::Account(const std::string& name, const std::string& passwd,
                  const std::string& location, const std::string& id)
     : m_name(name),
       m_passwd(passwd),
-      m_location(location),
+      m_phonenumber(location),
       m_id(id),
       m_cardNumber(generateCardNumber()),
       m_balance("0.0"),
@@ -114,7 +114,7 @@ void Account::display() const {
               << "ID: " << m_id << '\n'
               << "Password: " << m_passwd << '\n'
               << "Card Number: " << m_cardNumber << '\n'
-              << "Location: " << m_location << '\n'
+              << "Location: " << m_phonenumber << '\n'
               << "Balance: " << m_balance << '\n'
               << "Interest Rate: " << m_interestRate << "\n\n";
 }

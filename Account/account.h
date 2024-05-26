@@ -22,7 +22,7 @@ class bms::Account {
 protected:
     std::string m_name;        // 用户姓名
     std::string m_passwd;      // 密码
-    std::string m_location;    // 常住地址
+    std::string m_phonenumber;    // 手机号
     std::string m_id;          // 身份证号码，用户的唯一标识
     std::string m_cardNumber;  // 卡号，由系统生成，用于交易和识别
 
@@ -44,7 +44,7 @@ public:
 
     QString name() const;
     QString passwd() const;
-    QString location() const;
+    QString phoneNum() const;
     QString id() const;
 
     mpf_class balance() const;
