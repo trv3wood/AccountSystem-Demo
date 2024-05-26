@@ -38,6 +38,13 @@ else()
     else()
         add_executable(login
             ${PROJECT_SOURCES}
+            mainwindow.h mainwindow.cpp mainwindow.ui
+
+
+
+
+
+
         )
     endif()
 endif()

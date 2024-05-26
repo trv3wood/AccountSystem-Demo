@@ -1,5 +1,6 @@
 #include "widget.h"
 #include "./ui_widget.h"
+#include "mainwindow.h" // 包含主界面头文件
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -28,7 +29,7 @@ void Widget::on_loginButton_clicked()
     QString password = ui->passwordLineEdit->text();
 
     // 拼接用户信息文件的路径
-    QString filePath = "path_to_your_data_folder/" + password;
+    QString filePath = "C:\\Users\\wwh\\Desktop\\user\\" + username+".txt";
 
     // 检查文件是否存在
     QFile file(filePath);
@@ -43,14 +44,16 @@ void Widget::on_loginButton_clicked()
             // 验证账号密码是否匹配
             if (username == storedUsername && password == storedPassword) {
                 // 登录成功，进入主界面
-                ui->statusLabel->setText("登录成功！");
-                // 这里可以打开主界面窗口，或者发出信号通知主界面进行切换
-                // 后续逻辑根据实际需求处理
-            } else {
+                this->hide();
+                MainWindow *mainWindow = new MainWindow;
+                mainWindow->show();
+            }
+            else {
                 // 账号或密码不匹配，登录失败
                 ui->statusLabel->setText("账号或密码错误！");
             }
-        } else {
+        }
+        else {
             // 无法打开文件，登录失败
             ui->statusLabel->setText("无法打开用户信息文件！");
         }
@@ -58,5 +61,5 @@ void Widget::on_loginButton_clicked()
         // 文件不存在，登录失败
         ui->statusLabel->setText("账号或密码错误！");
     }
-}
 
+}

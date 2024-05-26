@@ -1,5 +1,6 @@
 #ifndef WIDGET_H
 #define WIDGET_H
+#include "mainwindow.h"
 
 #include <QWidget>
 #include <QFile>
@@ -7,6 +8,7 @@
 #include <QString>
 #include <QIODevice>
 #include <QLabel>
+#include <QString>
 
 
 
