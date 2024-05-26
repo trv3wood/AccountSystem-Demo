@@ -1,5 +1,7 @@
 #include "account.h"
+#include "basicAccount.h"
 #include <gtest/gtest.h>
+#include <cstdlib>
 
 int main() {
     testing::InitGoogleTest();
@@ -14,6 +16,18 @@ TEST(Account, Constructor) {
     bms::Account b = a;
     EXPECT_EQ(a.id(), b.id());
     b.display();
+}
+
+TEST(basicAccount, Constructor) {
+    bms::BasicAccount a("李田所", "1919810", "下北泽", "114514");
+    a.store(a.datafile());
+    a.display();
+    bms::BasicAccount b;
+    b.load(a.datafile());
+    EXPECT_EQ(a.id(), b.id());
+    b.display();
+    b.transfer(&a, 100);
+    // system("rm *.dat");
 }
 
 

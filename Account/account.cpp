@@ -1,14 +1,12 @@
 #include "account.h"
 
 #include <gmpxx.h>
-#include <openssl/sha.h>
 
-#include <QFile>
 #include <QString>
 #include <cstdlib>
 #include <iostream>
 #include <string>
-
+#include <random>
 
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
@@ -16,34 +14,33 @@
 
 using bms::Account;
 
-QString Account::name() const { return m_name; }
+QString Account::name() const { return QString::fromStdString(m_name); }
 
-QString Account::passwd() const { return m_passwd; }
+QString Account::passwd() const { return QString::fromStdString(m_passwd); }
 
-QString Account::location() const { return m_location; }
+QString Account::phoneNum() const { return QString::fromStdString(m_phonenumber); }
 
-QString Account::id() const { return m_id; }
+QString Account::id() const { return QString::fromStdString(m_id); }
 
 mpf_class Account::balance() const { return m_balance; }
 
 mpf_class Account::interestRate() const { return m_interestRate; }
 
-QString Account::cardNumber() const { return m_cardNumber; }
-
-QFile Account::datafile() const {
-    QString filename = hashSHA256(m_id, 1) + ".dat";
-    return QFile(filename);
+QString Account::cardNumber() const {
+    return QString::fromStdString(m_cardNumber);
 }
 
-void Account::setName(const QString& name) { m_name = name; }
+void Account::setName(const std::string& name) { m_name = name; }
 
-void Account::setPasswd(const QString& passwd) {
-    m_passwd = hashSHA256(passwd);
+void Account::setPasswd(const std::string& passwd) {
+    m_passwd = passwd;
 }
 
-void Account::setLocation(const QString& location) { m_location = location; }
+void Account::setLocation(const std::string& location) {
+    m_phonenumber = location;
+}
 
-void Account::setId(const QString& id) { m_id = id; }
+void Account::setId(const std::string& id) { m_id = id; }
 
 void Account::setInterestRate(double rate) { m_interestRate = rate; }
 
@@ -55,41 +52,26 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        QString msg = "Transfer failed: amount(" + mpf_class2str(amount) +
+        std::string msg = "Transfer failed: amount(" + mpf_class2str(amount) +
                       ") is more than balance(" + mpf_class2str(m_balance) +
                       ")";
-        qDebug() << msg << '\n';
+        std::cerr << msg << '\n';
     }
-}
-
-QString Account::hashSHA256(const QString& str, int lenMultiplier) {
-    unsigned char hash[SHA256_DIGEST_LENGTH];  // 32 字节的哈希值
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, str.toStdString().c_str(), str.length());
-    SHA256_Final(hash, &sha256);
-    char hex[lenMultiplier * SHA256_DIGEST_LENGTH +
-             1];  // 64 字节的十六进制字符串
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-        sprintf(hex + 2 * i, "%02x", hash[i]);  // 两个字符表示一个字节
-    }
-    hex[2 * SHA256_DIGEST_LENGTH] = 0;  // 字符串结尾
-    return QString(hex);
 }
 
 // To: Sour_xuanzi
-Account::Account(const QString& name, const QString& passwd,
-                 const QString& location, const QString& id)
+Account::Account(const std::string& name, const std::string& passwd,
+                 const std::string& location, const std::string& id)
     : m_name(name),
-      m_passwd(hashSHA256(passwd)),
-      m_location(location),
+      m_passwd(passwd),
+      m_phonenumber(location),
       m_id(id),
       m_cardNumber(generateCardNumber()),
       m_balance("0.0"),
       m_interestRate("0.01") {}
 
-QString Account::generateCardNumber() {
-    QString cardNumber;
+std::string Account::generateCardNumber() {
+    std::string cardNumber;
     const int len = 16;
 
     // 检查处理器是否支持 rdrand 指令
@@ -110,7 +92,7 @@ QString Account::generateCardNumber() {
             __asm__ volatile("rdrand %0; setc %1"
                              : "=r"(cardNumberInt), "=qm"(success));
             if (success) {
-                cardNumber += QString::number(cardNumberInt % 10);
+                cardNumber += std::to_string(cardNumberInt % 10);
             }
         }
     } else {
@@ -119,7 +101,7 @@ QString Account::generateCardNumber() {
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0, 9);
         for (int i = 0; i < len; ++i) {
-            cardNumber += QString::number(dis(gen));
+            cardNumber += std::to_string(dis(gen));
         }
     }
 
@@ -128,18 +110,21 @@ QString Account::generateCardNumber() {
 
 void Account::display() const {
     U8ENCODING
-    qDebug() << "Name: " << m_name << '\n'
-             << "ID: " << m_id << '\n'
-             << "Password: " << m_passwd << '\n'
-             << "Card Number: " << m_cardNumber << '\n'
-             << "Location: " << m_location;
-    std::cout << "Balance: " << m_balance << '\n'
+    std::cout << "Name: " << m_name << '\n'
+              << "ID: " << m_id << '\n'
+              << "Password: " << m_passwd << '\n'
+              << "Card Number: " << m_cardNumber << '\n'
+              << "Location: " << m_phonenumber << '\n'
+              << "Balance: " << m_balance << '\n'
               << "Interest Rate: " << m_interestRate << "\n\n";
 }
 
 void Account::deposit(const mpf_class& amount) { m_balance += amount; }
 
-QString Account::mpf_class2str(const mpf_class& number) {
+std::string Account::mpf_class2str(const mpf_class& number) {
+    if (number == 0) {
+        return "0";
+    }
     mp_exp_t exp;
     std::string s = number.get_str(exp);
     if (exp < 0) {
@@ -151,5 +136,5 @@ QString Account::mpf_class2str(const mpf_class& number) {
     } else {
         s += std::string(exp - s.size() + 1, '0');
     }
-    return QString::fromStdString(s);
+    return s;
 }

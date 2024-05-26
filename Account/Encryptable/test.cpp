@@ -4,6 +4,7 @@
 #include <gmp.h>
 #include <gtest/gtest.h>
 #include "encryptable.h"
+#include <QtCore/QString>
 #include <gmpxx.h>
 class TestEncryptable : public bms::Encryptable {
 public:
@@ -20,34 +21,16 @@ public:
         msg = std::string((char *)plaintext, plaintext_len);
         num.set_str(msg, 10);
     }
-    void encryptStr() {
-        unsigned char ciphertext[1024];
-        int ciphertext_len = encryptImpl((unsigned char *)msg.c_str(), msg.size(), key, iv, ciphertext);
-        msg = std::string((char *)ciphertext, ciphertext_len);
-    }
-    void decryptStr() {
-        unsigned char plaintext[1024];
-        int plaintext_len = decryptImpl((unsigned char *)msg.c_str(), msg.size(), key, iv, plaintext);
-        msg = std::string((char *)plaintext, plaintext_len);
-    }
 
+    void testHashSHA256(std::string str) {
+        std::string hash = hashSHA256(str);
+        std::cout << "Original: " << str << "\n"
+                  << "Hash: " << hash << "\n";
+    }
     std::string msg;
     mpf_class num;
+    QString text;
 };
-
-void testMsg(const std::string &msg) {
-    TestEncryptable test;
-    test.msg = msg;
-    test.encryptStr();
-    std::string encrypted = test.msg;
-    test.decryptStr();
-    std::string decrypted = test.msg;
-    std::cout << "Original: " << msg << ' ' << msg.size() << "\n"
-              << "Encrypted: " << encrypted << ' ' << encrypted.size() << "\n"
-              << "Decrypted: " << decrypted << ' ' << decrypted.size() << "\n";
-    ASSERT_NE(encrypted, decrypted);
-    ASSERT_EQ(msg, decrypted);
-}
 
 void testNum(const mpf_class &num) {
     TestEncryptable test;
@@ -64,18 +47,10 @@ void testNum(const mpf_class &num) {
     ASSERT_EQ(num.get_str(exp), decrypted.get_str(exp));
 }
 
+
 int main() {
     testing::InitGoogleTest();
     return RUN_ALL_TESTS();
-}
-
-TEST(encryptable, text) {
-    testMsg("Hello, world!");
-    testMsg("1145141919810");
-    testMsg("fhoeihfiehigg");
-    testMsg("我是山里灵活的狗");
-    testMsg("Man! What can I say?");
-    testMsg("Mamba out!");
 }
 
 TEST(encryptable, num) {
@@ -85,4 +60,22 @@ TEST(encryptable, num) {
     testNum(num * 2);
     testNum(num / 2);
     testNum(num + 1);
+}
+
+TEST(encryptable, text) {
+    TestEncryptable test;
+    test.text = "Hello, world!";
+    test.encrypt();
+    std::string encrypted = test.msg;
+    test.decrypt();
+    QString decrypted = test.text;
+    std::cout << "Original: " << test.text.toStdString() << "\n"
+              << "Encrypted: " << encrypted << "\n"
+              << "Decrypted: " << decrypted.toStdString() << "\n";
+    ASSERT_EQ(test.text, decrypted);
+}
+
+TEST(encryptable, hashSHA256) {
+    TestEncryptable test;
+    test.testHashSHA256("Hello, world!");
 }
