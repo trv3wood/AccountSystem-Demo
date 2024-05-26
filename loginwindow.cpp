@@ -5,6 +5,7 @@
 #include <QWidget>
 // #include"sign_up.h"
 #include "Account/basicAccount.h"
+#include"forgotpwd.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -95,4 +96,12 @@ void MainWindow::login_click() {
 //     Sign_up*x=new Sign_up;//打开注册的窗口
 //     x->show();
 // }
+
+
+void MainWindow::on_fogotpw_clicked()
+{
+    this->hide();
+    next=new forgotpwd;
+    next->show();
+}
 

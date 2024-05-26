@@ -34,7 +34,8 @@ list(REMOVE_ITEM ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${ACC_SRC}
     account.h
-    basicAccount.h)
+    basicAccount.h
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${GMPXX_LIB} ${GMP_LIB})

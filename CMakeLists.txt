@@ -47,6 +47,7 @@ else()
         add_executable(BMSystem
             ${PROJECT_SOURCES}
             img.qrc
+            forgotpwd.h forgotpwd.cpp forgotpwd.ui
 
 
         )
