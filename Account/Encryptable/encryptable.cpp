@@ -1,11 +1,13 @@
 #include "Encryptable.h"
+#include <openssl/sha.h>
+using bms::Encryptable;
 
-unsigned char *bms::Encryptable::iv = (unsigned char *)"1145141918102345";
+unsigned char *Encryptable::iv = (unsigned char *)"1145141918102345";
 
-unsigned char *bms::Encryptable::key =
+unsigned char *Encryptable::key =
     (unsigned char *)"01145141919810114514191981011451";
 
-int bms::Encryptable::encryptImpl(unsigned char *plaintext, int plaintext_len,
+int Encryptable::encryptImpl(unsigned char *plaintext, int plaintext_len,
                                   unsigned char *key, unsigned char *iv,
                                   unsigned char *ciphertext) {
     EVP_CIPHER_CTX *ctx;
@@ -44,7 +46,7 @@ int bms::Encryptable::encryptImpl(unsigned char *plaintext, int plaintext_len,
     return ciphertext_len;
 }
 
-int bms::Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
+int Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
                                   unsigned char *key, unsigned char *iv,
                                   unsigned char *plaintext) {
     EVP_CIPHER_CTX *ctx;
@@ -82,4 +84,25 @@ int bms::Encryptable::decryptImpl(unsigned char *ciphertext, int ciphertext_len,
     EVP_CIPHER_CTX_free(ctx);
 
     return plaintext_len;
+}
+
+std::string Encryptable::hashSHA256(const std::string& str) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];  // 32 字节的哈希值
+    EVP_MD_CTX* mdctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(mdctx, EVP_sha256(), NULL);
+    EVP_DigestUpdate(mdctx, str.c_str(), str.length());
+    EVP_DigestFinal_ex(mdctx, hash, NULL);
+    EVP_MD_CTX_free(mdctx);
+    char hex[2 * SHA256_DIGEST_LENGTH +
+             1];  // 64 字节的十六进制字符串
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        sprintf(hex + 2 * i, "%02x", hash[i]);  // 两个字符表示一个字节
+    }
+    hex[2 * SHA256_DIGEST_LENGTH] = 0;  // 字符串结尾
+    return std::string(hex);
+}
+
+std::string Encryptable::hash(const std::string& name, int preferedLen) {
+    std::string result = hashSHA256(name);
+    return result.substr(0, preferedLen);
 }

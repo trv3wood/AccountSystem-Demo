@@ -3,10 +3,10 @@
 #include <gmpxx.h>
 
 #include <QString>
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "account.h"
 
@@ -42,10 +42,10 @@ void BasicAccount::deserialize(const std::string& data) {
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
              const std::string& location, const std::string& id)
-    : Account(name, passwd, location, id) {
+    : Account(name, hashSHA256(passwd), location, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = m_cardNumber + ".dat";
+    m_datafile = hash(m_id, 8) + ".dat";
 }
 
 void BasicAccount::store(const std::string& filename) {

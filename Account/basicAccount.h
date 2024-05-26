@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <string>
 #include "Encryptable/Encryptable.h"
 #include "Serializable/Serializable.h"
@@ -14,12 +13,12 @@ public:
 private:
     static const unsigned transferRestriction;
     std::string m_datafile;    // 数据文件名
+    void serialize(std::string& data) const override;
+    void deserialize(const std::string& data) override;
 
 public:
     std::string datafile() const { return m_datafile; }
     void transfer(Account* to, const mpf_class& amount) override;
-    void serialize(std::string& data) const override;
-    void deserialize(const std::string& data) override;
 
     void store(const std::string& filename);
     void load(const std::string& filename);

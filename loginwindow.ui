@@ -37,26 +37,27 @@
 QPushButton {
 	border-radius: 20px;
 	font: 10pt &quot;Microsoft YaHei UI&quot;;
-	color: black;
+	color:  black;
 }
 QPushButton:pressed {
 	background-color: rgba(255, 255, 255, 150);/* 更暗的背景色表示按下状态 */
     border-style: inset;       /* 按钮边框样式改为内嵌 */
 }
-QPushButton#login {
+QPushButton#loginBtn {
 	border-radius: 30px;
 	font: 14pt &quot;Microsoft YaHei UI&quot;;
 	color: white;
 }
-#login:pressed {
+#loginBtn:pressed {
 	background-color: rgba(122, 142, 149, 150);
+	color: white
 }
-#sign_up {
+#sign_up_btn {
 	border-radius: 30px;
 	font: 14pt &quot;Microsoft YaHei UI&quot;;
 	color: white;
 }
-#sign_up:pressed {
+#sign_up_btn:pressed {
 	background-color: rgba(106, 126, 133, 150);
 }
 QLineEdit {
@@ -125,7 +126,7 @@ QLineEdit {
       <number>16</number>
      </property>
      <property name="placeholderText">
-      <string>Username</string>
+      <string>ID</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="passwdInput">
@@ -172,7 +173,7 @@ QLineEdit {
       <string>forgot password?</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="login">
+    <widget class="QPushButton" name="loginBtn">
      <property name="geometry">
       <rect>
        <x>253</x>
@@ -188,7 +189,7 @@ QLineEdit {
       <string>Login</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="sign_up">
+    <widget class="QPushButton" name="sign_up_btn">
      <property name="geometry">
       <rect>
        <x>250</x>
@@ -205,16 +206,6 @@ QLineEdit {
      </property>
     </widget>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>790</width>
-     <height>21</height>
-    </rect>
-   </property>
   </widget>
  </widget>
  <resources>

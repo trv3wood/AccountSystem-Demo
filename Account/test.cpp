@@ -21,12 +21,12 @@ TEST(Account, Constructor) {
 TEST(basicAccount, Constructor) {
     bms::BasicAccount a("李田所", "1919810", "下北泽", "114514");
     a.store(a.datafile());
+    a.display();
     bms::BasicAccount b;
     b.load(a.datafile());
     EXPECT_EQ(a.id(), b.id());
     b.display();
     b.transfer(&a, 100);
-    a.display();
     // system("rm *.dat");
 }
 

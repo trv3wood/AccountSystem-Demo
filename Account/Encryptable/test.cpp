@@ -21,11 +21,11 @@ public:
         msg = std::string((char *)plaintext, plaintext_len);
         num.set_str(msg, 10);
     }
-    void testPreDecrypt() {
-        msg = preDecrypt(msg);
-    }
-    void testPreEncrypt() {
-        msg = preEncrypt(msg);
+
+    void testHashSHA256(std::string str) {
+        std::string hash = hashSHA256(str);
+        std::cout << "Original: " << str << "\n"
+                  << "Hash: " << hash << "\n";
     }
     std::string msg;
     mpf_class num;
@@ -47,19 +47,6 @@ void testNum(const mpf_class &num) {
     ASSERT_EQ(num.get_str(exp), decrypted.get_str(exp));
 }
 
-void testPreDc(const std::string& text) {
-    TestEncryptable test;
-    test.msg = text;
-    test.testPreEncrypt();
-    std::string encrypted = test.msg;
-    test.testPreDecrypt();
-    std::string decrypted = test.msg;
-    std::cout << "Original: " << text << ' ' << text.size() << "\n"
-              << "Encrypted: " << encrypted << ' ' << encrypted.size() << "\n"
-              << "Decrypted: " << decrypted << ' ' << decrypted.size() << "\n";
-    ASSERT_NE(encrypted, decrypted);
-    ASSERT_EQ(text, decrypted);
-}
 
 int main() {
     testing::InitGoogleTest();
@@ -75,12 +62,20 @@ TEST(encryptable, num) {
     testNum(num + 1);
 }
 
-TEST(encryptable, preDecrypt) {
-    testPreDc("Hello, world!");
-    testPreDc("1145141919810");
-    testPreDc("fhoeihfiehigg");
-    testPreDc("我是山里灵活的狗");
-    testPreDc("Man! What can I say?");
-    testPreDc("Manba out!");
-    testPreDc("帅！otto！帅！");
+TEST(encryptable, text) {
+    TestEncryptable test;
+    test.text = "Hello, world!";
+    test.encrypt();
+    std::string encrypted = test.msg;
+    test.decrypt();
+    QString decrypted = test.text;
+    std::cout << "Original: " << test.text.toStdString() << "\n"
+              << "Encrypted: " << encrypted << "\n"
+              << "Decrypted: " << decrypted.toStdString() << "\n";
+    ASSERT_EQ(test.text, decrypted);
+}
+
+TEST(encryptable, hashSHA256) {
+    TestEncryptable test;
+    test.testHashSHA256("Hello, world!");
 }

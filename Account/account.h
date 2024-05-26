@@ -3,13 +3,8 @@
 
 #include <gmpxx.h>
 
-#include <QtCore/QDateTime>
 #include <QtCore/QString>
-#include <random>
-#include <stdexcept>
 #include <string>
-#include <QtCore/QFile>
-#include "Serializable/Serializable.h"
 
 #define ACCOUNT_DEBUG 1
 #if ACCOUNT_DEBUG == 1
@@ -88,12 +83,6 @@ private:
     /// @note 完成，分配给 Sour_xuanzi
     static std::string generateCardNumber();
 protected:
-    /// @brief 计算密码哈希值
-    /// @param str 用户密码
-    /// @param lenMultiplier 哈希值长度倍数
-    /// @return 哈希值
-    /// @note 使用了SHA256 算法 completed by Z_MAHO
-    static std::string hashSHA256(const std::string& str, int lenMultiplier = 2);
 
     static std::string mpf_class2str(const mpf_class& number);
 };

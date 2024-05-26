@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(account LANGUAGES CXX)
+project(Account LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -24,13 +24,13 @@ if(NOT GMP_LIB)
     message(FATAL_ERROR "libgmp not found")
 endif()
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/Encryptable ${CMAKE_SOURCE_DIR}/Encryptable/build)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Encryptable ${CMAKE_CURRENT_SOURCE_DIR}/Encryptable/build)
 
 # 编译Account类的库
-set(COMPILE_TEST_UNIT ON)
+set(COMPILE_TEST_UNIT OFF)
 file(GLOB ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 # 测试单元不包含在库中
-list(REMOVE_ITEM ACC_SRC ${CMAKE_SOURCE_DIR}/test.cpp)
+list(REMOVE_ITEM ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${ACC_SRC})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core)
