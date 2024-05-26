@@ -72,7 +72,7 @@ void MainWindow::signup_click() {
     }
     // 检查密码强度
     if (!checkPasswdStrength(passwd)) {
-        showErrWindow("密码强度不足");
+        showErrWindow("密码强度不足，密码需包含大小写字母和数字，且必须8位及以上！");
         return;
     }
     bms::BasicAccount account("name", passwd.toStdString(), "nowhere", phone .toStdString());
@@ -95,4 +95,14 @@ void MainWindow::login_click() {
 //     Sign_up*x=new Sign_up;//打开注册的窗口
 //     x->show();
 // }
+
+
+void MainWindow::on_clear_button_clicked()
+{
+    ui->nameEdit->clear();
+    ui->idEdit->clear();
+    ui->phoneEdit->clear();
+    ui->passwdEdit->clear();
+    ui->passwdConfirm->clear();
+}
 
