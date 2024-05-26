@@ -19,6 +19,9 @@ set(PROJECT_SOURCES
         loginwindow.cpp
         loginwindow.h
         loginwindow.ui
+        sign_up.cpp
+        sign_up.h
+        sign_up.ui
         ${TS_FILES}
 )
 
@@ -44,8 +47,6 @@ else()
         add_executable(BMSystem
             ${PROJECT_SOURCES}
             img.qrc
-            dashboard.ui
-            dashboard.h
 
 
         )

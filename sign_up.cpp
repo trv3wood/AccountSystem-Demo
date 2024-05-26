@@ -1,7 +1,7 @@
 #include "sign_up.h"
 #include "ui_sign_up.h"
-#include"loginwindow.h"
-#include"accountonly.h"//进入登录之后的主界面那个的头函数
+#include "loginwindow.h"
+// #include "accountonly.h"//进入登录之后的主界面那个的头函数
 
 Sign_up::Sign_up(QWidget *parent) :
     QWidget(parent),
@@ -63,8 +63,9 @@ void Sign_up::on_sureButton_clicked()
             file.close();
 
             this->hide();
-            accountonly*a=new accountonly;
-            a->show();
+            // accountonly*a=new accountonly;
+            // a->show();
+            show();
         }
     }
 }
