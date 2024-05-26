@@ -5,6 +5,7 @@
 #include <QResizeEvent>
 #include <QDebug>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginWindow; }
 QT_END_NAMESPACE
@@ -18,6 +19,9 @@ public:
     ~MainWindow();
 public slots:
     void signup();
+
+private slots:
+    void on_sign_up_clicked();
 
 private:
     Ui::LoginWindow *ui;

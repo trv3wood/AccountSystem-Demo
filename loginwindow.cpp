@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QLabel>
 
+#include"sign_up.h"
 #include "Account/basicAccount.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -62,3 +63,11 @@ void MainWindow::signup() {
     bms::BasicAccount account("name", passwd.toStdString(), "nowhere", id.toStdString());
     account.store(account.datafile());
 }
+
+void MainWindow::on_sign_up_clicked()
+{
+    this->hide();
+    Sign_up*x=new Sign_up;//打开注册的窗口
+    x->show();
+}
+
