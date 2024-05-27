@@ -45,7 +45,7 @@ BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
     : Account(name, hashSHA256(passwd), phoneNum, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = hash(m_id, 8) + ".dat";
+    m_datafile = hash(m_phonenumber, 8) + ".dat";
 }
 
 void BasicAccount::store(const std::string& filename) {

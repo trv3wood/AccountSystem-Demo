@@ -158,13 +158,13 @@ QLineEdit {
       <string>注册</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>240</x>
        <y>240</y>
        <width>341</width>
-       <height>321</height>
+       <height>328</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">

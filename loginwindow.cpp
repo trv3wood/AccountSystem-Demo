@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->idEdit->hide();
     ui->nameEdit->hide();
     ui->passwdConfirm->hide();
+
     QObject::connect(ui->sign_up_btn, SIGNAL(clicked()), this, SLOT(signup_click()));
     QObject::connect(ui->loginBtn, SIGNAL(clicked()), this, SLOT(login_click()));
 }
@@ -86,6 +87,50 @@ void MainWindow::login_click() {
         ui->passwdConfirm->hide();
         return;
     }
+    // 获取用户输入的账号和密码
+    QString username = ui->phoneEdit->text();
+    QString password = ui->passwdEdit->text();
+
+    bms::BasicAccount *user=new bms::BasicAccount;
+    // 拼接用户信息文件的路径
+    std::string filename = user->datafile();
+
+    //设置弹窗判断登陆状况
+    QString label;
+
+    // 检查文件是否存在
+    QFile file(filename.c_str());
+    if (file.exists()) {
+        // 文件存在，尝试读取用户信息
+        if (file.open(QIODevice::ReadOnly)) {
+            QTextStream into(&file);
+            QString storedUsername = into.readLine().trimmed(); // 读取文件中的用户名
+            QString storedPassword = into.readLine().trimmed(); // 读取文件中的密码
+            file.close();
+
+            // 验证账号密码是否匹配
+            if (username == storedUsername && password == storedPassword) {
+                 label="登陆成功！";
+
+//                // 登录成功，进入主界面
+//                this->hide();
+//                MainWindow *mainWindow = new MainWindow;
+//                mainWindow->show();
+            }
+            else {
+                // 账号或密码不匹配，登录失败
+                label="账号或密码错误！";
+            }
+        }
+        else {
+            // 无法打开文件，登录失败
+            label="无法打开用户信息文件！";
+        }
+    } else {
+        // 文件不存在，登录失败
+        label="账号或密码错误！";
+    }
+    QMessageBox::information(this,"Title",label);
     // TODO 完成登录逻辑
 }
 
