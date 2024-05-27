@@ -1,15 +1,27 @@
 #include <string>
 
 #include "Encryptable/Encryptable.h"
-#include "Serializable/Serializable.h"
+#include "Serializable.h"
 #include "account.h"
 
 namespace bms {
 class BasicAccount : public Account, public Serializable, public Encryptable {
 public:
     BasicAccount() = default;
+    /// @brief 构造函数
+    /// @param name 用户名
+    /// @param passwd 密码
+    /// @param phoneNum 手机号
+    /// @param id 身份证号
+    /// @note 应当用于注册新账户
     BasicAccount(const std::string& name, const std::string& passwd,
-                 const std::string& location, const std::string& id);
+                 const std::string& phoneNum, const std::string& id);
+    
+    /// @brief 构造函数
+    /// @param phoneNum 手机号
+    /// @param passwd 密码
+    /// @note 应当用于登录已有账户
+    BasicAccount(const std::string& phoneNum, const std::string& passwd);
 
 private:
     static const unsigned transferRestriction;
@@ -27,6 +39,7 @@ private:
 
 public:
     /// @brief 获取数据文件名
+    /// @note 命名格式为：手机号的hash值取前8位+后缀".dat"
     std::string datafile() const { return m_datafile; }
     /// @brief 存款
     /// @param amount 存款金额

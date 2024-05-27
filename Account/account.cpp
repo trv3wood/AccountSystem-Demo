@@ -70,6 +70,15 @@ Account::Account(const std::string& name, const std::string& passwd,
       m_balance("0.0"),
       m_interestRate("0.01") {}
 
+Account::Account(const std::string& phoneNum, const std::string& passwd)
+    : m_name("user"),
+      m_passwd(passwd),
+      m_phonenumber(phoneNum),
+      m_id("0"),
+      m_cardNumber("00000000"),
+      m_balance("0.0"),
+      m_interestRate("0.01") {}
+
 std::string Account::generateCardNumber() {
     std::string cardNumber;
     const int len = 16;

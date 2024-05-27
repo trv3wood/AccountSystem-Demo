@@ -42,6 +42,12 @@ public:
     Account(const std::string& name, const std::string& passwd,
             const std::string& phoneNum, const std::string& id);
 
+    /// @brief 构造函数
+    /// @param phoneNum 用户手机号
+    /// @param passwd 用户密码
+    /// @note 应当用于登录已有账户
+    Account(const std::string& phoneNum, const std::string& passwd);
+
     QString name() const;
     QString passwd() const;
     QString phoneNum() const;

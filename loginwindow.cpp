@@ -75,7 +75,7 @@ void MainWindow::signup_click() {
         showErrWindow("密码强度不足，密码需包含大小写字母和数字，且必须8位及以上！");
         return;
     }
-    bms::BasicAccount account("name", passwd.toStdString(), "nowhere", phone .toStdString());
+    bms::BasicAccount account(name.toStdString(), passwd.toStdString(), phone.toStdString(), id.toStdString());
     account.store(account.datafile());
 }
 
