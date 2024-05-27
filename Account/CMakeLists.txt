@@ -7,11 +7,10 @@ set(CMAKE_BUILD_TYPE Debug)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
-
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -pedantic")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(OpenSSL REQUIRED)
-find_package(GTest REQUIRED)
 
 # 查找libgmpxx
 find_library(GMPXX_LIB gmpxx REQUIRED)
@@ -42,6 +41,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE encryptable)
 
 if(COMPILE_TEST_UNIT)
     # 编译测试单元
+    find_package(GTest REQUIRED)
     add_executable(test_unit test.cpp)
     target_link_libraries(test_unit PRIVATE ${PROJECT_NAME})
     target_link_libraries(test_unit PRIVATE GTest::GTest GTest::Main)

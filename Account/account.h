@@ -36,11 +36,17 @@ public:
     /// @brief 构造函数
     /// @param name 用户姓名
     /// @param passwd 用户密码
-    /// @param location 用户常住地址
+    /// @param phoneNum 用户手机号
     /// @note 生成卡号和密码哈希值，完成，分配给 Sour_xuanzi
     /// @note 考虑加密用户信息
     Account(const std::string& name, const std::string& passwd,
-            const std::string& location, const std::string& id);
+            const std::string& phoneNum, const std::string& id);
+
+    /// @brief 构造函数
+    /// @param phoneNum 用户手机号
+    /// @param passwd 用户密码
+    /// @note 应当用于登录已有账户
+    Account(const std::string& phoneNum, const std::string& passwd);
 
     QString name() const;
     QString passwd() const;
@@ -82,8 +88,5 @@ private:
     /// @return 卡号 16 位
     /// @note 完成，分配给 Sour_xuanzi
     static std::string generateCardNumber();
-protected:
-
-    static std::string mpf_class2str(const mpf_class& number);
 };
 #endif

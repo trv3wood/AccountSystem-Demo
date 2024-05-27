@@ -1,4 +1,3 @@
-#include "account.h"
 #include "basicAccount.h"
 #include <gtest/gtest.h>
 #include <cstdlib>
@@ -30,7 +29,12 @@ TEST(basicAccount, Constructor) {
     // system("rm *.dat");
 }
 
-
+TEST(basicAccount, load) {
+    bms::BasicAccount user("18823231622", "@Ricky4881");
+    EXPECT_EQ(user.datafile(), "aa9656f7.dat");
+    user.load(user.datafile());
+    user.display();
+}
 /*
  * 请利用 Google Test 完成 Account 类的测试
  * 自行添加测试

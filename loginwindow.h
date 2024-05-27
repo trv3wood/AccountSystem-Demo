@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QResizeEvent>
 #include <QDebug>
+#include "Account/account.h"
+using bms::Account;
 
 
 QT_BEGIN_NAMESPACE
@@ -18,11 +20,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private slots:
+    /// @brief 点击注册按钮
+    /// @details 如果输入框隐藏，则显示输入框；否则进行注册操作
     void signup_click();
-    void login_click();
 
-// private slots:
-//     void on_sign_up_clicked();
+    /// @brief 点击登录按钮
+    /// @details 进行登录操作
+    void login_click();
+    
+    /// @brief 点击清空按钮
+    /// @details 清空所有输入框
+    void on_clear_button_clicked();
 
 private:
     Ui::LoginWindow *ui;
