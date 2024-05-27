@@ -23,10 +23,12 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
 
 void BasicAccount::serialize(std::string& data) const {
     data.clear();
+    // 将数据序列化为字符串，以便存储，用'\n'分隔
     data += m_name + '\n' + m_passwd + '\n' + m_phonenumber + '\n' + m_id + '\n' + m_cardNumber + '\n' + mpf_class2str(m_balance) + '\n' + mpf_class2str(m_interestRate) + '\n';
 }
 
 void BasicAccount::deserialize(const std::string& data) {
+    // 解析用'\n'分隔的字符串，恢复数据
     std::istringstream iss(data);
     std::getline(iss, m_name);
     std::getline(iss, m_passwd);
@@ -45,7 +47,7 @@ BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
     : Account(name, hashSHA256(passwd), phoneNum, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = hash(m_id, 8) + ".dat";
+    m_datafile = hash(m_phonenumber, 8) + ".dat";
 }
 
 void BasicAccount::store(const std::string& filename) {

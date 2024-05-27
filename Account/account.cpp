@@ -61,10 +61,10 @@ void Account::transfer(Account* to, const mpf_class& amount) {
 
 // To: Sour_xuanzi
 Account::Account(const std::string& name, const std::string& passwd,
-                 const std::string& location, const std::string& id)
+                 const std::string& phoneNum, const std::string& id)
     : m_name(name),
       m_passwd(passwd),
-      m_phonenumber(location),
+      m_phonenumber(phoneNum),
       m_id(id),
       m_cardNumber(generateCardNumber()),
       m_balance("0.0"),
