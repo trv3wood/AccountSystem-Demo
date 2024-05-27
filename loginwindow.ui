@@ -174,7 +174,7 @@ QLineEdit {
        <x>240</x>
        <y>240</y>
        <width>341</width>
-       <height>321</height>
+       <height>328</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
