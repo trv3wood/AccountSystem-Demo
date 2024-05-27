@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <random>
+#include <QtWidgets/QMessageBox>
 
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
@@ -52,10 +53,7 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         qDebug() << "Transfer successful!";
 #endif
     } else {
-        std::string msg = "Transfer failed: amount(" + mpf_class2str(amount) +
-                      ") is more than balance(" + mpf_class2str(m_balance) +
-                      ")";
-        std::cerr << msg << '\n';
+        QMessageBox::information(nullptr, "Title", "余额不足");
     }
 }
 
@@ -129,21 +127,3 @@ void Account::display() const {
 }
 
 void Account::deposit(const mpf_class& amount) { m_balance += amount; }
-
-std::string Account::mpf_class2str(const mpf_class& number) {
-    if (number == 0) {
-        return "0";
-    }
-    mp_exp_t exp;
-    std::string s = number.get_str(exp);
-    if (exp < 0) {
-        s = "0." + std::string(-exp - 1, '0') + s;
-    } else if (s.size() - 1 > exp && exp > 0) {
-        s.insert(exp, ".");
-    } else if (exp == 0) {
-        s.insert(0, "0.");
-    } else {
-        s += std::string(exp - s.size() + 1, '0');
-    }
-    return s;
-}

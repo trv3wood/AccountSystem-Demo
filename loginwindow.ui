@@ -68,7 +68,7 @@ QLineEdit {
 }
 #clear_button{
 	font: 11pt &quot;Microsoft YaHei UI&quot;;
-	test_decoration: underline;
+	text-decoration: underline;
 	letter-spacing:4;
 
 }</string>

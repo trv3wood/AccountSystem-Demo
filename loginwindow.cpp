@@ -3,6 +3,7 @@
 #include <QGraphicsEffect>
 #include <QMessageBox>
 #include <QWidget>
+#include <fstream>
 // #include"sign_up.h"
 #include "Account/basicAccount.h"
 
@@ -38,12 +39,6 @@ static bool checkPasswdStrength(const QString &passwd) {
     return false;
 }
 
-static void showErrWindow(const QString& errMsg) {
-    QMessageBox* err = new QMessageBox;
-    err->setText(errMsg);
-    err->resize(400, 300);
-    err->show();
-}
 void MainWindow::signup_click() {
     if (ui->idEdit->isHidden()) {
         ui->idEdit->show();
@@ -56,31 +51,33 @@ void MainWindow::signup_click() {
     QString id = ui->idEdit->text();
     QString name = ui->nameEdit->text();
     if (phone.isEmpty()) {
-        showErrWindow("手机号不能为空");
+        QMessageBox::information(this,"Title","手机号不能为空");
         return;
     }
     if (id.isEmpty()) {
-        showErrWindow("身份证号不能为空");
+        QMessageBox::information(this,"Title","身份证号不能为空");
         return;
     }
     if (name.isEmpty()) {
-        showErrWindow("姓名不能为空");
+        QMessageBox::information(this,"Title","姓名不能为空");
         return;
     }
     if (passwd != ui->passwdConfirm->text()) {
-        showErrWindow("两次输入密码不一致");
+        QMessageBox::information(this,"Title","两次密码输入不一致");
         return;
     }
     // 检查密码强度
     if (!checkPasswdStrength(passwd)) {
-        showErrWindow("密码强度不足，密码需包含大小写字母和数字，且必须8位及以上！");
+        QMessageBox::information(this,"Title","密码强度不足：至少需要8位，包含大小写字母和数字");
         return;
     }
     bms::BasicAccount account(name.toStdString(), passwd.toStdString(), phone.toStdString(), id.toStdString());
     account.store(account.datafile());
+        QMessageBox::information(this,"Title","注册成功！");
 }
 
 void MainWindow::login_click() {
+    // 如果用于注册的输入框显示，则隐藏
     if (ui->idEdit->isVisible()) {
         ui->idEdit->hide();
         ui->nameEdit->hide();
@@ -88,59 +85,27 @@ void MainWindow::login_click() {
         return;
     }
     // 获取用户输入的账号和密码
-    QString username = ui->phoneEdit->text();
+    QString phone = ui->phoneEdit->text();
     QString password = ui->passwdEdit->text();
 
-    bms::BasicAccount *user=new bms::BasicAccount;
+    bms::BasicAccount user(phone.toStdString(), password.toStdString());
     // 拼接用户信息文件的路径
-    std::string filename = user->datafile();
+    std::string filename = user.datafile();
 
     //设置弹窗判断登陆状况
-    QString label;
+    QString label = "用户" + phone + "登录成功！";
 
-    // 检查文件是否存在
-    QFile file(filename.c_str());
-    if (file.exists()) {
-        // 文件存在，尝试读取用户信息
-        if (file.open(QIODevice::ReadOnly)) {
-            QTextStream into(&file);
-            QString storedUsername = into.readLine().trimmed(); // 读取文件中的用户名
-            QString storedPassword = into.readLine().trimmed(); // 读取文件中的密码
-            file.close();
-
-            // 验证账号密码是否匹配
-            if (username == storedUsername && password == storedPassword) {
-                 label="登陆成功！";
-
-//                // 登录成功，进入主界面
-//                this->hide();
-//                MainWindow *mainWindow = new MainWindow;
-//                mainWindow->show();
-            }
-            else {
-                // 账号或密码不匹配，登录失败
-                label="账号或密码错误！";
-            }
-        }
-        else {
-            // 无法打开文件，登录失败
-            label="无法打开用户信息文件！";
-        }
+    std::ifstream file(filename);
+    if (file.good()) {
+        // 文件存在，登录成功
+        user.load(filename);
     } else {
         // 文件不存在，登录失败
         label="账号或密码错误！";
     }
     QMessageBox::information(this,"Title",label);
-    // TODO 完成登录逻辑
+
 }
-
-// void MainWindow::sign_up_clicked()
-// {
-//     this->hide();
-//     Sign_up*x=new Sign_up;//打开注册的窗口
-//     x->show();
-// }
-
 
 void MainWindow::on_clear_button_clicked()
 {

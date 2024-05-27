@@ -88,8 +88,5 @@ private:
     /// @return 卡号 16 位
     /// @note 完成，分配给 Sour_xuanzi
     static std::string generateCardNumber();
-protected:
-
-    static std::string mpf_class2str(const mpf_class& number);
 };
 #endif
