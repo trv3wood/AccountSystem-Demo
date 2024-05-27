@@ -1,13 +1,12 @@
 #include "account.h"
 
 #include <gmpxx.h>
-#include <openssl/sha.h>
 
-#include <QFile>
 #include <QString>
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <random>
 
 #if ACCOUNT_DEBUG == 1
 #include <cassert>
@@ -19,7 +18,7 @@ QString Account::name() const { return QString::fromStdString(m_name); }
 
 QString Account::passwd() const { return QString::fromStdString(m_passwd); }
 
-QString Account::location() const { return QString::fromStdString(m_location); }
+QString Account::phoneNum() const { return QString::fromStdString(m_phonenumber); }
 
 QString Account::id() const { return QString::fromStdString(m_id); }
 
@@ -34,11 +33,11 @@ QString Account::cardNumber() const {
 void Account::setName(const std::string& name) { m_name = name; }
 
 void Account::setPasswd(const std::string& passwd) {
-    m_passwd = hashSHA256(passwd);
+    m_passwd = passwd;
 }
 
 void Account::setLocation(const std::string& location) {
-    m_location = location;
+    m_phonenumber = location;
 }
 
 void Account::setId(const std::string& id) { m_id = id; }
@@ -60,27 +59,12 @@ void Account::transfer(Account* to, const mpf_class& amount) {
     }
 }
 
-std::string Account::hashSHA256(const std::string& str, int lenMultiplier) {
-    unsigned char hash[SHA256_DIGEST_LENGTH];  // 32 字节的哈希值
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, str.c_str(), str.length());
-    SHA256_Final(hash, &sha256);
-    char hex[lenMultiplier * SHA256_DIGEST_LENGTH +
-             1];  // 64 字节的十六进制字符串
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-        sprintf(hex + 2 * i, "%02x", hash[i]);  // 两个字符表示一个字节
-    }
-    hex[2 * SHA256_DIGEST_LENGTH] = 0;  // 字符串结尾
-    return std::string(hex);
-}
-
 // To: Sour_xuanzi
 Account::Account(const std::string& name, const std::string& passwd,
                  const std::string& location, const std::string& id)
     : m_name(name),
-      m_passwd(hashSHA256(passwd)),
-      m_location(location),
+      m_passwd(passwd),
+      m_phonenumber(location),
       m_id(id),
       m_cardNumber(generateCardNumber()),
       m_balance("0.0"),
@@ -130,7 +114,7 @@ void Account::display() const {
               << "ID: " << m_id << '\n'
               << "Password: " << m_passwd << '\n'
               << "Card Number: " << m_cardNumber << '\n'
-              << "Location: " << m_location << '\n'
+              << "Location: " << m_phonenumber << '\n'
               << "Balance: " << m_balance << '\n'
               << "Interest Rate: " << m_interestRate << "\n\n";
 }

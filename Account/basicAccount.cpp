@@ -3,10 +3,10 @@
 #include <gmpxx.h>
 
 #include <QString>
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "account.h"
 
@@ -23,14 +23,14 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
 
 void BasicAccount::serialize(std::string& data) const {
     data.clear();
-    data += m_name + '\n' + m_passwd + '\n' + m_location + '\n' + m_id + '\n' + m_cardNumber + '\n' + mpf_class2str(m_balance) + '\n' + mpf_class2str(m_interestRate) + '\n';
+    data += m_name + '\n' + m_passwd + '\n' + m_phonenumber + '\n' + m_id + '\n' + m_cardNumber + '\n' + mpf_class2str(m_balance) + '\n' + mpf_class2str(m_interestRate) + '\n';
 }
 
 void BasicAccount::deserialize(const std::string& data) {
     std::istringstream iss(data);
     std::getline(iss, m_name);
     std::getline(iss, m_passwd);
-    std::getline(iss, m_location);
+    std::getline(iss, m_phonenumber);
     std::getline(iss, m_id);
     std::getline(iss, m_cardNumber);
     std::string balance, interestRate;
@@ -41,11 +41,11 @@ void BasicAccount::deserialize(const std::string& data) {
 }
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
-             const std::string& location, const std::string& id)
-    : Account(name, passwd, location, id) {
+             const std::string& phoneNum, const std::string& id)
+    : Account(name, hashSHA256(passwd), phoneNum, id) {
     m_balance = 0;
     m_interestRate = defualtInterestRate;
-    m_datafile = m_cardNumber + ".dat";
+    m_datafile = hash(m_id, 8) + ".dat";
 }
 
 void BasicAccount::store(const std::string& filename) {

@@ -42,6 +42,19 @@ protected:
     static int decryptImpl(unsigned char *ciphertext, int ciphertext_len,
                     unsigned char *key, unsigned char *iv,
                     unsigned char *plaintext);
+
+    /// @brief 计算密码哈希值
+    /// @param str 用户密码
+    /// @param lenMultiplier 哈希值长度倍数
+    /// @return 哈希值
+    /// @note 使用了SHA256 算法 completed by Z_MAHO
+    static std::string hashSHA256(const std::string& str);
+
+    /// @brief 计算用户名的哈希值，用于生成数据文件名
+    /// @param str 用户名
+    /// @param preferedLen 哈希值长度
+    /// @return 指定长度的哈希值
+    static std::string hash(const std::string& name, int preferedLen = 8);
 private:
     /// @brief 处理错误
     static void handleErrors(void) {
@@ -53,7 +66,7 @@ private:
     void initOpenSSL() {
         ERR_load_crypto_strings();
         OpenSSL_add_all_algorithms();
-        OPENSSL_config(NULL);
+        OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CONFIG, NULL);
     }
 
     /// @brief 清理 OpenSSL
