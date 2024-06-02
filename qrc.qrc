@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icon.webp</file>
+        <file>resources/background.jpg</file>
+        <file>dashboard.qml</file>
+        <file>CustomButton.qml</file>
+    </qresource>
+    <qresource lang="qml" prefix="/qml"/>
+</RCC>

@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QWidget>
 #include <fstream>
+#include <QtQuick/QQuickView>
+#include <QQmlApplicationEngine>
 // #include"sign_up.h"
 #include "Account/basicAccount.h"
 
@@ -92,18 +94,29 @@ void MainWindow::login_click() {
     // 拼接用户信息文件的路径
     std::string filename = user.datafile();
 
-    //设置弹窗判断登陆状况
-    QString label = "用户" + phone + "登录成功！";
+    /*
+     * 以下代码用于测试登录功能
+        // // qml引擎
+        // QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+        // // 加载qml文件
+        // engine->load(QUrl(QStringLiteral("qrc:/dashboard.qml")));
+        // // 获取qml窗口
+    */
 
     std::ifstream file(filename);
+
     if (file.good()) {
         // 文件存在，登录成功
         user.load(filename);
+        // 创建独立的qml窗口
+        // qml引擎
+        QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+        // 加载qml文件
+        engine->load(QUrl(QStringLiteral("qrc:/dashboard.qml")));
     } else {
         // 文件不存在，登录失败
-        label="账号或密码错误！";
+        QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
     }
-    QMessageBox::information(this,"Title",label);
 
 }
 

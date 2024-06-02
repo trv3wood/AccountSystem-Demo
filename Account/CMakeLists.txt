@@ -10,18 +10,8 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -pedantic")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(OpenSSL REQUIRED)
-
-# 查找libgmpxx
-find_library(GMPXX_LIB gmpxx REQUIRED)
-if(NOT GMPXX_LIB)
-    message(FATAL_ERROR "libgmpxx not found")
-endif()
-# 查找libgmp
-find_library(GMP_LIB gmp REQUIRED)
-if(NOT GMP_LIB)
-    message(FATAL_ERROR "libgmp not found")
-endif()
+find_library(GMP gmp REQUIRED)
+find_library(GMPXX gmpxx REQUIRED)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Encryptable ${CMAKE_CURRENT_SOURCE_DIR}/Encryptable/build)
 
@@ -35,8 +25,7 @@ add_library(${PROJECT_NAME} STATIC ${ACC_SRC}
     account.h
     basicAccount.h)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${GMPXX_LIB} ${GMP_LIB})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${GMP} ${GMPXX})
 target_link_libraries(${PROJECT_NAME} PRIVATE encryptable)
 
 if(COMPILE_TEST_UNIT)
