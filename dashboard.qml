@@ -18,14 +18,14 @@ ApplicationWindow {
         // Left Sidebar
         Rectangle {
             id: leftsidebar
-            width: root.width * 0.2
+            width: 400
             Layout.fillHeight: true
-            color: "dodgerblue"
+            color: "#738e95"
 
             Column {
                 spacing: 30
                 y: parent.y + 30
-                Layout.fillWidth: true
+                Layout.fillWidth: truedd
 
                 CustomButton {
                     buttonText: "存取"
@@ -43,23 +43,8 @@ ApplicationWindow {
                     buttonText: "账户"
                 }
             }
-            Rectangle {
-                width: 100
-                height: 30
-                visible: true
-                color: "dodgerblue"
-                Button {
-                    flat: true
-                    width: leftsidebar.width
-                    anchors.fill: parent
-                }
-                Text {
-                    id: t
-                    text: qsTr("登出")
-                    color: "white"
-                    font.family: "Microsoft Yahei"
-                    anchors.centerIn: parent
-                }
+            CustomButton {
+                buttonText: "登出"
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
@@ -72,24 +57,24 @@ ApplicationWindow {
             color: "ghostwhite"
             id: mainArea
 
-            Column {
-
+            Row {
+                anchors.fill: parent
                 spacing: 30
                 anchors.centerIn: parent
-
-                Text {
-                    text: "账户名: 用户123\n"
-                    font.pointSize: 12
+                CustomLabel {
+                    id: label1
+                    labelText: "存款"
+                    width: mainArea.width / 2
+                    height: mainArea.height / 1.5
                 }
 
-                Text {
-                    text: "邮箱"
-                    font.pointSize: 12
+                CustomLabel {
+                    id: label2
+                    labelText: "取款"
+                    width: mainArea.width / 2
+                    height: mainArea.height / 1.5
                 }
-                Text {
-                    text: "地址"
-                    font.pointSize: 12
-                }
+
             }
         }
     }

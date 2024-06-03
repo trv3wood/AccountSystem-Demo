@@ -2,8 +2,11 @@
     <qresource prefix="/">
         <file>resources/icon.webp</file>
         <file>resources/background.jpg</file>
+    </qresource>
+    <qresource lang="qml" prefix="/qml">
+        <file>CustomLabel.qml</file>
         <file>dashboard.qml</file>
         <file>CustomButton.qml</file>
+        <file>LineEdit.qml</file>
     </qresource>
-    <qresource lang="qml" prefix="/qml"/>
 </RCC>

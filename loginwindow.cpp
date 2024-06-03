@@ -96,27 +96,27 @@ void MainWindow::login_click() {
 
     /*
      * 以下代码用于测试登录功能
-        // // qml引擎
-        // QQmlApplicationEngine* engine = new QQmlApplicationEngine;
-        // // 加载qml文件
-        // engine->load(QUrl(QStringLiteral("qrc:/dashboard.qml")));
-        // // 获取qml窗口
     */
-
-    std::ifstream file(filename);
-
-    if (file.good()) {
-        // 文件存在，登录成功
-        user.load(filename);
-        // 创建独立的qml窗口
         // qml引擎
         QQmlApplicationEngine* engine = new QQmlApplicationEngine;
         // 加载qml文件
-        engine->load(QUrl(QStringLiteral("qrc:/dashboard.qml")));
-    } else {
-        // 文件不存在，登录失败
-        QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
-    }
+        engine->load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
+        // 获取qml窗口
+
+    // std::ifstream file(filename);
+
+    // if (file.good()) {
+    //     // 文件存在，登录成功
+    //     user.load(filename);
+    //     // 创建独立的qml窗口
+    //     // qml引擎
+    //     QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+    //     // 加载qml文件
+    //     engine->load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
+    // } else {
+    //     // 文件不存在，登录失败
+    //     QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
+    // }
 
 }
 
