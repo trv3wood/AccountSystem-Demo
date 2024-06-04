@@ -7,9 +7,11 @@
 #include <QtQuick/QQuickView>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QObject>
 #include "Account/Encryptable/Encryptable.h"
 #include "Account/basicAccount.h"
 using bms::BasicAccount;
+#include"forgotpwd.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -136,5 +138,13 @@ void MainWindow::on_clear_button_clicked()
     ui->phoneEdit->clear();
     ui->passwdEdit->clear();
     ui->passwdConfirm->clear();
+}
+
+
+void MainWindow::on_fogotpw_clicked()
+{
+    this->hide();
+    next=new forgotpwd;
+    next->show();
 }
 
