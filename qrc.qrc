@@ -8,5 +8,6 @@
         <file>dashboard.qml</file>
         <file>CustomButton.qml</file>
         <file>LineEdit.qml</file>
+        <file>Deposit.qml</file>
     </qresource>
 </RCC>

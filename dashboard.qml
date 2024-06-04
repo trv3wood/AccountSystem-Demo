@@ -29,53 +29,46 @@ ApplicationWindow {
 
                 CustomButton {
                     buttonText: "存取"
+                    onClicked: contentLoader.sourceComponent = listModel.get(0).source
                 }
 
                 CustomButton {
                     buttonText: "转账"
+                    onClicked: contentLoader.sourceComponent = listModel.get(1).source
                 }
 
                 CustomButton {
                     buttonText: "收支"
+                    onClicked: contentLoader.sourceComponent = listModel.get(2).source
                 }
 
                 CustomButton {
                     buttonText: "账户"
+                    onClicked: contentLoader.sourceComponent = listModel.get(3).source
                 }
             }
             CustomButton {
                 buttonText: "登出"
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
+                onClicked: {
+                    root.close()
+                }
             }
         }
 
         // Main content area
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            color: "ghostwhite"
-            id: mainArea
+        listModel: ListModel {
+            ListElement { name: "存取"; source: "Deposit.qml" }
+            ListElement { name: "转账"; source: "Transfer.qml" }
+            ListElement { name: "收支"; source: "IncomeExpense.qml" }
+            ListElement { name: "账户"; source: "Account.qml" }
+        }
 
-            Row {
-                anchors.fill: parent
-                spacing: 30
-                anchors.centerIn: parent
-                CustomLabel {
-                    id: label1
-                    labelText: "存款"
-                    width: mainArea.width / 2
-                    height: mainArea.height / 1.5
-                }
-
-                CustomLabel {
-                    id: label2
-                    labelText: "取款"
-                    width: mainArea.width / 2
-                    height: mainArea.height / 1.5
-                }
-
-            }
+        Loader {
+            id: contentLoader
+            sourceComponent: ListElement.source
+            anchors.fill: parent
         }
     }
 }
