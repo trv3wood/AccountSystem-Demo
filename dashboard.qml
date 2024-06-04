@@ -25,26 +25,33 @@ ApplicationWindow {
             Column {
                 spacing: 30
                 y: parent.y + 30
-                Layout.fillWidth: truedd
+                Layout.fillWidth: true
+
+                CustomButton {
+                    buttonText: "欢迎 " + user.phoneNum
+                    background: Rectangle {
+                        color: "#738e95"
+                    }
+                }
 
                 CustomButton {
                     buttonText: "存取"
-                    onClicked: contentLoader.sourceComponent = listModel.get(0).source
+                    onClicked: contentLoader.source = listModel.get(0).source
                 }
 
                 CustomButton {
                     buttonText: "转账"
-                    onClicked: contentLoader.sourceComponent = listModel.get(1).source
+                    onClicked: contentLoader.source = listModel.get(1).source
                 }
 
                 CustomButton {
                     buttonText: "收支"
-                    onClicked: contentLoader.sourceComponent = listModel.get(2).source
+                    onClicked: contentLoader.source = listModel.get(2).source
                 }
 
                 CustomButton {
                     buttonText: "账户"
-                    onClicked: contentLoader.sourceComponent = listModel.get(3).source
+                    onClicked: contentLoader.source = listModel.get(3).source
                 }
             }
             CustomButton {
@@ -58,17 +65,18 @@ ApplicationWindow {
         }
 
         // Main content area
-        listModel: ListModel {
-            ListElement { name: "存取"; source: "Deposit.qml" }
-            ListElement { name: "转账"; source: "Transfer.qml" }
-            ListElement { name: "收支"; source: "IncomeExpense.qml" }
-            ListElement { name: "账户"; source: "Account.qml" }
+        ListModel {
+            id: listModel
+            ListElement { name: "存取"; source: "qrc:/qml/Deposit.qml" }
+            ListElement { name: "转账"; source: "qrc:/qml/Transfer.qml" }
+            ListElement { name: "收支"; source: "qrc:/qml/IncomeExpense.qml" }
+            ListElement { name: "账户"; source: "qrc:/qml/Account.qml" }
         }
 
         Loader {
             id: contentLoader
-            sourceComponent: ListElement.source
-            anchors.fill: parent
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
     }
 }

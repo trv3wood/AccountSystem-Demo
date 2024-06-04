@@ -9,5 +9,9 @@
         <file>CustomButton.qml</file>
         <file>LineEdit.qml</file>
         <file>Deposit.qml</file>
+        <file>Transfer.qml</file>
+        <file>IncomeExpense.qml</file>
+        <file>Account.qml</file>
+        <file>CustomComboBox.qml</file>
     </qresource>
 </RCC>

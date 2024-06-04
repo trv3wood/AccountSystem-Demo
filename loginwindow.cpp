@@ -6,8 +6,9 @@
 #include <fstream>
 #include <QtQuick/QQuickView>
 #include <QQmlApplicationEngine>
-// #include"sign_up.h"
+#include <QQmlContext>
 #include "Account/basicAccount.h"
+// #include"sign_up.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -90,9 +91,10 @@ void MainWindow::login_click() {
     QString phone = ui->phoneEdit->text();
     QString password = ui->passwdEdit->text();
 
-    bms::BasicAccount user(phone.toStdString(), password.toStdString());
+    bms::BasicAccount* user = new bms::BasicAccount(phone.toStdString(), password.toStdString());
     // 拼接用户信息文件的路径
-    std::string filename = user.datafile();
+    std::string filename = user->datafile();
+    user->load(filename);
 
     /*
      * 以下代码用于测试登录功能
@@ -100,8 +102,8 @@ void MainWindow::login_click() {
         // qml引擎
         QQmlApplicationEngine* engine = new QQmlApplicationEngine;
         // 加载qml文件
+        engine->rootContext()->setContextProperty("user", user);
         engine->load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
-        // 获取qml窗口
 
     // std::ifstream file(filename);
 
