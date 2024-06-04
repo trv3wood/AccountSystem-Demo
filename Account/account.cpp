@@ -1,7 +1,6 @@
 #include "account.h"
 
 #include <gmpxx.h>
-#include <qobjectdefs.h>
 
 #include <QString>
 #include <cstdlib>
