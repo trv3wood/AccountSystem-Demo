@@ -47,6 +47,7 @@ else()
         add_executable(BMSystem
             ${PROJECT_SOURCES}
             qrc.qrc
+            test.h test.cpp test.ui
 
 
         )

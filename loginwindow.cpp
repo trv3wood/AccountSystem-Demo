@@ -75,7 +75,7 @@ void MainWindow::signup_click() {
     }
     bms::BasicAccount account(name.toStdString(), passwd.toStdString(), phone.toStdString(), id.toStdString());
     account.store(account.datafile());
-        QMessageBox::information(this,"Title","注册成功！");
+        QMessageBox::information(this,"Title","注册成功！请转为登录界面进行用户登录");
 }
 
 void MainWindow::login_click() {
@@ -113,6 +113,8 @@ void MainWindow::login_click() {
         QQmlApplicationEngine* engine = new QQmlApplicationEngine;
         // 加载qml文件
         engine->load(QUrl(QStringLiteral("qrc:/dashboard.qml")));
+        //并且对原登陆界面进行隐藏
+        this->hide();
     } else {
         // 文件不存在，登录失败
         QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
