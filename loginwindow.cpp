@@ -146,7 +146,7 @@ void MainWindow::on_clear_button_clicked()
 void MainWindow::on_fogotpw_clicked()
 {
     this->hide();
-    next=new forgotpwd;
+    forgotpwd*next=new forgotpwd;
     next->show();
 }
 

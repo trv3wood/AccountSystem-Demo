@@ -5,8 +5,8 @@
 #include <QResizeEvent>
 #include <QDebug>
 #include "Account/account.h"
+#include "forgotpwd.h"
 using bms::Account;
-#include"forgotpwd.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -20,7 +20,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    forgotpwd*next=NULL;
 private slots:
     /// @brief 点击注册按钮
     /// @details 如果输入框隐藏，则显示输入框；否则进行注册操作
@@ -34,10 +33,9 @@ private slots:
     /// @details 清空所有输入框
     void on_clear_button_clicked();
 
-<<<<<<< HEAD
-=======
+    /// @brief 点击忘记密码
+    /// @details 重置密码
     void on_fogotpw_clicked();
->>>>>>> dev_3wood
 
 private:
     Ui::LoginWindow *ui;

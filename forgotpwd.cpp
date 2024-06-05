@@ -30,6 +30,13 @@ void forgotpwd::on_pushButton_clicked()
         a.setPasswd(psw);
         a.store(newname);
         outfile.close();
+
+//        QQmlApplicationEngine engine;
+//        forgotpwd forgotPwd;
+
+//        engine.rootContext()->setContextProperty("forgotpwd", &controller);
+//        engine.load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
+
     }
     else
     {
