@@ -13,7 +13,6 @@ class forgotpwd : public QWidget {
 public:
     explicit forgotpwd(QWidget *parent = nullptr);
     ~forgotpwd();
-    std::string q2s(const QString &s);
 
 private slots:
     void on_pushButton_clicked();

@@ -56,5 +56,7 @@ public:
     /// @param filename 文件名
     /// @note 文件名搭配datafile()使用
     void load(const std::string& filename);
+
+    void setPasswd(const std::string& passwd) override;
 };
 }  // namespace bms
