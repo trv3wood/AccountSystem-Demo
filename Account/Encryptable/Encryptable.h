@@ -22,6 +22,12 @@ public:
     Encryptable() {
         initOpenSSL();
     }
+
+    /// @brief 计算密码哈希值
+    /// @param str 用户密码
+    /// @return 哈希值
+    /// @note 使用了SHA256 算法 completed by Z_MAHO
+    static std::string hashSHA256(const std::string& str);
 protected:
     /// @brief 加密实现
     /// @param plaintext 明文
@@ -42,12 +48,6 @@ protected:
     static int decryptImpl(unsigned char *ciphertext, int ciphertext_len,
                     unsigned char *key, unsigned char *iv,
                     unsigned char *plaintext);
-
-    /// @brief 计算密码哈希值
-    /// @param str 用户密码
-    /// @return 哈希值
-    /// @note 使用了SHA256 算法 completed by Z_MAHO
-    static std::string hashSHA256(const std::string& str);
 
     /// @brief 计算用户名的哈希值，用于生成数据文件名
     /// @param str 用户名

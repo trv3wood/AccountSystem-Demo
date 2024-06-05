@@ -2,6 +2,7 @@
 #define ACCOUNT_H
 
 #include <gmpxx.h>
+#include <QObject>
 
 #include <QtCore/QString>
 #include <string>
@@ -18,7 +19,15 @@ namespace bms {
 class Account;
 const double defualtInterestRate = 0.01;
 }
-class bms::Account {
+class bms::Account: public QObject {
+    Q_OBJECT
+
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString passwd READ passwd CONSTANT)
+    Q_PROPERTY(QString phoneNum READ phoneNum CONSTANT)
+    Q_PROPERTY(QString id READ id CONSTANT)
+    Q_PROPERTY(mpf_class balance READ balance CONSTANT)
+    Q_PROPERTY(mpf_class interestRate READ interestRate CONSTANT)
 protected:
     std::string m_name;        // 用户姓名
     std::string m_passwd;      // 密码
@@ -30,7 +39,7 @@ protected:
     mpf_class m_interestRate;  // 利率
 
 public:
-    Account(): m_balance(0), m_interestRate(defualtInterestRate) {}
+    Account(): QObject(nullptr), m_balance(0), m_interestRate(defualtInterestRate) {}
     virtual ~Account() {}
 
     /// @brief 构造函数
@@ -40,13 +49,13 @@ public:
     /// @note 生成卡号和密码哈希值，完成，分配给 Sour_xuanzi
     /// @note 考虑加密用户信息
     Account(const std::string& name, const std::string& passwd,
-            const std::string& phoneNum, const std::string& id);
+            const std::string& phoneNum, const std::string& id, QObject *parent = nullptr);
 
     /// @brief 构造函数
     /// @param phoneNum 用户手机号
     /// @param passwd 用户密码
     /// @note 应当用于登录已有账户
-    Account(const std::string& phoneNum, const std::string& passwd);
+    Account(const std::string& phoneNum, const std::string& passwd, QObject *parent = nullptr);
 
     QString name() const;
     QString passwd() const;
@@ -80,7 +89,6 @@ public:
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
     virtual void deposit(const mpf_class& amount);
-
     void display() const;
 
 private:

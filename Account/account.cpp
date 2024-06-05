@@ -35,6 +35,7 @@ void Account::setName(const std::string& name) { m_name = name; }
 
 void Account::setPasswd(const std::string& passwd) {
     m_passwd = passwd;
+    // emit passwdChanged();
 }
 
 void Account::setLocation(const std::string& location) {
@@ -49,6 +50,7 @@ void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
         to->m_balance += amount;
+        // emit balanceChanged();
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Transfer successful!";
 #endif
@@ -59,8 +61,9 @@ void Account::transfer(Account* to, const mpf_class& amount) {
 
 // To: Sour_xuanzi
 Account::Account(const std::string& name, const std::string& passwd,
-                 const std::string& phoneNum, const std::string& id)
-    : m_name(name),
+                 const std::string& phoneNum, const std::string& id, QObject *parent)
+    : QObject(parent),
+      m_name(name),
       m_passwd(passwd),
       m_phonenumber(phoneNum),
       m_id(id),
@@ -68,8 +71,9 @@ Account::Account(const std::string& name, const std::string& passwd,
       m_balance("0.0"),
       m_interestRate("0.01") {}
 
-Account::Account(const std::string& phoneNum, const std::string& passwd)
-    : m_name("user"),
+Account::Account(const std::string& phoneNum, const std::string& passwd, QObject *parent)
+    : QObject(parent),
+      m_name("user"),
       m_passwd(passwd),
       m_phonenumber(phoneNum),
       m_id("0"),
