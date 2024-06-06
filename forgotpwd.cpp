@@ -11,24 +11,18 @@ forgotpwd::forgotpwd(QWidget *parent) : QWidget(parent), ui(new Ui::forgotpwd) {
 
 forgotpwd::~forgotpwd() { delete ui; }
 
-std::string forgotpwd::q2s(const QString &s)
-{
-    return std::string((const char *)s.toLocal8Bit());
-}
 
 void forgotpwd::on_pushButton_clicked()
 {
-    QString filename=ui->phonenum->text()+".dat";
+    bms::BasicAccount user(ui->phonenum->text().toStdString(), ".");
+    QString filename = QString::fromStdString(user.datafile());
     QFile outfile(filename);
     if(outfile.exists())
     {
         ui->exist->setText("账号存在");
-        bms::BasicAccount a;
-        std::string newname=q2s(filename);
-        a.load(newname);
-        std::string psw=q2s(ui->passwd->text());
-        a.setPasswd(psw);
-        a.store(newname);
+        user.load(user.datafile());
+        user.setPasswd(ui->passwd->text().toStdString());
+        user.store(user.datafile());
         outfile.close();
     }
     else

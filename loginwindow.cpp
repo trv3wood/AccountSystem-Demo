@@ -94,9 +94,14 @@ void MainWindow::login_click() {
     QString phone = ui->phoneEdit->text();
     QString password = ui->passwdEdit->text();
 
-    BasicAccount user(phone.toStdString(), ".");
+    BasicAccount* user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
-    std::string filename = user.datafile();
+    std::string filename = user->datafile();
+
+    // Logging to check filename
+    #if ACCOUNT_DEBUG == 1
+    qDebug() << "Data file path: " << QString::fromStdString(filename);
+    #endif
 
     /*
      * 以下代码用于测试登录功能
@@ -111,22 +116,44 @@ void MainWindow::login_click() {
 
     if (file.good()) {
         // 文件存在，读取用户信息
-        BasicAccount* existUser = new BasicAccount();
-        existUser->load(filename);
+        user->load(filename);
         // 比对密码
-        if (existUser->passwd().toStdString() != bms::Encryptable::hashSHA256(password.toStdString())) {
-            QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
+        if (user->passwd().toStdString() != bms::Encryptable::hashSHA256(password.toStdString())) {
+            QMessageBox::information(this,"Title", __FILE__"登录失败，请检查手机号和密码是否正确");
+            delete user;
+            return;
+        }
+        // QML engine setup
+        QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+        if (!engine) {
+            QMessageBox::information(this, "Title", __FILE__":"
+            "QML引擎初始化失败");
+            delete user;
             return;
         }
 
-        // qml引擎
-        QQmlApplicationEngine* engine = new QQmlApplicationEngine;
-        // 加载qml文件
-        engine->rootContext()->setContextProperty("user", existUser);
-        engine->load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
+        engine->rootContext()->setContextProperty("user", user);
+
+        const QUrl url(QStringLiteral("qrc:/qml/dashboard.qml"));
+        QObject::connect(engine, &QQmlApplicationEngine::objectCreated, this,
+            [url](QObject *obj, const QUrl &objUrl) {
+                if (!obj && url == objUrl)
+                    QCoreApplication::exit(-1);
+            }, Qt::QueuedConnection);
+
+        engine->load(url);
+
+        if (engine->rootObjects().isEmpty()) {
+            QMessageBox::information(this, "Title", __FILE__"加载QML文件失败");
+            delete user;
+            delete engine;
+            return;
+        }
     } else {
         // 文件不存在，登录失败
-        QMessageBox::information(this,"Title", "登录失败，请检查手机号和密码是否正确");
+        QMessageBox::information(this,"Title", __FILE__"登录失败，请检查手机号和密码是否正确");
+        delete user;
+        return;
     }
 
 }

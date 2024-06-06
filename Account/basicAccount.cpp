@@ -10,7 +10,6 @@
 
 #include "account.h"
 
-
 namespace bms {
 const unsigned BasicAccount::transferRestriction = 5000;
 
@@ -58,9 +57,12 @@ BasicAccount::BasicAccount(const std::string& phoneNum,
 }
 
 void BasicAccount::store(const std::string& filename) {
-    std::ofstream outFile(filename, std::ios::binary);
+    std::ofstream outFile(filename, std::ios::binary | std::ios::trunc);
     if (!outFile) {
-        throw std::runtime_error("Cannot open file for writing");
+        throw std::runtime_error(__FILE__ + std::string(":") +
+                                 std::to_string(__LINE__) +
+                                 std::string(" on ") + __FUNCTION__ +
+                                 "Cannot open file for writing");
     }
 
     std::string data;
@@ -103,5 +105,9 @@ void BasicAccount::load(const std::string& filename) {
     delete[] ciphertext;
     delete[] plaintext;
     inFile.close();
+}
+
+void BasicAccount::setPasswd(const std::string& passwd) {
+    m_passwd = hashSHA256(passwd);
 }
 }  // namespace bms
