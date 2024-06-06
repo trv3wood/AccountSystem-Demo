@@ -1,3 +1,4 @@
+#include <qobjectdefs.h>
 #include <string>
 
 #include "Encryptable/Encryptable.h"
@@ -6,6 +7,7 @@
 
 namespace bms {
 class BasicAccount : public Account, public Serializable, public Encryptable {
+    Q_OBJECT
 public:
     BasicAccount() = default;
     /// @brief 构造函数
@@ -45,18 +47,18 @@ public:
     /// @param amount 存款金额
     /// @param to 转入账户
     /// @return 存款后的余额
-    void transfer(Account* to, const mpf_class& amount) override;
+    Q_INVOKABLE void transfer(Account* to, const mpf_class& amount) override;
 
     /// @brief 将类的信息存储到文件
     /// @param filename 文件名
     /// @note 文件名搭配datafile()使用
-    void store(const std::string& filename);
+    Q_INVOKABLE void store(const std::string& filename);
 
     /// @brief 从文件中加载类的信息
     /// @param filename 文件名
     /// @note 文件名搭配datafile()使用
-    void load(const std::string& filename);
+    Q_INVOKABLE void load(const std::string& filename);
 
-    void setPasswd(const std::string& passwd) override;
+    Q_INVOKABLE void setPasswd(const std::string& passwd) override;
 };
 }  // namespace bms

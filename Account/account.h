@@ -2,7 +2,7 @@
 #define ACCOUNT_H
 
 #include <gmpxx.h>
-#include <QObject>
+#include <QtCore/QObject>
 
 #include <QtCore/QString>
 #include <string>
