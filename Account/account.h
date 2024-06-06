@@ -28,6 +28,7 @@ class bms::Account: public QObject {
     Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(mpf_class balance READ balance CONSTANT)
     Q_PROPERTY(mpf_class interestRate READ interestRate CONSTANT)
+    Q_PROPERTY(QString cardNumber READ cardNumber CONSTANT)
 protected:
     std::string m_name;        // 用户姓名
     std::string m_passwd;      // 密码
