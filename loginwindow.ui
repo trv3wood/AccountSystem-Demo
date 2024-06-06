@@ -112,7 +112,7 @@ QLineEdit {
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="fogotpw">
+    <widget class="QPushButton" name="fogotpwBtn">
      <property name="geometry">
       <rect>
        <x>251</x>

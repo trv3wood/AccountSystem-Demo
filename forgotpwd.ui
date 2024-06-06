@@ -25,16 +25,35 @@
    <string>忘记密码</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
+   <iconset resource="qrc.qrc">
     <normaloff>:/resources/icon.webp</normaloff>:/resources/icon.webp</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+	border-radius: 20px;
+	font: 14pt &quot;Microsoft YaHei UI&quot;;
+	color:  black;
+}
+QPushButton:pressed {
+	background-color: rgba(255, 255, 255, 150);/* 更暗的背景色表示按下状态 */
+    border-style: inset;       /* 按钮边框样式改为内嵌 */
+}
+QLineEdit {
+    border: 2px solid #b6b6b6; /* 设置边框宽度和颜色 */
+    border-radius: 20px;       /* 设置边框圆角的半径 */
+    background-color: #ffffff; /* 设置背景色 */
+    color: black;              /* 设置文本颜色 */
+    padding: 10px;              /* 设置内边距，保持文本与边框的距离 */
+	font: 14pt &quot;Microsoft YaHei UI&quot;;
+}</string>
   </property>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>440</y>
-     <width>339</width>
-     <height>44</height>
+     <x>250</x>
+     <y>460</y>
+     <width>231</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="sizeIncrement">
@@ -45,7 +64,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>14</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -55,10 +77,10 @@
   <widget class="QLineEdit" name="phonenum">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>320</y>
-     <width>339</width>
-     <height>44</height>
+     <x>180</x>
+     <y>240</y>
+     <width>361</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="baseSize">
@@ -69,7 +91,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>14</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -82,10 +107,10 @@
   <widget class="QLineEdit" name="passwd">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>380</y>
-     <width>339</width>
-     <height>44</height>
+     <x>180</x>
+     <y>350</y>
+     <width>361</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="baseSize">
@@ -104,8 +129,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>260</y>
+     <x>190</x>
+     <y>150</y>
      <width>339</width>
      <height>44</height>
     </rect>
@@ -129,6 +154,19 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="backBtn">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>40</y>
+     <width>51</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>exist</tabstop>
@@ -137,7 +175,7 @@
   <tabstop>pushButton</tabstop>
  </tabstops>
  <resources>
-  <include location="img.qrc"/>
+  <include location="qrc.qrc"/>
  </resources>
  <connections/>
 </ui>
