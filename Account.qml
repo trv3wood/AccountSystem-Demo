@@ -2,9 +2,12 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import Qt3D.Extras 2.15
-import "loginwindow.h"
+import MyCppClassModule 1.0
 import "."
 Item {
+    MainWindow {
+            id: myCppClassInstance // 创建 MainWindow 类的实例
+        }
     Row {
         ColumnLayout{
             id:first
@@ -32,11 +35,7 @@ Item {
 
     }
     Button{
-        id:changePsswd
-        objectName: changepwbutton
 
-        property string buttonText: ""
-        property string fontFamily: "Microsoft Yahei"
         flat: true
         width: 100
         height: 80
@@ -44,19 +43,19 @@ Item {
 
 
         Text {
-            text: changePsswd.buttonText
-            font.family: changePsswd.fontFamily
-            font.pixelSize: 80
+            text: "修改密码"
+
+            font.family : "Microsoft Yahei"
+            font.pixelSize: 35
             color: "black"
-            anchors.centerIn: parent
+            //anchors.centerIn: parent
         }
-        text: "修改密码"
-        font.family : "Microsoft Yahei"
+
         x:520
         y:600
 
         onClicked: {
-            MainWindow.callcpp_clicked();
+            myCppClassInstance.create();
         }
     }
 }

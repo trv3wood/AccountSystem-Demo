@@ -2,7 +2,6 @@
 #include<QString>
 #include<QFile>
 #include "Account/basicAccount.h"
-
 #include "ui_forgotpwd.h"
 
 forgotpwd::forgotpwd(QWidget *parent) : QWidget(parent), ui(new Ui::forgotpwd) {
@@ -15,6 +14,8 @@ std::string forgotpwd::q2s(const QString &s)
 {
     return std::string((const char *)s.toLocal8Bit());
 }
+
+
 
 void forgotpwd::on_pushButton_clicked()
 {
@@ -31,11 +32,6 @@ void forgotpwd::on_pushButton_clicked()
         a.store(newname);
         outfile.close();
 
-//        QQmlApplicationEngine engine;
-//        forgotpwd forgotPwd;
-
-//        engine.rootContext()->setContextProperty("forgotpwd", &controller);
-//        engine.load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
 
     }
     else

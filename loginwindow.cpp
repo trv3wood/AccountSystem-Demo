@@ -121,6 +121,9 @@ void MainWindow::login_click() {
 
         // qml引擎
         QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+        // 注册 MyCppClass 类到 QML
+        qmlRegisterType<MainWindow>("MyCppClassModule", 1, 0, "MainWindow");
+
         // 加载qml文件
         //并且对原登陆界面进行隐藏
         this->hide();
@@ -150,3 +153,9 @@ void MainWindow::on_fogotpw_clicked()
     next->show();
 }
 
+void MainWindow::create()
+{
+    forgotpwd* n=new forgotpwd;
+    n->show();
+
+}

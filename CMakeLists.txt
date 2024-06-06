@@ -47,6 +47,7 @@ else()
             forgotpwd.h forgotpwd.cpp forgotpwd.ui
 
 
+
         )
     endif()
 
