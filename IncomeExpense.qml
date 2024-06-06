@@ -79,7 +79,7 @@ Item {
 
         onAccepted: {
             // 执行存款操作
-            transfer(account, amount)
+            user.transfer(account, amount)
         }
     }
 
@@ -115,7 +115,7 @@ Item {
 
         onAccepted: {
             // 执行取款操作
-             transfer(account, -amount)
+             user.transfer(account, -amount)
         }
     }
 
@@ -156,7 +156,7 @@ Item {
 
         onAccepted: {
             // 执行转账操作
-            transfer(transferTo, transferAmount)
+            user.transfer(transferTo, transferAmount)
         }
     }
 }
