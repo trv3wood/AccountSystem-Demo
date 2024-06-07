@@ -3,7 +3,9 @@ project(Account LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -13,10 +15,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_library(GMP gmp REQUIRED)
 find_library(GMPXX gmpxx REQUIRED)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Encryptable ${CMAKE_CURRENT_SOURCE_DIR}/Encryptable/build)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Encryptable)
 
 # 编译Account类的库
-set(COMPILE_TEST_UNIT OFF)
+set(COMPILE_TEST_UNIT ON)
 file(GLOB ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 # 测试单元不包含在库中
 list(REMOVE_ITEM ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp)
@@ -25,7 +27,7 @@ add_library(${PROJECT_NAME} STATIC ${ACC_SRC}
     account.h
     basicAccount.h
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${GMP} ${GMPXX})
 target_link_libraries(${PROJECT_NAME} PRIVATE encryptable)
 

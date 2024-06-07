@@ -149,6 +149,9 @@ void MainWindow::login_click() {
             },
             Qt::QueuedConnection);
 
+        // 注册 MyCppClass 类到 QML
+        // qmlRegisterType<MainWindow>("MyCppClassModule", 1, 0, "MainWindow");
+
         engine->load(url);
 
         if (engine->rootObjects().isEmpty()) {

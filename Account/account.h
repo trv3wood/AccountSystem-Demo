@@ -63,8 +63,8 @@ public:
     QString phoneNum() const;
     QString id() const;
 
-    mpf_class balance() const;
-    mpf_class interestRate() const;
+    std::string balance() const;
+    std::string interestRate() const;
     QString cardNumber() const;
 
     void setName(const std::string& name);
@@ -89,7 +89,9 @@ public:
     /// @brief 存款
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
-    virtual void deposit(const mpf_class& amount);
+    void deposit(const mpf_class& amount);
+
+    void withdraw(const mpf_class& amount);
     void display() const;
 
 private:

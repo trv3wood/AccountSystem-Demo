@@ -2,12 +2,12 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import Qt3D.Extras 2.15
-import MyCppClassModule 1.0
+// import MyCppClassModule 1.0
 import "."
 Item {
-    MainWindow {
-            id: myCppClassInstance // 创建 MainWindow 类的实例
-        }
+    // MainWindow {
+    //         // id: myCppClassInstance // 创建 MainWindow 类的实例
+    //     }
     Row {
         ColumnLayout{
             id:first
@@ -55,7 +55,7 @@ Item {
         y:600
 
         onClicked: {
-            myCppClassInstance.create();
+            // myCppClassInstance.create();
         }
     }
 }

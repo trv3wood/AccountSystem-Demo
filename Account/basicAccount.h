@@ -1,5 +1,7 @@
-#include <qobjectdefs.h>
+#ifndef BASICACCOUNT_H
+#define BASICACCOUNT_H
 #include <string>
+#include <QtCore/QObject>
 
 #include "Encryptable/Encryptable.h"
 #include "Serializable.h"
@@ -32,6 +34,11 @@ private:
     /// @note 命名格式为：手机号的hash值取前8位+后缀".dat"
     std::string m_datafile;
 
+    /// @brief 日志文件名
+    /// @note 用于存储加密后的日志信息
+    /// @note 命名格式为：手机号的hash值取前8位+后缀".log"
+    std::string m_logfile;
+
     /// @brief 将账户信息序列化为字符串
     /// @param data 序列化后的字符串
     void serialize(std::string& data) const override;
@@ -43,6 +50,10 @@ public:
     /// @brief 获取数据文件名
     /// @note 命名格式为：手机号的hash值取前8位+后缀".dat"
     std::string datafile() const { return m_datafile; }
+
+    /// @brief 获取日志文件名
+    /// @note 命名格式为：手机号的hash值取前8位+后缀".log"
+    std::string logfile() const { return m_logfile; }
     /// @brief 存款
     /// @param amount 存款金额
     /// @param to 转入账户
@@ -62,3 +73,4 @@ public:
     Q_INVOKABLE void setPasswd(const std::string& passwd) override;
 };
 }  // namespace bms
+#endif  // BASICACCOUNT_H

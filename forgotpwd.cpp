@@ -6,9 +6,11 @@
 #include "Account/basicAccount.h"
 #include "ui_forgotpwd.h"
 
-forgotpwd::forgotpwd(QWidget* prev, QWidget *parent) : QWidget(parent), ui(new Ui::forgotpwd), mainWindow(prev) {
+forgotpwd::forgotpwd(QWidget* prev, QWidget* parent)
+    : QWidget(parent), ui(new Ui::forgotpwd), mainWindow(prev) {
     ui->setupUi(this);
-    QObject::connect(ui->backBtn, SIGNAL(clicked(bool)), this, SLOT(backBtn_clicked()));
+    QObject::connect(ui->backBtn, SIGNAL(clicked(bool)), this,
+                     SLOT(backBtn_clicked()));
 }
 
 forgotpwd::~forgotpwd() { delete ui; }
@@ -28,9 +30,7 @@ void forgotpwd::pushButton_clicked() {
     }
 }
 
-void forgotpwd::backBtn_clicked()
-{
+void forgotpwd::backBtn_clicked() {
     mainWindow->show();
     this->hide();
 }
-
