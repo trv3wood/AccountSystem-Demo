@@ -9,6 +9,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# ccache
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Quick)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -pedantic")
@@ -45,6 +51,7 @@ else()
             ${PROJECT_SOURCES}
             qrc.qrc
             forgotpwd.h forgotpwd.cpp forgotpwd.ui
+
 
 
         )

@@ -42,18 +42,22 @@ void BasicAccount::deserialize(const std::string& data) {
     std::getline(iss, interestRate);
     m_balance = balance;
     m_interestRate = interestRate;
+    m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
                            const std::string& phoneNum, const std::string& id)
     : Account(name, hashSHA256(passwd), phoneNum, id) {
     m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 BasicAccount::BasicAccount(const std::string& phoneNum,
                            const std::string& passwd)
     : Account(phoneNum, passwd) {
     m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 void BasicAccount::store(const std::string& filename) {

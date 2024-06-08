@@ -28,6 +28,7 @@ class bms::Account: public QObject {
     Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(mpf_class balance READ balance CONSTANT)
     Q_PROPERTY(mpf_class interestRate READ interestRate CONSTANT)
+    Q_PROPERTY(QString cardNumber READ cardNumber CONSTANT)
 protected:
     std::string m_name;        // 用户姓名
     std::string m_passwd;      // 密码
@@ -62,8 +63,8 @@ public:
     QString phoneNum() const;
     QString id() const;
 
-    mpf_class balance() const;
-    mpf_class interestRate() const;
+    std::string balance() const;
+    std::string interestRate() const;
     QString cardNumber() const;
 
     void setName(const std::string& name);
@@ -88,7 +89,9 @@ public:
     /// @brief 存款
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
-    virtual void deposit(const mpf_class& amount);
+    void deposit(const mpf_class& amount);
+
+    void withdraw(const mpf_class& amount);
     void display() const;
 
 private:
