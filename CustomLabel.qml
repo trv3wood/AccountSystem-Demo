@@ -3,19 +3,18 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: customLabel
-    color: "#a7b7b6"
+    color: "transparent"
     property string labelText: ""
     radius: 10
 
     Column {
-        spacing: 50
         anchors.centerIn: parent
-
+        spacing: 100
         Text {
             text: customLabel.labelText
             font.family: "Microsoft Yahei"
             font.pointSize: 20
-            color: "white"
+            color: "gray"
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
@@ -29,7 +28,7 @@ Rectangle {
             }
             Text {
                 text: "￥"
-                font.pointSize: 24
+                font.pointSize: 20
                 y: line.y
             }
         }
@@ -48,10 +47,10 @@ Rectangle {
             height: 80
             anchors.horizontalCenter: parent.horizontalCenter
             background: Rectangle {
+                id: backg
                 color: "#738e95"
                 radius: 20
             }
-            flat: true
         }
     }
 }

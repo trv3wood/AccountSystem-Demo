@@ -8,55 +8,54 @@ Item {
     // MainWindow {
     //         // id: myCppClassInstance // 创建 MainWindow 类的实例
     //     }
-    Row {
-        ColumnLayout{
-            id:first
+    anchors.centerIn: parent
+    Column {
+        anchors.centerIn: parent
+        spacing: 30
+        Row {
+            id: table
+            ColumnLayout{
+                id:first
 
-            SourText { myText: "用户姓名：" }
-            SourText { myText: "绑定手机号：" }
-            SourText { myText: "身份证号码：" }
-            SourText { myText: "卡号：" }
-            spacing: 50
+                SourText { myText: "用户姓名：" }
+                SourText { myText: "绑定手机号：" }
+                SourText { myText: "身份证号码：" }
+                SourText { myText: "卡号：" }
+                spacing: 50
+
+            }
+            ColumnLayout{
+                id: second
+
+                SourText { myText: user.name }
+                SourText { myText: user.phoneNum }
+                SourText { myText: user.id }
+                SourText { myText: user.cardNumber }
+                spacing: 50
+
+            }
+            spacing: 25
 
         }
-        ColumnLayout{
-            id: second
+        Button{
 
-            SourText { myText: user.name }
-            SourText { myText: user.phoneNum }
-            SourText { myText: user.id }
-            SourText { myText: user.cardNumber }
-            spacing: 50
+            flat: true
+            width: 150
+            height: 80
+            anchors.horizontalCenter: table.horizontalCenter
+            Text {
+                text: "修改密码"
 
-        }
-        x:480
-        y:220
-        spacing: 25
+                font.family : "Microsoft Yahei"
+                font.pixelSize: 35
+                color: "black"
+            }
 
-    }
-    Button{
-
-        flat: true
-        width: 100
-        height: 80
-        anchors.horizontalCenter: parent.horizontalCenter
-
-
-        Text {
-            text: "修改密码"
-
-            font.family : "Microsoft Yahei"
-            font.pixelSize: 35
-            color: "black"
-            //anchors.centerIn: parent
+            onClicked: {
+                // myCppClassInstance.create();
+            }
         }
 
-        x:520
-        y:600
-
-        onClicked: {
-            // myCppClassInstance.create();
-        }
     }
 }
 

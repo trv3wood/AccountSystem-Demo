@@ -21,6 +21,15 @@ public:
         msg = std::string((char *)plaintext, plaintext_len);
         num.set_str(msg, 10);
     }
+    void testString(const std::string &str) {
+        msg = str;
+        encrypt();
+        decrypt();
+        std::cout << "Original: " << str << "\n"
+                  << "Encrypted: " << msg << "\n"
+                  << "Decrypted: " << num << "\n";
+        ASSERT_EQ(str, msg);
+    }
 
     void testHashSHA256(std::string str) {
         std::string hash = hashSHA256(str);
@@ -73,6 +82,7 @@ TEST(encryptable, text) {
               << "Encrypted: " << encrypted << "\n"
               << "Decrypted: " << decrypted.toStdString() << "\n";
     ASSERT_EQ(test.text, decrypted);
+    test.testString("Manba out!");
 }
 
 TEST(encryptable, hashSHA256) {

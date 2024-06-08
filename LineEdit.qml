@@ -7,7 +7,7 @@ Rectangle {
     color: "white"
     TextInput {
         anchors.fill: parent
-        font.pixelSize: 24
+        font.pointSize: 18
         horizontalAlignment: Text.AlignHCenter
         // 设置文字居中
         verticalAlignment: Text.AlignVCenter

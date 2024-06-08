@@ -6,17 +6,11 @@
 #include <qglobal.h>
 
 #include <QString>
-#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <random>
 #include <QtWidgets/QMessageBox>
 #include "Serializable.h"
-
-#if ACCOUNT_DEBUG == 1
-#include <cassert>
-#endif
-
 using bms::Account;
 
 QString Account::name() const { return QString::fromStdString(m_name); }

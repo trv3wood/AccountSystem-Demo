@@ -27,12 +27,14 @@ MainWindow::MainWindow(QWidget *parent)
                      SLOT(signup_click()));
     QObject::connect(ui->loginBtn, SIGNAL(clicked()), this,
                      SLOT(login_click()));
+    QObject::connect(ui->clear_button, SIGNAL(clicked()), this,
+                     SLOT(clear_button_click()));
     QObject::connect(ui->fogotpwBtn, SIGNAL(clicked()), this, SLOT(fogotpw_click()));
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
-static bool checkPasswdStrength(const QString &passwd) {
+static bool isStrongPasswd(const QString &passwd) {
     if (passwd.length() < 8) {
         return false;
     }
@@ -74,7 +76,7 @@ void MainWindow::signup_click() {
         return;
     }
     // 检查密码强度
-    if (!checkPasswdStrength(passwd)) {
+    if (!isStrongPasswd(passwd)) {
         QMessageBox::information(
             this, "Title", "密码强度不足：至少需要8位，包含大小写字母和数字");
         return;
@@ -94,26 +96,14 @@ void MainWindow::login_click() {
         return;
     }
     // 获取用户输入的账号和密码
-    QString phone = ui->phoneEdit->text();
-    QString password = ui->passwdEdit->text();
+    // QString phone = ui->phoneEdit->text();
+    // QString password = ui->passwdEdit->text();
+    QString phone = "18025989770";
+    QString password = "Scara7246";
 
     BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
     std::string filename = user->datafile();
-
-// Logging to check filename
-#if ACCOUNT_DEBUG == 1
-    qDebug() << "Data file path: " << QString::fromStdString(filename);
-#endif
-
-    /*
-     * 以下代码用于测试登录功能
-     */
-    //  // qml引擎
-    // QQmlApplicationEngine* engine = new QQmlApplicationEngine;
-    // // 加载qml文件
-    // engine->rootContext()->setContextProperty("user", user);
-    // engine->load(QUrl(QStringLiteral("qrc:/qml/dashboard.qml")));
 
     std::ifstream file(filename);
 
