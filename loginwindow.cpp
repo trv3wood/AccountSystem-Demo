@@ -12,6 +12,7 @@
 #include "Account/basicAccount.h"
 using bms::BasicAccount;
 #include"forgotpwd.h"
+#include"sourchange.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -121,8 +122,8 @@ void MainWindow::login_click() {
 
         // qml引擎
         QQmlApplicationEngine* engine = new QQmlApplicationEngine;
-        // 注册 MyCppClass 类到 QML
-        qmlRegisterType<MainWindow>("MyCppClassModule", 1, 0, "MainWindow");
+        // 注册 Sourchange 类到 QML
+        qmlRegisterType<Sourchange>("Sourchange",1,0,"Sourchange");
 
         // 加载qml文件
         //并且对原登陆界面进行隐藏
@@ -153,9 +154,7 @@ void MainWindow::on_fogotpw_clicked()
     next->show();
 }
 
-void MainWindow::create()
-{
-    forgotpwd* n=new forgotpwd;
-    n->show();
-
+//用于连接qml中修改密码的
+void MainWindow::cppConnection(){
+    this->on_fogotpw_clicked();
 }

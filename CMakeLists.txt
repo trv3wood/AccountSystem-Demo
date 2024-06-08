@@ -45,6 +45,7 @@ else()
             ${PROJECT_SOURCES}
             qrc.qrc
             forgotpwd.h forgotpwd.cpp forgotpwd.ui
+            sourchange.h sourchange.cpp
 
 
 
