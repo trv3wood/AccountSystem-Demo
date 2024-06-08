@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 Rectangle {
     id: customLabel
@@ -33,24 +34,8 @@ Rectangle {
             }
         }
 
-        Button {
-            id: submitbtn
-            Text {
-                anchors.centerIn: parent
-                text: "提交"
-                color: "White"
-                font.family: "Microsoft Yahei"
-                font.pointSize: 18
-            }
-
-            width: 200
-            height: 80
+        SubmitBtn {
             anchors.horizontalCenter: parent.horizontalCenter
-            background: Rectangle {
-                id: backg
-                color: "#738e95"
-                radius: 20
-            }
         }
     }
 }

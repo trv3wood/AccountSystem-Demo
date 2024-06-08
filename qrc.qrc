@@ -3,7 +3,7 @@
         <file>resources/icon.webp</file>
         <file>resources/background.jpg</file>
     </qresource>
-    <qresource prefix="/qml" lang="qml">
+    <qresource lang="qml" prefix="/qml">
         <file>CustomLabel.qml</file>
         <file>dashboard.qml</file>
         <file>CustomButton.qml</file>
@@ -14,5 +14,6 @@
         <file>Account.qml</file>
         <file>CustomComboBox.qml</file>
         <file>SourText.qml</file>
+        <file>SubmitBtn.qml</file>
     </qresource>
 </RCC>

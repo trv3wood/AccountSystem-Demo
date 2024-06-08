@@ -79,21 +79,8 @@ Item {
                 color: "#2e3a45"
             }
         }
-
-        Button {
-            text: "提交"
-            font.family: "Microsoft Yahei"
-            font.pointSize: 18
-            width: 150
-            height: 50
-            background: Rectangle {
-                color: "#738e95"
-                radius: 10
-            }
+        SubmitBtn {
             Layout.alignment: Qt.AlignHCenter
-            onClicked: {
-                // 提交转账操作
-            }
         }
     }
 }
