@@ -16,6 +16,7 @@ public:
     explicit forgotpwd(QWidget* mainWindow = nullptr,
                        QWidget* parent = nullptr);
     ~forgotpwd();
+    Ui::forgotpwd* ui;
 
 private slots:
     void pushButton_clicked();
@@ -23,7 +24,6 @@ private slots:
     void backBtn_clicked();
 
 private:
-    Ui::forgotpwd* ui;
     QWidget* mainWindow;
 };
 

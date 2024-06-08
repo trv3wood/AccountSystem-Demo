@@ -12,6 +12,7 @@
 #include "./ui_loginwindow.h"
 #include "Account/Encryptable/Encryptable.h"
 #include "Account/basicAccount.h"
+#include "ui_forgotpwd.h"
 
 using bms::BasicAccount;
 #include "forgotpwd.h"
@@ -98,10 +99,10 @@ void MainWindow::login_click() {
         return;
     }
     // 获取用户输入的账号和密码
-    // QString phone = ui->phoneEdit->text();
-    // QString password = ui->passwdEdit->text();
-    QString phone = "18823231622";
-    QString password = "Ricky4881";
+    QString phone = ui->phoneEdit->text();
+    QString password = ui->passwdEdit->text();
+    // QString phone = "18823231622";
+    // QString password = "Ricky4881";
 
     BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
@@ -173,11 +174,11 @@ void MainWindow::fogotpw_click() {
     forgotpwd *changePasswd = new forgotpwd(this);
     changePasswd->show();
     this->hide();
-    forgotpwd*next=new forgotpwd;
-    next->show();
 }
 
 //用于连接qml中修改密码的
 void MainWindow::cppConnection(){
-    this->fogotpw_click();
+    forgotpwd *changePasswd = new forgotpwd;
+    changePasswd->show();
+    changePasswd->ui->backBtn->hide();
 }
