@@ -5,7 +5,9 @@ Rectangle {
     border.width: 5
     border.color: "#b6b6b6"
     color: "white"
+    property string amount: input.text
     TextInput {
+        id: input
         anchors.fill: parent
         font.pointSize: 18
         horizontalAlignment: Text.AlignHCenter
@@ -14,8 +16,11 @@ Rectangle {
         // 设置文字颜色
         color: "#333"
         // 输入数字验证
-        validator: RegExpValidator { regExp: /^[0-9]*$/ }
+        validator: RegExpValidator {
+            // 小数点后两位
+            regExp: /^[0-9]+(.[0-9]{0,2})?$/
+        }
         // 设置输入框最大长度
-        maximumLength: 20
+        maximumLength: 30
     }
 }

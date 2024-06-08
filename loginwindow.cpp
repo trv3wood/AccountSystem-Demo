@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
                      SLOT(login_click()));
     QObject::connect(ui->clear_button, SIGNAL(clicked()), this,
                      SLOT(clear_button_click()));
-    QObject::connect(ui->fogotpwBtn, SIGNAL(clicked()), this, SLOT(fogotpw_click()));
+    QObject::connect(ui->fogotpwBtn, SIGNAL(clicked()), this,
+                     SLOT(fogotpw_click()));
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -98,8 +99,8 @@ void MainWindow::login_click() {
     // 获取用户输入的账号和密码
     // QString phone = ui->phoneEdit->text();
     // QString password = ui->passwdEdit->text();
-    QString phone = "18025989770";
-    QString password = "Scara7246";
+    QString phone = "18823231622";
+    QString password = "Ricky4881";
 
     BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
@@ -168,7 +169,7 @@ void MainWindow::clear_button_click() {
 }
 
 void MainWindow::fogotpw_click() {
-    forgotpwd* changePasswd = new forgotpwd(this);
+    forgotpwd *changePasswd = new forgotpwd(this);
     changePasswd->show();
     this->hide();
 }

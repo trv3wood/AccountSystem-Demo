@@ -4,7 +4,6 @@
         <file>resources/background.jpg</file>
     </qresource>
     <qresource lang="qml" prefix="/qml">
-        <file>CustomLabel.qml</file>
         <file>dashboard.qml</file>
         <file>CustomButton.qml</file>
         <file>LineEdit.qml</file>
