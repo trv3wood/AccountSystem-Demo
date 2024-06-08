@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
                      SLOT(login_click()));
     QObject::connect(ui->clear_button, SIGNAL(clicked()), this,
                      SLOT(clear_button_click()));
-    QObject::connect(ui->fogotpw, SIGNAL(clicked()), this,
+    QObject::connect(ui->fogotpwBtn, SIGNAL(clicked()), this,
                      SLOT(fogotpw_click()));
 }
 
@@ -142,7 +142,7 @@ void MainWindow::login_click() {
             Qt::QueuedConnection);
 
         // 注册 Sourchange 类到 QML
-        // qmlRegisterType<Sourchange>("Sourchange",1,0,"Sourchange");
+        qmlRegisterType<Sourchange>("Sourchange",1,0,"Sourchange");
 
         engine->load(url);
 
