@@ -15,6 +15,7 @@
 
 using bms::BasicAccount;
 #include "forgotpwd.h"
+#include"sourchange.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LoginWindow) {
@@ -29,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
                      SLOT(login_click()));
     QObject::connect(ui->clear_button, SIGNAL(clicked()), this,
                      SLOT(clear_button_click()));
-    QObject::connect(ui->fogotpwBtn, SIGNAL(clicked()), this,
+    QObject::connect(ui->fogotpw, SIGNAL(clicked()), this,
                      SLOT(fogotpw_click()));
 }
 
@@ -140,8 +141,8 @@ void MainWindow::login_click() {
             },
             Qt::QueuedConnection);
 
-        // 注册 MyCppClass 类到 QML
-        // qmlRegisterType<MainWindow>("MyCppClassModule", 1, 0, "MainWindow");
+        // 注册 Sourchange 类到 QML
+        // qmlRegisterType<Sourchange>("Sourchange",1,0,"Sourchange");
 
         engine->load(url);
 
@@ -172,4 +173,11 @@ void MainWindow::fogotpw_click() {
     forgotpwd *changePasswd = new forgotpwd(this);
     changePasswd->show();
     this->hide();
+    forgotpwd*next=new forgotpwd;
+    next->show();
+}
+
+//用于连接qml中修改密码的
+void MainWindow::cppConnection(){
+    this->fogotpw_click();
 }

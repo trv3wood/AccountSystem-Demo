@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void cppConnection();
 private slots:
     /// @brief 点击注册按钮
     /// @details 如果输入框隐藏，则显示输入框；否则进行注册操作
