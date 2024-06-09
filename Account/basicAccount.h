@@ -63,14 +63,19 @@ public:
     /// @brief 将类的信息存储到文件
     /// @param filename 文件名
     /// @note 文件名搭配datafile()使用
-    Q_INVOKABLE void store(const std::string& filename);
+    void store(const std::string& filename);
+    Q_INVOKABLE void store();
 
     /// @brief 从文件中加载类的信息
     /// @param filename 文件名
     /// @note 文件名搭配datafile()使用
-    Q_INVOKABLE void load(const std::string& filename);
+    void load(const std::string& filename);
+    Q_INVOKABLE void load();
 
     Q_INVOKABLE void setPasswd(const std::string& passwd) override;
+
+    Q_INVOKABLE void deposit(const QString& amount) override;
+    Q_INVOKABLE void withdraw(const QString& amount) override;
 };
 }  // namespace bms
 #endif  // BASICACCOUNT_H

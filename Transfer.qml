@@ -33,6 +33,7 @@ Item {
 
             CustomComboBox {
                 model: ["", "账户1", "账户2", "账户3"]
+                font.pointSize: 20
             }
         }
 
@@ -50,6 +51,7 @@ Item {
 
             CustomComboBox {
                 model: ["", "账户1", "账户2", "账户3"]
+                font.pointSize: 20
             }
         }
 
@@ -79,8 +81,20 @@ Item {
                 color: "#2e3a45"
             }
         }
-        SubmitBtn {
+        RoundButton {
+            text: "确认转账"
+            font.pointSize: 20
             Layout.alignment: Qt.AlignHCenter
+            width: 200
+            height: 80
+            onClicked: {
+                if (amountField.text === "") {
+                    Qt.inputMethod.show();
+                    amountField.focus = true;
+                } else {
+                    console.log("转账成功");
+                }
+            }
         }
     }
 }

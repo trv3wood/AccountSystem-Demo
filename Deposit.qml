@@ -29,6 +29,11 @@ Item {
             radius: height / 2 - 10
             width: 600
             height: 80
+            background: Rectangle {
+                color: "lightgreen"
+                radius: parent.radius
+                anchors.fill: parent
+            }
             onClicked: {
                 if (deposit.amount === "") {
                     return
@@ -70,6 +75,12 @@ Item {
             radius: height / 2 - 10
             width: 600
             height: 80
+            // 背景色
+            background: Rectangle {
+                color: "lightblue"
+                radius: parent.radius
+                anchors.fill: parent
+            }
             onClicked: {
                 if (withdraw.amount === "") {
                     return
@@ -90,6 +101,7 @@ Item {
             font.pixelSize: 35
             font.bold: true
             font.family: "Microsoft YaHei"
+            anchors.horizontalCenter: parent.horizontalCenter
         }
         
         Text {
@@ -98,7 +110,8 @@ Item {
             font.pixelSize: 35
             font.bold: true
             font.family: "Microsoft YaHei"
-        }
             anchors.horizontalCenter: parent.horizontalCenter
+        }
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 }

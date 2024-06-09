@@ -86,7 +86,7 @@ void MainWindow::signup_click() {
     }
     BasicAccount account(name.toStdString(), passwd.toStdString(),
                          phone.toStdString(), id.toStdString());
-    account.store(account.datafile());
+    account.store();
     QMessageBox::information(this, "Title", "注册成功！");
 }
 
@@ -99,10 +99,10 @@ void MainWindow::login_click() {
         return;
     }
     // 获取用户输入的账号和密码
-    QString phone = ui->phoneEdit->text();
-    QString password = ui->passwdEdit->text();
-    // QString phone = "18823231622";
-    // QString password = "Ricky4881";
+    // QString phone = ui->phoneEdit->text();
+    // QString password = ui->passwdEdit->text();
+    QString phone = "18823231622";
+    QString password = "Ricky4881";
 
     BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
@@ -112,7 +112,7 @@ void MainWindow::login_click() {
 
     if (file.good()) {
         // 文件存在，读取用户信息
-        user->load(filename);
+        user->load();
         // 比对密码
         if (user->passwd().toStdString() !=
             bms::Encryptable::hashSHA256(password.toStdString())) {

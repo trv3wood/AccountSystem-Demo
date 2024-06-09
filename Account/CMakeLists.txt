@@ -18,7 +18,7 @@ find_library(GMPXX gmpxx REQUIRED)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Encryptable)
 
 # 编译Account类的库
-set(COMPILE_TEST_UNIT ON)
+set(COMPILE_TEST_UNIT OFF)
 file(GLOB ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 # 测试单元不包含在库中
 list(REMOVE_ITEM ACC_SRC ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp)

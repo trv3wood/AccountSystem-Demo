@@ -12,8 +12,6 @@ Rectangle {
         font.pointSize: 18
         horizontalAlignment: Text.AlignHCenter
         // 设置文字居中
-        verticalAlignment: Text.AlignVCenter
-        // 设置文字颜色
         color: "#333"
         // 输入数字验证
         validator: RegExpValidator {

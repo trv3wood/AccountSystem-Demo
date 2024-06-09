@@ -56,23 +56,37 @@ void Account::setInterestRate(double rate) { m_interestRate = rate; }
 void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
+        m_balance.set_prec(3);
+        if (roundBalance()) {
+            m_balance = 0.01;
+        }
+        static_cast<BasicAccount*>(this)->store(
+            static_cast<BasicAccount*>(this)->datafile());
+        emit balanceChanged();
         to->m_balance += amount;
-        // emit balanceChanged();
+        BasicAccount* castTo = static_cast<BasicAccount*>(to);
+        castTo->store(castTo->datafile());
+        emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Transfer successful!";
+        qDebug() << "Transfer successful!" << "self balance: " << Balance() << " to balance: " << to->Balance();
 #endif
-
-        Log logSelf(
-            LogType::TRANSFEROUT, static_cast<BasicAccount*>(this)->datafile(),
-            Serializable::mpf_class2str(amount), Balance().toStdString());
+        QMessageBox::information(nullptr, "转账", "转账成功！");
+        Log logSelf(LogType::TRANSFEROUT,
+                    static_cast<BasicAccount*>(this)->datafile(),
+                    Serializable::mpf_class2str(amount),
+                    Balance().toStdString(), to->id().toStdString());
         logSelf.write_with(*this);
-        Log logTo(
-            LogType::TRANSFERIN, static_cast<BasicAccount*>(to)->datafile(),
-            Serializable::mpf_class2str(amount), to->Balance().toStdString());
+        Log logTo(LogType::TRANSFERIN,
+                  static_cast<BasicAccount*>(to)->datafile(),
+                  Serializable::mpf_class2str(amount),
+                  to->Balance().toStdString(), id().toStdString());
         logTo.write_with(*to);
     } else {
+#if ACCOUNT_DEBUG == 1
         qDebug() << "Insufficient balance!";
+#endif
+        QMessageBox::warning(nullptr, "转账", "余额不足！");
     }
 }
 
@@ -156,6 +170,8 @@ void Account::deposit(const mpf_class& amount) {
               << std::endl;
 #endif
     m_balance += amount;
+    static_cast<BasicAccount*>(this)->store(
+        static_cast<BasicAccount*>(this)->datafile());
     emit balanceChanged();
     Log log(LogType::DEPOSIT, m_id, Serializable::mpf_class2str(amount),
             balance_f().toStdString());
@@ -166,9 +182,6 @@ void Account::deposit(const mpf_class& amount) {
     qDebug() << "Deposit successful!";
 #endif
     QMessageBox::information(nullptr, "存款", "存款成功！");
-
-    static_cast<BasicAccount*>(this)->store(
-        static_cast<BasicAccount*>(this)->datafile());
 }
 void Account::deposit(const QString& amount) {
 #if ACCOUNT_DEBUG == 1
@@ -187,11 +200,12 @@ bool Account::roundBalance() const {
 void Account::withdraw(const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
-        // mpf_sub(m_balance.get_mpf_t(), m_balance.get_mpf_t(), amount.get_mpf_t());
         m_balance.set_prec(3);
         if (roundBalance()) {
             m_balance = 0.01;
         }
+        static_cast<BasicAccount*>(this)->store(
+            static_cast<BasicAccount*>(this)->datafile());
         emit balanceChanged();
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Withdraw successful!";
@@ -200,8 +214,6 @@ void Account::withdraw(const mpf_class& amount) {
         Log log(LogType::WITHDRAW, m_id, Serializable::mpf_class2str(amount),
                 balance_f().toStdString());
         log.write_with(*this);
-        static_cast<BasicAccount*>(this)->store(
-            static_cast<BasicAccount*>(this)->datafile());
     } else {
         qDebug() << "Insufficient balance!";
         QMessageBox::warning(nullptr, "取款", "余额不足！");

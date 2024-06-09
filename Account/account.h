@@ -105,11 +105,11 @@ public:
     /// @brief 存款
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
-    Q_INVOKABLE void deposit(const mpf_class& amount);
-    Q_INVOKABLE void deposit(const QString& amount);
+    void deposit(const mpf_class& amount);
+    Q_INVOKABLE virtual void deposit(const QString& amount);
 
-    Q_INVOKABLE void withdraw(const mpf_class& amount);
-    Q_INVOKABLE void withdraw(const QString& amount);
+    void withdraw(const mpf_class& amount);
+    Q_INVOKABLE virtual void withdraw(const QString& amount);
     void display() const;
 
 private:

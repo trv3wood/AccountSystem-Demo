@@ -1,16 +1,26 @@
 #include "log.h"
-#include <QtCore/QString>
+
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
+#include <QtCore/QString>
 #include <fstream>
 #include <iostream>
 #include <string>
+
 
 Log::Log(LogType type, const std::string &id, const std::string &amount,
          const std::string &balance)
     : m_type(type), m_id(id), m_amount(amount), m_balance(balance) {}
 
-void Log::write_with(const BasicAccount& user) const {
+Log::Log(LogType type, const std::string &id, const std::string &amount,
+         const std::string &balance, const std::string &other)
+    : m_type(type),
+      m_id(id),
+      m_amount(amount),
+      m_balance(balance),
+      m_other(other) {}
+
+void Log::write_with(const BasicAccount &user) const {
     // qDebug() << "write_with" << QString::fromStdString(user.datafile());
     std::string filename = user.logfile();
     // qDebug() << QString::fromStdString(filename);
@@ -26,7 +36,8 @@ void Log::write_with(const BasicAccount& user) const {
 
 std::string Log::generate_log() const {
     QDateTime time = QDateTime::currentDateTime();
-    std::string log = (time.toString("yyyy-MM-dd hh:mm:ss") + " ").toStdString();
+    std::string log =
+        (time.toString("yyyy-MM-dd hh:mm:ss") + " ").toStdString();
     switch (m_type) {
         case DEPOSIT:
             log += "存款";
@@ -44,11 +55,14 @@ std::string Log::generate_log() const {
             break;
     }
     log += " 操作人: " + m_id + " 金额: " + m_amount + " 余额: " + m_balance;
+    if (m_other != "") {
+        log += " 对方: " + m_other;
+    }
     log += '\n';
     return log;
 }
 
-std::string Log::read_with(const BasicAccount& user) {
+std::string Log::read_with(const BasicAccount &user) {
     std::string filename = user.logfile();
     std::fstream file(filename, std::ios::in);
     if (!file) {
@@ -65,10 +79,10 @@ std::string Log::read_with(const BasicAccount& user) {
     return result;
 }
 
-void Log::write_with(const Account& user) const {
-    Log::write_with(*static_cast<const BasicAccount*>(&user));
+void Log::write_with(const Account &user) const {
+    Log::write_with(*static_cast<const BasicAccount *>(&user));
 }
 
-std::string Log::read_with(const Account& user) {
-    return Log::read_with(*static_cast<const BasicAccount*>(&user));
+std::string Log::read_with(const Account &user) {
+    return Log::read_with(*static_cast<const BasicAccount *>(&user));
 }

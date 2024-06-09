@@ -21,9 +21,9 @@ void forgotpwd::pushButton_clicked() {
     QFile outfile(filename);
     if (outfile.exists()) {
         ui->exist->setText("账号存在");
-        user.load(user.datafile());
+        user.load();
         user.setPasswd(ui->passwd->text().toStdString());
-        user.store(user.datafile());
+        user.store();
         outfile.close();
     } else {
         ui->exist->setText("账户不存在");

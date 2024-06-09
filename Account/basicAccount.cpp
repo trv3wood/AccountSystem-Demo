@@ -85,6 +85,10 @@ void BasicAccount::store(const std::string& filename) {
     outFile.close();
 }
 
+void BasicAccount::store() {
+    store(m_datafile);
+}
+
 void BasicAccount::load(const std::string& filename) {
     std::ifstream inFile(filename, std::ios::binary);
     if (!inFile) {
@@ -111,7 +115,21 @@ void BasicAccount::load(const std::string& filename) {
     inFile.close();
 }
 
+void BasicAccount::load() {
+    load(m_datafile);
+}
+
 void BasicAccount::setPasswd(const std::string& passwd) {
     m_passwd = hashSHA256(passwd);
+}
+
+void BasicAccount::deposit(const QString &amount) {
+    load();
+    Account::deposit(amount);
+}
+
+void BasicAccount::withdraw(const QString &amount) {
+    load();
+    Account::withdraw(amount);
 }
 }  // namespace bms
