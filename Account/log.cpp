@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string>
 
-
 Log::Log(LogType type, const std::string &id, const std::string &amount,
          const std::string &balance)
     : m_type(type), m_id(id), m_amount(amount), m_balance(balance) {}
@@ -23,10 +22,25 @@ Log::Log(LogType type, const std::string &id, const std::string &amount,
 void Log::write_with(const BasicAccount &user) const {
     // 日志文件名
     std::string filename = user.logfile();
+    // 超过一定大小则清空
+    QFile file(QString::fromStdString(filename));
+    if (!file.exists()) {
+        if (!file.open(QIODevice::WriteOnly)) {
+            throw std::runtime_error("无法打开日志文件");
+        }
+        file.close();
+    } else {
+        if (file.size() > 1024 * 1024 * 10) {
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                throw std::runtime_error("无法打开日志文件");
+            }
+            file.close();
+        }
+    }
+
     // 生成日志
     std::string log = generate_log();
     // 写入日志
-    QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Append)) {
         throw std::runtime_error("无法打开日志文件");
     }
@@ -57,7 +71,7 @@ std::string Log::generate_log() const {
             break;
     }
     // 交易信息
-    log += " 操作人: " + m_id + " 金额: " + m_amount + "\t余额:\t" + m_balance;
+    log += " 操作人: " + m_id + " 金额: " + m_amount + " 余额: " + m_balance;
     if (m_other != "") {
         log += " 对方: " + m_other;
     }

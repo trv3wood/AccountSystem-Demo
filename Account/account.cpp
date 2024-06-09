@@ -73,7 +73,8 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Transfer successful!" << "self balance: " << balance_f() << " to balance: " << to->balance_f();
+        qDebug() << "Transfer successful!" << "self balance: " << balance_f()
+                 << " to balance: " << to->balance_f();
 #endif
         QMessageBox::information(nullptr, "转账", "转账成功！");
 
@@ -83,8 +84,7 @@ void Account::transfer(Account* to, const mpf_class& amount) {
                     Serializable::mpf_class2str(amount),
                     balance_f().toStdString(), to->id().toStdString());
         logSelf.write_with(*this);
-        Log logTo(LogType::TRANSFERIN,
-                  m_phonenumber,
+        Log logTo(LogType::TRANSFERIN, m_phonenumber,
                   Serializable::mpf_class2str(amount),
                   to->balance_f().toStdString(), id().toStdString());
         logTo.write_with(*to);
@@ -182,7 +182,7 @@ void Account::deposit(const mpf_class& amount) {
     // 发送信号
     emit balanceChanged();
     // 记录日志
-    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
+    Log log(LogType::DEPOSIT, m_id, Serializable::mpf_class2str(amount),
             balance_f().toStdString());
     log.write_with(*this);
 
@@ -219,8 +219,8 @@ void Account::withdraw(const mpf_class& amount) {
         qDebug() << "Withdraw successful!";
 #endif
         QMessageBox::information(nullptr, "Withdraw", "Withdraw successful!");
-        Log log(LogType::WITHDRAW, m_phonenumber, Serializable::mpf_class2str(amount),
-                balance_f().toStdString());
+        Log log(LogType::WITHDRAW, m_phonenumber,
+                Serializable::mpf_class2str(amount), balance_f().toStdString());
         log.write_with(*this);
     } else {
         qDebug() << "Insufficient balance!";

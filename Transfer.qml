@@ -23,36 +23,6 @@ Item {
             spacing: 10
 
             Text {
-                text: "发件账户:"
-                font.pointSize: 18
-                font.family: "Microsoft Yahei"
-                color: "#2e3a45"
-                Layout.alignment: Qt.AlignVCenter
-                height: transferPage / 3
-            }
-
-            CustomComboBox {
-                id: senderBox
-                model: ["", "账户1", "账户2", "账户3"]
-                font.pointSize: 20
-                onCurrentIndexChanged: {
-                    sender.enabled = currentIndex === 0;
-                }
-                TextField {
-                    id: sender
-                    width: parent.width - 30 // 调整宽度
-                    height: parent.height
-                    enabled: parent.currentIndex === 0
-                    text: enabled ? text : ""
-                }
-            }
-        }
-
-        RowLayout {
-            // Layout.fillWidth: true
-            spacing: 10
-
-            Text {
                 text: "收件账户:"
                 font.pointSize: 18
                 color: "#2e3a45"
@@ -119,10 +89,6 @@ Item {
                 anchors.fill: parent
             }
             onClicked: {
-                // console.log("转账成功" + sender.text + receiver.text)
-                // sender.text = ""
-                // receiver.text = ""
-                // amountField.text = ""
                 user.transfer(receiver.text, amountField.text)
             }
         }
