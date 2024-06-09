@@ -119,10 +119,11 @@ Item {
                 anchors.fill: parent
             }
             onClicked: {
-                console.log("转账成功" + sender.text + receiver.text)
-                sender.text = ""
-                receiver.text = ""
-                amountField.text = ""
+                // console.log("转账成功" + sender.text + receiver.text)
+                // sender.text = ""
+                // receiver.text = ""
+                // amountField.text = ""
+                user.transfer(receiver.text, amountField.text)
             }
         }
     }

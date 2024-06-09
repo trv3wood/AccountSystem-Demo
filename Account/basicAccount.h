@@ -58,7 +58,8 @@ public:
     /// @param amount 存款金额
     /// @param to 转入账户
     /// @return 存款后的余额
-    Q_INVOKABLE void transfer(Account* to, const mpf_class& amount) override;
+    void transfer(Account* to, const mpf_class& amount) override;
+    Q_INVOKABLE void transfer(const QString& phone, const QString& amount);
 
     /// @brief 将类的信息存储到文件
     /// @param filename 文件名

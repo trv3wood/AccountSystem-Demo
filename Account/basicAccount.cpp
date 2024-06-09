@@ -1,7 +1,8 @@
 #include "basicAccount.h"
 
 #include <gmpxx.h>
-
+#include <QMessageBox>
+#include <QFile>
 #include <QString>
 #include <fstream>
 #include <iostream>
@@ -19,6 +20,20 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
         return;
     }
     Account::transfer(to, amount);
+}
+
+void BasicAccount::transfer(const QString &phone, const QString &amount) {
+    // 同步转出账户信息
+    load();
+    BasicAccount to(phone.toStdString(), ".");
+    // 检查转入账户是否存在
+    if (!QFile(to.datafile().c_str()).exists()) {
+        QMessageBox::warning(nullptr, "Title", "转入账户不存在");
+        return;
+    }
+    // 同步转入账户信息
+    to.load();
+    transfer(&to, mpf_class(amount.toStdString()));
 }
 
 void BasicAccount::serialize(std::string& data) const {

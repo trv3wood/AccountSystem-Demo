@@ -75,10 +75,15 @@ public:
     QString phoneNum() const;
     QString id() const;
 
+    /// @brief 获取余额
+    /// @return 计算机科学中的字符串表示，e.g. "1.23e+4"
     QString Balance() const { return Serializable::mpf2str(m_balance); }
     QString InterestRate() const {
         return Serializable::mpf2str(m_interestRate);
     }
+
+    /// @brief 获取余额
+    /// @return 人类可读的字符串表示，e.g. "12,345.67"
     QString balance_f() const;
     QString interestRate_f() const;
     QString cardNumber() const;
@@ -106,10 +111,17 @@ public:
     /// @param amount 存款金额
     /// @note 完成，分配给 Maco
     void deposit(const mpf_class& amount);
+    /// @brief 暴露给 QML 的存款接口
     Q_INVOKABLE virtual void deposit(const QString& amount);
 
+    /// @brief 取款
+    /// @param amount 取款金额
     void withdraw(const mpf_class& amount);
+
+    /// @brief 暴露给 QML 的取款接口
     Q_INVOKABLE virtual void withdraw(const QString& amount);
+    
+    /// @brief 打印账户信息，用于调试
     void display() const;
 
 private:
@@ -117,6 +129,9 @@ private:
     /// @return 卡号 16 位
     /// @note 完成，分配给 Sour_xuanzi
     static std::string generateCardNumber();
+
+    /// @brief 检查余额舍入
+    /// @return 是否舍入
     bool roundBalance() const;
 };
 #endif

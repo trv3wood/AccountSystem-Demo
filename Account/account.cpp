@@ -55,30 +55,38 @@ void Account::setInterestRate(double rate) { m_interestRate = rate; }
 void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
+        // 保留两位小数
         m_balance.set_prec(3);
+        // 四舍五入
         if (roundBalance()) {
             m_balance = 0.01;
         }
+        // 存储转出账户信息
         static_cast<BasicAccount*>(this)->store();
+        // 发送信号
         emit balanceChanged();
+
+        // 同上，处理转入账户
         to->m_balance += amount;
         BasicAccount* castTo = static_cast<BasicAccount*>(to);
         castTo->store();
         emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Transfer successful!" << "self balance: " << Balance() << " to balance: " << to->Balance();
+        qDebug() << "Transfer successful!" << "self balance: " << balance_f() << " to balance: " << to->balance_f();
 #endif
         QMessageBox::information(nullptr, "转账", "转账成功！");
+
+        // 记录日志
         Log logSelf(LogType::TRANSFEROUT,
                     static_cast<BasicAccount*>(this)->datafile(),
                     Serializable::mpf_class2str(amount),
-                    Balance().toStdString(), to->id().toStdString());
+                    balance_f().toStdString(), to->id().toStdString());
         logSelf.write_with(*this);
         Log logTo(LogType::TRANSFERIN,
                   m_phonenumber,
                   Serializable::mpf_class2str(amount),
-                  to->Balance().toStdString(), id().toStdString());
+                  to->balance_f().toStdString(), id().toStdString());
         logTo.write_with(*to);
     } else {
 #if ACCOUNT_DEBUG == 1
@@ -167,12 +175,15 @@ void Account::deposit(const mpf_class& amount) {
     std::cout << "write_with" << Serializable::mpf_class2str(amount)
               << std::endl;
 #endif
+    // 存款
     m_balance += amount;
+    // 存储账户信息
     static_cast<BasicAccount*>(this)->store();
+    // 发送信号
     emit balanceChanged();
+    // 记录日志
     Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
             balance_f().toStdString());
-
     log.write_with(*this);
 
 #if ACCOUNT_DEBUG == 1
@@ -194,6 +205,7 @@ bool Account::roundBalance() const {
     }
     return false;
 }
+
 void Account::withdraw(const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
