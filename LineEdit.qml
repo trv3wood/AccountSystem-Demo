@@ -11,6 +11,7 @@ Rectangle {
         anchors.fill: parent
         font.pointSize: 18
         horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         // 设置文字居中
         color: "#333"
         // 输入数字验证
