@@ -39,9 +39,9 @@ Item {
                     return
                 }
                 var amount = parseFloat(deposit.amount)
-                // if (isNaN(amount)) {
-                //     return
-                // }
+                if (isNaN(amount)) {
+                    return
+                }
                 user.deposit(amount);
                 // 清空
                 deposit.children[0].text = ""
@@ -86,9 +86,9 @@ Item {
                     return
                 }
                 var amount = parseFloat(withdraw.amount)
-                // if (isNaN(amount)) {
-                //     return
-                // }
+                if (isNaN(amount)) {
+                    return
+                }
                 user.withdraw(amount);
                 // 清空
                 withdraw.children[0].text = ""

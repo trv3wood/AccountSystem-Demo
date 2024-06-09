@@ -21,11 +21,11 @@ Log::Log(LogType type, const std::string &id, const std::string &amount,
       m_other(other) {}
 
 void Log::write_with(const BasicAccount &user) const {
-    // qDebug() << "write_with" << QString::fromStdString(user.datafile());
+    // 日志文件名
     std::string filename = user.logfile();
-    // qDebug() << QString::fromStdString(filename);
-    // 去掉.dat后缀
+    // 生成日志
     std::string log = generate_log();
+    // 写入日志
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Append)) {
         throw std::runtime_error("无法打开日志文件");
@@ -35,9 +35,11 @@ void Log::write_with(const BasicAccount &user) const {
 }
 
 std::string Log::generate_log() const {
+    // 交易时间
     QDateTime time = QDateTime::currentDateTime();
     std::string log =
         (time.toString("yyyy-MM-dd hh:mm:ss") + " ").toStdString();
+    // 交易类型
     switch (m_type) {
         case DEPOSIT:
             log += "存款";
@@ -54,7 +56,8 @@ std::string Log::generate_log() const {
         default:
             break;
     }
-    log += " 操作人: " + m_id + " 金额: " + m_amount + " 余额: " + m_balance;
+    // 交易信息
+    log += " 操作人: " + m_id + " 金额: " + m_amount + "\t余额:\t" + m_balance;
     if (m_other != "") {
         log += " 对方: " + m_other;
     }
@@ -72,8 +75,6 @@ std::string Log::read_with(const BasicAccount &user) {
     std::string result;
     while (std::getline(file, log)) {
         result += log + '\n';
-        // U8ENCODING
-        // qDebug() << QString::fromStdString(log);
     }
     file.close();
     return result;

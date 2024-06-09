@@ -9,9 +9,9 @@ Item {
 
     // 显示用户信息
     Text {
-        text: "Hello " + user.m_name + "!\n"
-              +" Your account number is " + user.m_cardNumber + ".\n"
-              +" Your current balance is $" + user.m_balance+ ".\n"
+        text: "Hello " + user.name + "!\n"
+              +" Your account number is " + user.cardNumber + ".\n"
+              +" Your current balance is $" + user.balance_f + ".\n"
         anchors.centerIn: parent
     }
 

@@ -2,7 +2,6 @@
 
 #include <gmp.h>
 #include <gmpxx.h>
-#include <qchar.h>
 
 #include <QString>
 #include <QtWidgets/QMessageBox>
@@ -60,12 +59,11 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         if (roundBalance()) {
             m_balance = 0.01;
         }
-        static_cast<BasicAccount*>(this)->store(
-            static_cast<BasicAccount*>(this)->datafile());
+        static_cast<BasicAccount*>(this)->store();
         emit balanceChanged();
         to->m_balance += amount;
         BasicAccount* castTo = static_cast<BasicAccount*>(to);
-        castTo->store(castTo->datafile());
+        castTo->store();
         emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
@@ -78,7 +76,7 @@ void Account::transfer(Account* to, const mpf_class& amount) {
                     Balance().toStdString(), to->id().toStdString());
         logSelf.write_with(*this);
         Log logTo(LogType::TRANSFERIN,
-                  static_cast<BasicAccount*>(to)->datafile(),
+                  m_phonenumber,
                   Serializable::mpf_class2str(amount),
                   to->Balance().toStdString(), id().toStdString());
         logTo.write_with(*to);
@@ -170,10 +168,9 @@ void Account::deposit(const mpf_class& amount) {
               << std::endl;
 #endif
     m_balance += amount;
-    static_cast<BasicAccount*>(this)->store(
-        static_cast<BasicAccount*>(this)->datafile());
+    static_cast<BasicAccount*>(this)->store();
     emit balanceChanged();
-    Log log(LogType::DEPOSIT, m_id, Serializable::mpf_class2str(amount),
+    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
             balance_f().toStdString());
 
     log.write_with(*this);
@@ -204,14 +201,13 @@ void Account::withdraw(const mpf_class& amount) {
         if (roundBalance()) {
             m_balance = 0.01;
         }
-        static_cast<BasicAccount*>(this)->store(
-            static_cast<BasicAccount*>(this)->datafile());
+        static_cast<BasicAccount*>(this)->store();
         emit balanceChanged();
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Withdraw successful!";
 #endif
         QMessageBox::information(nullptr, "Withdraw", "Withdraw successful!");
-        Log log(LogType::WITHDRAW, m_id, Serializable::mpf_class2str(amount),
+        Log log(LogType::WITHDRAW, m_phonenumber, Serializable::mpf_class2str(amount),
                 balance_f().toStdString());
         log.write_with(*this);
     } else {

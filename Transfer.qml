@@ -32,8 +32,19 @@ Item {
             }
 
             CustomComboBox {
+                id: senderBox
                 model: ["", "账户1", "账户2", "账户3"]
                 font.pointSize: 20
+                onCurrentIndexChanged: {
+                    sender.enabled = currentIndex === 0;
+                }
+                TextField {
+                    id: sender
+                    width: parent.width - 30 // 调整宽度
+                    height: parent.height
+                    enabled: parent.currentIndex === 0
+                    text: enabled ? text : ""
+                }
             }
         }
 
@@ -50,8 +61,19 @@ Item {
             }
 
             CustomComboBox {
+                id: receiverBox
                 model: ["", "账户1", "账户2", "账户3"]
                 font.pointSize: 20
+                onCurrentIndexChanged: {
+                    receiver.enabled = currentIndex === 0;
+                }
+                TextField {
+                    id: receiver
+                    width: parent.width - 30 // 调整宽度
+                    height: parent.height
+                    enabled: parent.currentIndex === 0
+                    text: enabled ? text : ""
+                }
             }
         }
 
@@ -72,6 +94,7 @@ Item {
                 font.family: "Microsoft Yahei"
                 font.pointSize: 18
                 width: transferPage.width / 3
+                validator: DoubleValidator { bottom: 0.0; top: 1000000000.0; decimals: 2 }
             }
 
             Text {
@@ -82,18 +105,24 @@ Item {
             }
         }
         RoundButton {
-            text: "确认转账"
-            font.pointSize: 20
             Layout.alignment: Qt.AlignHCenter
-            width: 200
-            height: 80
+            text: "确认转账"
+            font.pixelSize: 35
+            font.family: "Microsoft Yahei"
+            radius: height / 2 - 10
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            // 背景色
+            background: Rectangle {
+                color: "lightblue"
+                radius: parent.radius
+                anchors.fill: parent
+            }
             onClicked: {
-                if (amountField.text === "") {
-                    Qt.inputMethod.show();
-                    amountField.focus = true;
-                } else {
-                    console.log("转账成功");
-                }
+                console.log("转账成功" + sender.text + receiver.text)
+                sender.text = ""
+                receiver.text = ""
+                amountField.text = ""
             }
         }
     }
