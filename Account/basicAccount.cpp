@@ -167,12 +167,17 @@ QStringList BasicAccount::recentRecords() const {
         qDebug() << record;
     }
 #endif
+    if (records.back() == "") {
+        records.pop_back();  // 去掉最后一个空行
+    }
+    // 翻转顺序
+    std::reverse(records.begin(), records.end());
     return records;
 }
 
 QStringList BasicAccount::recentTransfers() const {
     QStringList records = recentRecords();
-    QStringList transfers;
+    QStringList transfers(" ");
     for (const auto& record : records) {
         if (record.contains("转账") || record.contains("收款")) {
             // 截取"对方"后的字符串

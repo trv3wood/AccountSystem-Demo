@@ -41,7 +41,6 @@ void Account::setName(const std::string& name) { m_name = name; }
 
 void Account::setPasswd(const std::string& passwd) {
     m_passwd = passwd;
-    // emit passwdChanged();
 }
 
 void Account::setLocation(const std::string& location) {
@@ -80,13 +79,13 @@ void Account::transfer(Account* to, const mpf_class& amount) {
 
         // 记录日志
         Log logSelf(LogType::TRANSFEROUT,
-                    static_cast<BasicAccount*>(this)->datafile(),
+                    m_phonenumber,
                     Serializable::mpf_class2str(amount),
-                    balance_f().toStdString(), to->id().toStdString());
+                    balance_f().toStdString(), to->phoneNum().toStdString());
         logSelf.write_with(*this);
         Log logTo(LogType::TRANSFERIN, m_phonenumber,
                   Serializable::mpf_class2str(amount),
-                  to->balance_f().toStdString(), id().toStdString());
+                  to->balance_f().toStdString(), m_phonenumber);
         logTo.write_with(*to);
     } else {
 #if ACCOUNT_DEBUG == 1
@@ -182,7 +181,7 @@ void Account::deposit(const mpf_class& amount) {
     // 发送信号
     emit balanceChanged();
     // 记录日志
-    Log log(LogType::DEPOSIT, m_id, Serializable::mpf_class2str(amount),
+    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
             balance_f().toStdString());
     log.write_with(*this);
 

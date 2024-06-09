@@ -32,7 +32,7 @@ Item {
 
             CustomComboBox {
                 id: receiverBox
-                model: ["", "账户1", "账户2", "账户3"]
+                model: user.recentTransfers()
                 font.pointSize: 20
                 onCurrentIndexChanged: {
                     receiver.enabled = currentIndex === 0;
