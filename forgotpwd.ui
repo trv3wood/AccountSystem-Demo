@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>forgotpwd</class>
+ <widget class="QWidget" name="forgotpwd">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>925</height>
+   </rect>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>忘记密码</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qrc.qrc">
+    <normaloff>:/resources/icon.webp</normaloff>:/resources/icon.webp</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+	border-radius: 20px;
+	font: 14pt &quot;Microsoft YaHei UI&quot;;
+	color:  black;
+}
+QPushButton:pressed {
+	background-color: rgba(255, 255, 255, 150);/* 更暗的背景色表示按下状态 */
+    border-style: inset;       /* 按钮边框样式改为内嵌 */
+}
+QLineEdit {
+    border: 2px solid #b6b6b6; /* 设置边框宽度和颜色 */
+    border-radius: 20px;       /* 设置边框圆角的半径 */
+    background-color: #ffffff; /* 设置背景色 */
+    color: black;              /* 设置文本颜色 */
+    padding: 10px;              /* 设置内边距，保持文本与边框的距离 */
+	font: 14pt &quot;Microsoft YaHei UI&quot;;
+}</string>
+  </property>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>460</y>
+     <width>231</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="sizeIncrement">
+    <size>
+     <width>44</width>
+     <height>44</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>14</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>确定</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="phonenum">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>240</y>
+     <width>361</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>339</width>
+     <height>44</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>14</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>手机号码</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="passwd">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>350</y>
+     <width>361</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>339</width>
+     <height>44</height>
+    </size>
+   </property>
+   <property name="placeholderText">
+    <string>密码</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="exist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>150</y>
+     <width>339</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>339</width>
+     <height>44</height>
+    </size>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="frame">
+    <bool>false</bool>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="backBtn">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>40</y>
+     <width>51</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>exist</tabstop>
+  <tabstop>phonenum</tabstop>
+  <tabstop>passwd</tabstop>
+  <tabstop>pushButton</tabstop>
+ </tabstops>
+ <resources>
+  <include location="qrc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

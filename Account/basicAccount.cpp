@@ -1,7 +1,8 @@
 #include "basicAccount.h"
 
 #include <gmpxx.h>
-
+#include <QMessageBox>
+#include <QFile>
 #include <QString>
 #include <fstream>
 #include <iostream>
@@ -9,7 +10,6 @@
 #include <string>
 
 #include "account.h"
-
 
 namespace bms {
 const unsigned BasicAccount::transferRestriction = 5000;
@@ -20,6 +20,20 @@ void BasicAccount::transfer(Account* to, const mpf_class& amount) {
         return;
     }
     Account::transfer(to, amount);
+}
+
+void BasicAccount::transfer(const QString &phone, const QString &amount) {
+    // 同步转出账户信息
+    load();
+    BasicAccount to(phone.toStdString(), ".");
+    // 检查转入账户是否存在
+    if (!QFile(to.datafile().c_str()).exists()) {
+        QMessageBox::warning(nullptr, "Title", "转入账户不存在");
+        return;
+    }
+    // 同步转入账户信息
+    to.load();
+    transfer(&to, mpf_class(amount.toStdString()));
 }
 
 void BasicAccount::serialize(std::string& data) const {
@@ -43,24 +57,31 @@ void BasicAccount::deserialize(const std::string& data) {
     std::getline(iss, interestRate);
     m_balance = balance;
     m_interestRate = interestRate;
+    m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
                            const std::string& phoneNum, const std::string& id)
     : Account(name, hashSHA256(passwd), phoneNum, id) {
     m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 BasicAccount::BasicAccount(const std::string& phoneNum,
                            const std::string& passwd)
     : Account(phoneNum, passwd) {
     m_datafile = hash(m_phonenumber, 8) + ".dat";
+    m_logfile = hash(m_phonenumber, 8) + ".log";
 }
 
 void BasicAccount::store(const std::string& filename) {
-    std::ofstream outFile(filename, std::ios::binary);
+    std::ofstream outFile(filename, std::ios::binary | std::ios::trunc);
     if (!outFile) {
-        throw std::runtime_error("Cannot open file for writing");
+        throw std::runtime_error(__FILE__ + std::string(":") +
+                                 std::to_string(__LINE__) +
+                                 std::string(" on ") + __FUNCTION__ +
+                                 "Cannot open file for writing");
     }
 
     std::string data;
@@ -77,6 +98,10 @@ void BasicAccount::store(const std::string& filename) {
 
     delete[] ciphertext;
     outFile.close();
+}
+
+void BasicAccount::store() {
+    store(m_datafile);
 }
 
 void BasicAccount::load(const std::string& filename) {
@@ -103,5 +128,23 @@ void BasicAccount::load(const std::string& filename) {
     delete[] ciphertext;
     delete[] plaintext;
     inFile.close();
+}
+
+void BasicAccount::load() {
+    load(m_datafile);
+}
+
+void BasicAccount::setPasswd(const std::string& passwd) {
+    m_passwd = hashSHA256(passwd);
+}
+
+void BasicAccount::deposit(const QString &amount) {
+    load();
+    Account::deposit(amount);
+}
+
+void BasicAccount::withdraw(const QString &amount) {
+    load();
+    Account::withdraw(amount);
 }
 }  // namespace bms

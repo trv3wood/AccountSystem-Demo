@@ -26,7 +26,7 @@
    <string>银行账户管理系统</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
+   <iconset resource="qrc.qrc">
     <normaloff>:/resources/icon.webp</normaloff>:/resources/icon.webp</iconset>
   </property>
   <property name="styleSheet">
@@ -112,7 +112,7 @@ QLineEdit {
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="fogotpw">
+    <widget class="QPushButton" name="fogotpwBtn">
      <property name="geometry">
       <rect>
        <x>251</x>
@@ -337,7 +337,7 @@ QLineEdit {
   </widget>
  </widget>
  <resources>
-  <include location="img.qrc"/>
+  <include location="qrc.qrc"/>
  </resources>
  <connections/>
 </ui>

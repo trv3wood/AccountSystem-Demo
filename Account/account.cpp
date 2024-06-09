@@ -1,17 +1,17 @@
 #include "account.h"
 
+#include <gmp.h>
 #include <gmpxx.h>
 
 #include <QString>
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <random>
 #include <QtWidgets/QMessageBox>
+#include <iostream>
+#include <random>
+#include <string>
 
-#if ACCOUNT_DEBUG == 1
-#include <cassert>
-#endif
+#include "Serializable.h"
+#include "basicAccount.h"
+#include "log.h"
 
 using bms::Account;
 
@@ -19,13 +19,19 @@ QString Account::name() const { return QString::fromStdString(m_name); }
 
 QString Account::passwd() const { return QString::fromStdString(m_passwd); }
 
-QString Account::phoneNum() const { return QString::fromStdString(m_phonenumber); }
+QString Account::phoneNum() const {
+    return QString::fromStdString(m_phonenumber);
+}
 
 QString Account::id() const { return QString::fromStdString(m_id); }
 
-mpf_class Account::balance() const { return m_balance; }
+QString Account::balance_f() const {
+    return QString::fromStdString(Serializable::mpf_class2str(m_balance));
+}
 
-mpf_class Account::interestRate() const { return m_interestRate; }
+QString Account::interestRate_f() const {
+    return QString::fromStdString(Serializable::mpf_class2str(m_interestRate));
+}
 
 QString Account::cardNumber() const {
     return QString::fromStdString(m_cardNumber);
@@ -35,6 +41,7 @@ void Account::setName(const std::string& name) { m_name = name; }
 
 void Account::setPasswd(const std::string& passwd) {
     m_passwd = passwd;
+    // emit passwdChanged();
 }
 
 void Account::setLocation(const std::string& location) {
@@ -48,19 +55,53 @@ void Account::setInterestRate(double rate) { m_interestRate = rate; }
 void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
+        // 保留两位小数
+        m_balance.set_prec(3);
+        // 四舍五入
+        if (roundBalance()) {
+            m_balance = 0.01;
+        }
+        // 存储转出账户信息
+        static_cast<BasicAccount*>(this)->store();
+        // 发送信号
+        emit balanceChanged();
+
+        // 同上，处理转入账户
         to->m_balance += amount;
+        BasicAccount* castTo = static_cast<BasicAccount*>(to);
+        castTo->store();
+        emit to->balanceChanged();
+
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Transfer successful!";
+        qDebug() << "Transfer successful!" << "self balance: " << balance_f() << " to balance: " << to->balance_f();
 #endif
+        QMessageBox::information(nullptr, "转账", "转账成功！");
+
+        // 记录日志
+        Log logSelf(LogType::TRANSFEROUT,
+                    static_cast<BasicAccount*>(this)->datafile(),
+                    Serializable::mpf_class2str(amount),
+                    balance_f().toStdString(), to->id().toStdString());
+        logSelf.write_with(*this);
+        Log logTo(LogType::TRANSFERIN,
+                  m_phonenumber,
+                  Serializable::mpf_class2str(amount),
+                  to->balance_f().toStdString(), id().toStdString());
+        logTo.write_with(*to);
     } else {
-        QMessageBox::information(nullptr, "Title", "余额不足");
+#if ACCOUNT_DEBUG == 1
+        qDebug() << "Insufficient balance!";
+#endif
+        QMessageBox::warning(nullptr, "转账", "余额不足！");
     }
 }
 
 // To: Sour_xuanzi
 Account::Account(const std::string& name, const std::string& passwd,
-                 const std::string& phoneNum, const std::string& id)
-    : m_name(name),
+                 const std::string& phoneNum, const std::string& id,
+                 QObject* parent)
+    : QObject(parent),
+      m_name(name),
       m_passwd(passwd),
       m_phonenumber(phoneNum),
       m_id(id),
@@ -68,8 +109,10 @@ Account::Account(const std::string& name, const std::string& passwd,
       m_balance("0.0"),
       m_interestRate("0.01") {}
 
-Account::Account(const std::string& phoneNum, const std::string& passwd)
-    : m_name("user"),
+Account::Account(const std::string& phoneNum, const std::string& passwd,
+                 QObject* parent)
+    : QObject(parent),
+      m_name("user"),
       m_passwd(passwd),
       m_phonenumber(phoneNum),
       m_id("0"),
@@ -126,4 +169,68 @@ void Account::display() const {
               << "Interest Rate: " << m_interestRate << "\n\n";
 }
 
-void Account::deposit(const mpf_class& amount) { m_balance += amount; }
+void Account::deposit(const mpf_class& amount) {
+#if ACCOUNT_DEBUG == 1
+    std::cout << "Deposit amount: " << amount << std::endl;
+    std::cout << "write_with" << Serializable::mpf_class2str(amount)
+              << std::endl;
+#endif
+    // 存款
+    m_balance += amount;
+    // 存储账户信息
+    static_cast<BasicAccount*>(this)->store();
+    // 发送信号
+    emit balanceChanged();
+    // 记录日志
+    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
+            balance_f().toStdString());
+    log.write_with(*this);
+
+#if ACCOUNT_DEBUG == 1
+    qDebug() << "Deposit successful!";
+#endif
+    QMessageBox::information(nullptr, "存款", "存款成功！");
+}
+void Account::deposit(const QString& amount) {
+#if ACCOUNT_DEBUG == 1
+    qDebug() << "Deposit amount: " << amount;
+#endif
+    Account::deposit(mpf_class(amount.toStdString()));
+}
+
+bool Account::roundBalance() const {
+    QString balance = Balance();
+    if (balance.endsWith("e-2") && balance.startsWith("9")) {
+        return true;
+    }
+    return false;
+}
+
+void Account::withdraw(const mpf_class& amount) {
+    if (m_balance >= amount) {
+        m_balance -= amount;
+        m_balance.set_prec(3);
+        if (roundBalance()) {
+            m_balance = 0.01;
+        }
+        static_cast<BasicAccount*>(this)->store();
+        emit balanceChanged();
+#if ACCOUNT_DEBUG == 1
+        qDebug() << "Withdraw successful!";
+#endif
+        QMessageBox::information(nullptr, "Withdraw", "Withdraw successful!");
+        Log log(LogType::WITHDRAW, m_phonenumber, Serializable::mpf_class2str(amount),
+                balance_f().toStdString());
+        log.write_with(*this);
+    } else {
+        qDebug() << "Insufficient balance!";
+        QMessageBox::warning(nullptr, "取款", "余额不足！");
+    }
+}
+
+void Account::withdraw(const QString& amount) {
+#if ACCOUNT_DEBUG == 1
+    qDebug() << "Withdraw amount: " << amount;
+#endif
+    Account::withdraw(mpf_class(amount.toStdString()));
+}
