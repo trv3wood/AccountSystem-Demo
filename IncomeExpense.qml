@@ -2,161 +2,63 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Item {
-    width: 400
-    height: 300
+    id: root
+       width: 400
+       height: 300
 
-    property real amount: 0 // 存款/取款金额
-    property string transferTo: "" // 转账目标账户
-    property real transferAmount: 0 // 转账金额
 
-    Column {
+    // 显示用户信息
+    Text {
+        text: "Hello " + user.m_name + "!\n"
+              +" Your account number is " + user.m_cardNumber + ".\n"
+              +" Your current balance is $" + user.m_balance+ ".\n"
         anchors.centerIn: parent
-        spacing: 10
-
-        Button {
-            text: "存款"
-            onClicked: {
-                amount = 0; // 重置金额
-                transferTo = ""; // 重置转账目标
-                transferAmount = 0; // 重置转账金额
-                // 打开存款对话框
-                depositDialog.open()
-            }
-        }
-
-        Button {
-            text: "取款"
-            onClicked: {
-                amount = 0; // 重置金额
-                transferTo = ""; // 重置转账目标
-                transferAmount = 0; // 重置转账金额
-                // 打开取款对话框
-                withdrawDialog.open()
-            }
-        }
-
-        Button {
-            text: "转账"
-            onClicked: {
-                amount = 0; // 重置金额
-                transferTo = ""; // 重置转账目标
-                transferAmount = 0; // 重置转账金额
-                // 打开转账对话框
-                transferDialog.open()
-            }
-        }
     }
 
-    Dialog {
-        id: depositDialog
-        title: "存款"
-        standardButtons: Dialog.Ok | Dialog.Cancel
+       // 读取用户信息文件的函数
+       function datafile() {
+           // 实现文件读取逻辑
+       }
 
-        Column {
-            spacing: 10
+       // 用于显示收支记录的文本框
+       Text {
+           id: recordText
+           anchors.centerIn: parent
+           width: parent.width * 0.8
+           wrapMode: Text.WordWrap
+       }
 
-            TextField {
-                placeholderText: "金额"
-                onTextChanged: amount = parseFloat(text)
-            }
+       // 创建一个下拉菜单供用户选择操作
+       CustomComboBox {
+           id: operationComboBox
+           anchors.horizontalCenter: parent.horizontalCenter
+           anchors.bottom: recordText.top
+           width: parent.width * 0.6
+           model: ["存钱", "取钱", "转账", "所有"]
+           onActivated: {
+               // 用户选择不同操作时执行不同的逻辑
+               switch (operationComboBox.currentIndex) {
+                   case 0: // 存钱
+                       recordText.text = "执行存钱操作的逻辑";
+                       break;
+                   case 1: // 取钱
+                       recordText.text = "执行取钱操作的逻辑";
+                       break;
+                   case 2: // 转账
+                       recordText.text = "执行转账操作的逻辑";
+                       break;
+                   case 3: // 查看所有记录
+                       recordText.text = "执行查看所有记录操作的逻辑";
+                       break;
+                   default:
+                       break;
+               }
+           }
+       }
 
-            // 金额选项按钮
-            Row {
-                spacing: 5
-                Repeater {
-                    model: [100, 500, 1000, 10000, -1] // -1 表示自定义金额
-                    Button {
-                        text: modelData === -1 ? "自定义金额" : modelData
-                        onClicked: {
-                            if (modelData !== -1) {
-                                amount = modelData
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        onAccepted: {
-            // 执行存款操作
-            transfer(account, amount)
-        }
-    }
-
-    Dialog {
-        id: withdrawDialog
-        title: "取款"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-
-        Column {
-            spacing: 10
-
-            TextField {
-                placeholderText: "金额"
-                onTextChanged: amount = parseFloat(text)
-            }
-
-            // 金额选项按钮
-            Row {
-                spacing: 5
-                Repeater {
-                    model: [100, 500, 1000, 10000, -1] // -1 表示自定义金额
-                    Button {
-                        text: modelData === -1 ? "自定义金额" : modelData
-                        onClicked: {
-                            if (modelData !== -1) {
-                                amount = modelData
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        onAccepted: {
-            // 执行取款操作
-             transfer(account, -amount)
-        }
-    }
-
-    Dialog {
-        id: transferDialog
-        title: "转账"
-        standardButtons: Dialog.Ok | Dialog.Cancel
-
-        Column {
-            spacing: 10
-
-            TextField {
-                placeholderText: "目标账户"
-                onTextChanged: transferTo = text
-            }
-
-            TextField {
-                placeholderText: "金额"
-                onTextChanged: transferAmount = parseFloat(text)
-            }
-
-            // 金额选项按钮
-            Row {
-                spacing: 5
-                Repeater {
-                    model: [100, 500, 1000, 10000, -1] // -1 表示自定义金额
-                    Button {
-                        text: modelData === -1 ? "自定义金额" : modelData
-                        onClicked: {
-                            if (modelData !== -1) {
-                                transferAmount = modelData
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        onAccepted: {
-            // 执行转账操作
-            transfer(transferTo, transferAmount)
-        }
-    }
+       // 当界面可见时执行初始化逻辑
+       Component.onCompleted: {
+           // 读取用户信息文件，你需要根据自己的文件路径和格式来实现这部分逻辑
+           datafile();
+       }
 }
