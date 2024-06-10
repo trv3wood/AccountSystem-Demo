@@ -29,7 +29,11 @@
     <normaloff>:/resources/icon.webp</normaloff>:/resources/icon.webp</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QPushButton {
+   <string notr="true">#forgotpwd {
+	
+	background-color: rgb(255, 255, 255);
+}
+QPushButton {
 	border-radius: 20px;
 	font: 14pt &quot;Microsoft YaHei UI&quot;;
 	color:  black;
@@ -47,113 +51,6 @@ QLineEdit {
 	font: 14pt &quot;Microsoft YaHei UI&quot;;
 }</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>460</y>
-     <width>231</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="sizeIncrement">
-    <size>
-     <width>44</width>
-     <height>44</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <family>Microsoft YaHei UI</family>
-     <pointsize>14</pointsize>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>确定</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="phonenum">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>240</y>
-     <width>361</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>339</width>
-     <height>44</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <family>Microsoft YaHei UI</family>
-     <pointsize>14</pointsize>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="placeholderText">
-    <string>手机号码</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="passwd">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>350</y>
-     <width>361</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>339</width>
-     <height>44</height>
-    </size>
-   </property>
-   <property name="placeholderText">
-    <string>密码</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="exist">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>150</y>
-     <width>339</width>
-     <height>44</height>
-    </rect>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>339</width>
-     <height>44</height>
-    </size>
-   </property>
-   <property name="acceptDrops">
-    <bool>true</bool>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="frame">
-    <bool>false</bool>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QPushButton" name="backBtn">
    <property name="geometry">
     <rect>
@@ -167,9 +64,81 @@ QLineEdit {
     <string>返回</string>
    </property>
   </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>181</x>
+     <y>256</y>
+     <width>331</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLineEdit" name="phonenum">
+      <property name="baseSize">
+       <size>
+        <width>339</width>
+        <height>44</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI</family>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>手机号码</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="passwd">
+      <property name="baseSize">
+       <size>
+        <width>339</width>
+        <height>44</height>
+       </size>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
+      </property>
+      <property name="placeholderText">
+       <string>密码</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="sizeIncrement">
+       <size>
+        <width>44</width>
+        <height>44</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI</family>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>确定</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <tabstops>
-  <tabstop>exist</tabstop>
   <tabstop>phonenum</tabstop>
   <tabstop>passwd</tabstop>
   <tabstop>pushButton</tabstop>
