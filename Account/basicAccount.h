@@ -1,7 +1,6 @@
 #ifndef BASICACCOUNT_H
 #define BASICACCOUNT_H
-#include <qlist.h>
-#include <QList>
+#include <QtCore/QStringList>
 #include <QtCore/QObject>
 #include <string>
 
@@ -63,7 +62,7 @@ public:
     /// @return 存款后的余额
     void transfer(Account* to, const mpf_class& amount) override;
     /// @brief 暴露给QML的转账接口
-    Q_INVOKABLE void transfer(const QString& phone, const QString& amount);
+    Q_INVOKABLE virtual void transfer(const QString& phone, const QString& amount);
 
     /// @brief 将类的信息存储到文件
     /// @param filename 文件名

@@ -1,15 +1,12 @@
 #ifndef PREMIUMACCOUNT_H
 #define PREMIUMACCOUNT_H
-#include <string>
 #include <QtCore/QObject>
+#include <string>
 
-#include "Encryptable/Encryptable.h"
-#include "Serializable.h"
-#include "account.h"
 #include "basicaccount.h"
 
 namespace bms {
-class PremiumAccount : public BasicAccount, public Serializable, public Encryptable {
+class PremiumAccount : public BasicAccount {
     Q_OBJECT
 public:
     PremiumAccount() = default;
@@ -20,24 +17,24 @@ public:
     /// @param id 身份证号
     /// @note 应当用于注册新账户
     PremiumAccount(const std::string& name, const std::string& passwd,
-                 const std::string& phoneNum, const std::string& id);
-    
+                   const std::string& phoneNum, const std::string& id);
+
     /// @brief 构造函数
     /// @param phoneNum 手机号
     /// @param passwd 密码
     /// @note 应当用于登录已有账户
     PremiumAccount(const std::string& phoneNum, const std::string& passwd);
 
-private:
-    
-
-public:
-/// @brief 存款
-    /// @param amount 存款金额
-    /// @param to 转入账户
-    /// @return 存款后的余额
-    Q_INVOKABLE void transfer(Account* to, const mpf_class& amount) override;
-    
+    /// @brief 暴露给QML的转账接口
+    /// @param phone 转账目标
+    /// @param amount 转账金额
+    Q_INVOKABLE void transfer(const QString& phone,
+                              const QString& amount) override;
+    /// @brief 判断是否为高级用户
+    /// @param phoneNum 手机号
+    /// @return 是否为高级用户
+    /// @note 高级用户的手机号为偶数结尾
+    static bool isPremium(const QString& phoneNum);
 };
 }  // namespace bms
-#endif  // PREMIUMACCOUNT_H 
+#endif  // PREMIUMACCOUNT_H

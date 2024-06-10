@@ -89,7 +89,8 @@ Item {
                 anchors.fill: parent
             }
             onClicked: {
-                var Receiver = receiverBox.currentText
+                var Receiver = receiverBox.currentIndex === 0 ? receiver.text : receiverBox.currentText
+                // console.log(Receiver)
                 user.transfer(Receiver, amountField.text)
             }
         }

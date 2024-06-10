@@ -1,42 +1,43 @@
-#include "basicAccount.h"
+#include "PremiumAccount.h"
 
 #include <gmpxx.h>
+#include <QRegExp>
 
-#include <QString>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 #include <string>
-
+#include <QFile>
+#include <QMessageBox>
 #include "account.h"
 #include "basicaccount.h"
 
-
 namespace bms {
-const unsigned BasicAccount::transferRestriction = 5000;
 
-PremiumAccount:: PremiumAccount(const std::string& name, const std::string& passwd,
-                 const std::string& phoneNum, const std::string& id):
-                 basicAccount(name, passwd, phoneNum, id);
+PremiumAccount::PremiumAccount(const std::string& name,
+                               const std::string& passwd,
+                               const std::string& phoneNum,
+                               const std::string& id)
+    : BasicAccount(name, passwd, phoneNum, id){};
 
-PremiumAccount:: PremiumAccount(const std::string& phoneNum,
-                           const std::string& passwd):
-                 basicAccount(phoneNum, passwdphoneNum);
+PremiumAccount::PremiumAccount(const std::string& phoneNum,
+                               const std::string& passwd)
+    : BasicAccount(phoneNum, passwd){}
 
-void PremiumAccount::transfer(Account* to, const mpf_class& amount) {
-    // Modified code without transfer limit:
-m_balance -= amount;
-to->m_balance += amount;
-// emit balanceChanged();
-
-#if ACCOUNT_DEBUG == 1
-qDebug() << "Transfer successful!";
-#endif
-
-Log logSelf(LogType::TRANSFEROUT, static_cast<BasicAccount*>(this)->datafile(), Serializable::mpf_class2str(amount), balance());
-logSelf.write_with(*this);
-Log logTo(LogType::TRANSFERIN, static_cast<BasicAccount*>(to)->datafile(), Serializable::mpf_class2str(amount), to->balance());
-logTo.write_with(*to);
+void PremiumAccount::transfer(const QString &phone, const QString &amount) {
+    // 同步转出账户信息
+    load();
+    BasicAccount to(phone.toStdString(), ".");
+    // 检查转入账户是否存在
+    if (!QFile(to.datafile().c_str()).exists()) {
+        QMessageBox::warning(nullptr, "不存在", "转入账户不存在");
+        return;
+    }
+    // 同步转入账户信息
+    to.load();
+    Account::transfer(&to, mpf_class(amount.toStdString()));
 }
-                 
-}
+
+bool PremiumAccount::isPremium(const QString &phoneNum) {
+    QRegExp re("\\d*[02468]$");
+    return re.exactMatch(phoneNum);
+};
+
+}  // namespace bms

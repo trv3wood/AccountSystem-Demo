@@ -11,10 +11,11 @@
 
 #include "./ui_loginwindow.h"
 #include "Account/Encryptable/Encryptable.h"
-#include "Account/basicAccount.h"
+#include "Account/PremiumAccount.h"
+#include "Account/basicaccount.h"
 #include "ui_forgotpwd.h"
 
-using bms::BasicAccount;
+using bms::BasicAccount, bms::PremiumAccount;
 #include "forgotpwd.h"
 #include "sourchange.h"
 
@@ -104,7 +105,13 @@ void MainWindow::login_click() {
     // QString phone = "18823231622";
     // QString password = "Ricky4881";
 
-    BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
+    // 判断是否为高级用户
+    BasicAccount *user = nullptr;
+    if (PremiumAccount::isPremium(phone)) {
+        user = new PremiumAccount(phone.toStdString(), ".");
+    } else {
+        user = new BasicAccount(phone.toStdString(), ".");
+    }
     // 拼接用户信息文件的路径
     std::string filename = user->datafile();
 

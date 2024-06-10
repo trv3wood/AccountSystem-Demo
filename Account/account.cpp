@@ -2,8 +2,6 @@
 
 #include <gmp.h>
 #include <gmpxx.h>
-#include <qchar.h>
-#include <qglobal.h>
 
 #include <QString>
 #include <QtWidgets/QMessageBox>
