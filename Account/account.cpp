@@ -5,7 +5,9 @@
 
 #include <QString>
 #include <QtWidgets/QMessageBox>
+#if ACCOUNT_DEBUG == 1
 #include <iostream>
+#endif
 #include <random>
 #include <string>
 
@@ -59,14 +61,22 @@ void Account::transfer(Account* to, const mpf_class& amount) {
             m_balance = 0.01;
         }
         // 存储转出账户信息
-        static_cast<BasicAccount*>(this)->store();
+        try {
+            static_cast<BasicAccount*>(this)->store();
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "存储", e.what());
+        }
         // 发送信号
         emit balanceChanged();
 
         // 同上，处理转入账户
         to->m_balance += amount;
         BasicAccount* castTo = static_cast<BasicAccount*>(to);
-        castTo->store();
+        try {
+            castTo->store();
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "存储", e.what());
+        }
         emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
@@ -79,11 +89,19 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         Log logSelf(LogType::TRANSFEROUT, m_phonenumber,
                     Serializable::mpf_class2str(amount),
                     balance_f().toStdString(), to->phoneNum().toStdString());
-        logSelf.write_with(*this);
+        try {
+            logSelf.write_with(*this);
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "日志", e.what());
+        }
         Log logTo(LogType::TRANSFERIN, m_phonenumber,
                   Serializable::mpf_class2str(amount),
                   to->balance_f().toStdString(), m_phonenumber);
-        logTo.write_with(*to);
+        try {
+            logTo.write_with(*to);
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "日志", e.what());
+        }
     } else {
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Insufficient balance!";
@@ -154,6 +172,7 @@ std::string Account::generateCardNumber() {
     return cardNumber;
 }
 
+#if ACCOUNT_DEBUG == 1
 void Account::display() const {
     U8ENCODING
     std::cout << "Name: " << m_name << '\n'
@@ -164,6 +183,7 @@ void Account::display() const {
               << "Balance: " << m_balance << '\n'
               << "Interest Rate: " << m_interestRate << "\n\n";
 }
+#endif
 
 void Account::deposit(const mpf_class& amount) {
 #if ACCOUNT_DEBUG == 1
@@ -174,7 +194,11 @@ void Account::deposit(const mpf_class& amount) {
     // 存款
     m_balance += amount;
     // 存储账户信息
-    static_cast<BasicAccount*>(this)->store();
+    try {
+        static_cast<BasicAccount*>(this)->store();
+    } catch (const std::runtime_error& e) {
+        QMessageBox::warning(nullptr, "存储", e.what());
+    }
     // 发送信号
     emit balanceChanged();
     // 记录日志

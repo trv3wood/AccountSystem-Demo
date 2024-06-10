@@ -9,7 +9,7 @@
 
 #include "Serializable.h"
 
-#define ACCOUNT_DEBUG 1
+#define ACCOUNT_DEBUG 0
 #if ACCOUNT_DEBUG == 1
 #include <QtCore/QDebug>
 #include <QtCore/QTextCodec>

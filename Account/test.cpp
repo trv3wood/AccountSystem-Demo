@@ -17,7 +17,7 @@ TEST(basicAccount, Constructor) {
     EXPECT_EQ(a.id(), b.id());
     b.transfer(&a, 100);
     b.display();
-    b.deposit(1000);
+    b.deposit("1000");
     b.transfer(&a, 100);
     a.display();
     b.display();

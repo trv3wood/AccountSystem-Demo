@@ -78,6 +78,7 @@ CMakeSettings.json
 # vscode settings
 .vscode/
 build/
+release/
 
 # user data
 *.dat

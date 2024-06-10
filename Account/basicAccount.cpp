@@ -152,7 +152,8 @@ void BasicAccount::withdraw(const QString& amount) {
 QStringList BasicAccount::recentRecords() const {
     QFile logFile(QString::fromStdString(m_logfile));
     if (!logFile.open(QIODevice::ReadOnly)) {
-        throw std::runtime_error("Cannot open log file for reading");
+        // 如果日志文件不存在，返回空列表
+        return QStringList();
     }
     QString log = logFile.readAll();
     logFile.close();
