@@ -14,5 +14,6 @@
         <file>CustomComboBox.qml</file>
         <file>SourText.qml</file>
         <file>SubmitBtn.qml</file>
+        <file>CustomLabel.qml</file>
     </qresource>
 </RCC>

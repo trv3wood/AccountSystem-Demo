@@ -1,8 +1,10 @@
 #include "basicAccount.h"
 
 #include <gmpxx.h>
-#include <QMessageBox>
+#include <qlist.h>
+
 #include <QFile>
+#include <QMessageBox>
 #include <QString>
 #include <fstream>
 #include <iostream>
@@ -16,19 +18,22 @@ const unsigned BasicAccount::transferRestriction = 5000;
 
 void BasicAccount::transfer(Account* to, const mpf_class& amount) {
     if (amount > transferRestriction) {
+#if ACCOUNT_DEBUG == 1
         std::cerr << "Transfer amount exceeds the restriction." << '\n';
+#endif
+        QMessageBox::warning(nullptr, "限额", "转账金额超过限制 5000 元");
         return;
     }
     Account::transfer(to, amount);
 }
 
-void BasicAccount::transfer(const QString &phone, const QString &amount) {
+void BasicAccount::transfer(const QString& phone, const QString& amount) {
     // 同步转出账户信息
     load();
     BasicAccount to(phone.toStdString(), ".");
     // 检查转入账户是否存在
     if (!QFile(to.datafile().c_str()).exists()) {
-        QMessageBox::warning(nullptr, "Title", "转入账户不存在");
+        QMessageBox::warning(nullptr, "不存在", "转入账户不存在");
         return;
     }
     // 同步转入账户信息
@@ -100,9 +105,7 @@ void BasicAccount::store(const std::string& filename) {
     outFile.close();
 }
 
-void BasicAccount::store() {
-    store(m_datafile);
-}
+void BasicAccount::store() { store(m_datafile); }
 
 void BasicAccount::load(const std::string& filename) {
     std::ifstream inFile(filename, std::ios::binary);
@@ -130,21 +133,63 @@ void BasicAccount::load(const std::string& filename) {
     inFile.close();
 }
 
-void BasicAccount::load() {
-    load(m_datafile);
-}
+void BasicAccount::load() { load(m_datafile); }
 
 void BasicAccount::setPasswd(const std::string& passwd) {
     m_passwd = hashSHA256(passwd);
 }
 
-void BasicAccount::deposit(const QString &amount) {
+void BasicAccount::deposit(const QString& amount) {
     load();
     Account::deposit(amount);
 }
 
-void BasicAccount::withdraw(const QString &amount) {
+void BasicAccount::withdraw(const QString& amount) {
     load();
     Account::withdraw(amount);
+}
+
+QStringList BasicAccount::recentRecords() const {
+    QFile logFile(QString::fromStdString(m_logfile));
+    if (!logFile.open(QIODevice::ReadOnly)) {
+        // 如果日志文件不存在，返回空列表
+        return QStringList();
+    }
+    QString log = logFile.readAll();
+    logFile.close();
+    // 取最近的10条记录
+    QStringList records = log.split('\n');
+    int n = records.size();
+    if (n > 10) {
+        records = records.mid(n - 10);  // 取最后10条记录
+    }
+#if ACCOUNT_DEBUG == 1
+    for (const auto& record : records) {
+        qDebug() << record;
+    }
+#endif
+    if (records.back() == "") {
+        records.pop_back();  // 去掉最后一个空行
+    }
+    // 翻转顺序
+    std::reverse(records.begin(), records.end());
+    return records;
+}
+
+QStringList BasicAccount::recentTransfers() const {
+    QStringList records = recentRecords();
+    QStringList transfers(" ");
+    for (const auto& record : records) {
+        if (record.contains("转账") || record.contains("收款")) {
+            // 截取"对方"后的字符串
+            transfers.append(record.mid(record.indexOf("对方: ") + 4));
+        }
+    }
+    // 去重
+    transfers.removeDuplicates();
+#if ACCOUNT_DEBUG == 1
+    qDebug() << "Transfers: " << transfers;
+#endif
+    return transfers;
 }
 }  // namespace bms

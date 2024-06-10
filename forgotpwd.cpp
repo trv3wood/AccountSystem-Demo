@@ -1,4 +1,7 @@
 #include "forgotpwd.h"
+#include <qmessagebox.h>
+#include <qobject.h>
+#include <QMessageBox>
 
 #include <QFile>
 #include <QString>
@@ -11,6 +14,13 @@ forgotpwd::forgotpwd(QWidget* prev, QWidget* parent)
     ui->setupUi(this);
     QObject::connect(ui->backBtn, SIGNAL(clicked(bool)), this,
                      SLOT(backBtn_clicked()));
+    QObject::connect(ui->pushButton, SIGNAL(clicked(bool)), this,
+                     SLOT(pushButton_clicked()));
+    // 居中
+    ui->phonenum->setAlignment(Qt::AlignCenter);
+    ui->passwd->setAlignment(Qt::AlignCenter);
+    ui->phonenum->setPlaceholderText("请输入手机号");
+    ui->passwd->setPlaceholderText("请输入新密码");
 }
 
 forgotpwd::~forgotpwd() { delete ui; }
@@ -20,13 +30,13 @@ void forgotpwd::pushButton_clicked() {
     QString filename = QString::fromStdString(user.datafile());
     QFile outfile(filename);
     if (outfile.exists()) {
-        ui->exist->setText("账号存在");
         user.load();
         user.setPasswd(ui->passwd->text().toStdString());
         user.store();
         outfile.close();
+        QMessageBox::information(this, "Success", "密码修改成功！");
     } else {
-        ui->exist->setText("账户不存在");
+        QMessageBox::warning(this, "Warning", "未找到该用户！");
     }
 }
 

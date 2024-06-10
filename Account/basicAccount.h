@@ -1,7 +1,8 @@
 #ifndef BASICACCOUNT_H
 #define BASICACCOUNT_H
-#include <string>
+#include <QtCore/QStringList>
 #include <QtCore/QObject>
+#include <string>
 
 #include "Encryptable/Encryptable.h"
 #include "Serializable.h"
@@ -20,7 +21,7 @@ public:
     /// @note 应当用于注册新账户
     BasicAccount(const std::string& name, const std::string& passwd,
                  const std::string& phoneNum, const std::string& id);
-    
+
     /// @brief 构造函数
     /// @param phoneNum 手机号
     /// @param passwd 密码
@@ -54,12 +55,14 @@ public:
     /// @brief 获取日志文件名
     /// @note 命名格式为：手机号的hash值取前8位+后缀".log"
     std::string logfile() const { return m_logfile; }
+
     /// @brief 存款
     /// @param amount 存款金额
     /// @param to 转入账户
     /// @return 存款后的余额
     void transfer(Account* to, const mpf_class& amount) override;
-    Q_INVOKABLE void transfer(const QString& phone, const QString& amount);
+    /// @brief 暴露给QML的转账接口
+    Q_INVOKABLE virtual void transfer(const QString& phone, const QString& amount);
 
     /// @brief 将类的信息存储到文件
     /// @param filename 文件名
@@ -77,6 +80,11 @@ public:
 
     Q_INVOKABLE void deposit(const QString& amount) override;
     Q_INVOKABLE void withdraw(const QString& amount) override;
+
+    /// @brief 获取最近的交易记录
+    Q_INVOKABLE QStringList recentRecords() const;
+    /// @brief 获取最近的转账对象
+    Q_INVOKABLE QStringList recentTransfers() const;
 };
 }  // namespace bms
 #endif  // BASICACCOUNT_H

@@ -5,7 +5,9 @@
 
 #include <QString>
 #include <QtWidgets/QMessageBox>
+#if ACCOUNT_DEBUG == 1
 #include <iostream>
+#endif
 #include <random>
 #include <string>
 
@@ -39,10 +41,7 @@ QString Account::cardNumber() const {
 
 void Account::setName(const std::string& name) { m_name = name; }
 
-void Account::setPasswd(const std::string& passwd) {
-    m_passwd = passwd;
-    // emit passwdChanged();
-}
+void Account::setPasswd(const std::string& passwd) { m_passwd = passwd; }
 
 void Account::setLocation(const std::string& location) {
     m_phonenumber = location;
@@ -62,32 +61,47 @@ void Account::transfer(Account* to, const mpf_class& amount) {
             m_balance = 0.01;
         }
         // 存储转出账户信息
-        static_cast<BasicAccount*>(this)->store();
+        try {
+            static_cast<BasicAccount*>(this)->store();
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "存储", e.what());
+        }
         // 发送信号
         emit balanceChanged();
 
         // 同上，处理转入账户
         to->m_balance += amount;
         BasicAccount* castTo = static_cast<BasicAccount*>(to);
-        castTo->store();
+        try {
+            castTo->store();
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "存储", e.what());
+        }
         emit to->balanceChanged();
 
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Transfer successful!" << "self balance: " << balance_f() << " to balance: " << to->balance_f();
+        qDebug() << "Transfer successful!" << "self balance: " << balance_f()
+                 << " to balance: " << to->balance_f();
 #endif
         QMessageBox::information(nullptr, "转账", "转账成功！");
 
         // 记录日志
-        Log logSelf(LogType::TRANSFEROUT,
-                    static_cast<BasicAccount*>(this)->datafile(),
+        Log logSelf(LogType::TRANSFEROUT, m_phonenumber,
                     Serializable::mpf_class2str(amount),
-                    balance_f().toStdString(), to->id().toStdString());
-        logSelf.write_with(*this);
-        Log logTo(LogType::TRANSFERIN,
-                  m_phonenumber,
+                    balance_f().toStdString(), to->phoneNum().toStdString());
+        try {
+            logSelf.write_with(*this);
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "日志", e.what());
+        }
+        Log logTo(LogType::TRANSFERIN, m_phonenumber,
                   Serializable::mpf_class2str(amount),
-                  to->balance_f().toStdString(), id().toStdString());
-        logTo.write_with(*to);
+                  to->balance_f().toStdString(), m_phonenumber);
+        try {
+            logTo.write_with(*to);
+        } catch (const std::runtime_error& e) {
+            QMessageBox::warning(nullptr, "日志", e.what());
+        }
     } else {
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Insufficient balance!";
@@ -158,6 +172,7 @@ std::string Account::generateCardNumber() {
     return cardNumber;
 }
 
+#if ACCOUNT_DEBUG == 1
 void Account::display() const {
     U8ENCODING
     std::cout << "Name: " << m_name << '\n'
@@ -168,22 +183,27 @@ void Account::display() const {
               << "Balance: " << m_balance << '\n'
               << "Interest Rate: " << m_interestRate << "\n\n";
 }
+#endif
 
 void Account::deposit(const mpf_class& amount) {
 #if ACCOUNT_DEBUG == 1
-    std::cout << "Deposit amount: " << amount << std::endl;
-    std::cout << "write_with" << Serializable::mpf_class2str(amount)
-              << std::endl;
+    qDebug() << "Deposit amount: "
+             << BasicAccount::mpf_class2str(amount).c_str() << " to "
+             << m_phonenumber.c_str();
 #endif
     // 存款
     m_balance += amount;
     // 存储账户信息
-    static_cast<BasicAccount*>(this)->store();
+    try {
+        static_cast<BasicAccount*>(this)->store();
+    } catch (const std::runtime_error& e) {
+        QMessageBox::warning(nullptr, "存储", e.what());
+    }
     // 发送信号
     emit balanceChanged();
     // 记录日志
-    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
-            balance_f().toStdString());
+    Log log(LogType::DEPOSIT, m_phonenumber,
+            Serializable::mpf_class2str(amount), balance_f().toStdString());
     log.write_with(*this);
 
 #if ACCOUNT_DEBUG == 1
@@ -219,11 +239,13 @@ void Account::withdraw(const mpf_class& amount) {
         qDebug() << "Withdraw successful!";
 #endif
         QMessageBox::information(nullptr, "Withdraw", "Withdraw successful!");
-        Log log(LogType::WITHDRAW, m_phonenumber, Serializable::mpf_class2str(amount),
-                balance_f().toStdString());
+        Log log(LogType::WITHDRAW, m_phonenumber,
+                Serializable::mpf_class2str(amount), balance_f().toStdString());
         log.write_with(*this);
     } else {
+#if ACCOUNT_DEBUG == 1
         qDebug() << "Insufficient balance!";
+#endif
         QMessageBox::warning(nullptr, "取款", "余额不足！");
     }
 }

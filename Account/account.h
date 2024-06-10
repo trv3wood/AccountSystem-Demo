@@ -9,7 +9,7 @@
 
 #include "Serializable.h"
 
-#define ACCOUNT_DEBUG 1
+#define ACCOUNT_DEBUG 0
 #if ACCOUNT_DEBUG == 1
 #include <QtCore/QDebug>
 #include <QtCore/QTextCodec>
@@ -120,7 +120,7 @@ public:
 
     /// @brief 暴露给 QML 的取款接口
     Q_INVOKABLE virtual void withdraw(const QString& amount);
-    
+
     /// @brief 打印账户信息，用于调试
     void display() const;
 

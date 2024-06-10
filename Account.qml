@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
  import QtQuick.Controls 2.15
-import Qt3D.Extras 2.15
 import Sourchange 1.0
 import "."
 Item {

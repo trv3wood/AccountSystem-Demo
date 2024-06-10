@@ -201,7 +201,7 @@ QLineEdit {
          <string notr="true"/>
         </property>
         <property name="maxLength">
-         <number>22</number>
+         <number>10</number>
         </property>
         <property name="placeholderText">
          <string>姓名</string>
@@ -228,7 +228,7 @@ QLineEdit {
          <string notr="true"/>
         </property>
         <property name="maxLength">
-         <number>16</number>
+         <number>25</number>
         </property>
         <property name="placeholderText">
          <string>身份证号</string>

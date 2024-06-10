@@ -77,6 +77,16 @@ ApplicationWindow {
             id: contentLoader
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Text {
+                topPadding: 20
+                leftPadding: 30
+                bottomPadding: 10
+                // 如果为Premium用户显示
+                text: user.isPremium ? "Premium User" : "Free User"
+                font.pointSize: 24
+                font.family: "Microsoft YaHei"
+                font.bold: true
+            }
         }
     }
 }
