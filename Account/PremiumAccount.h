@@ -34,7 +34,7 @@ public:
     /// @param phoneNum 手机号
     /// @return 是否为高级用户
     /// @note 高级用户的手机号为偶数结尾
-    static bool isPremium(const QString& phoneNum);
+    Q_INVOKABLE static bool isPremium(const QString& phoneNum);
 };
 }  // namespace bms
 #endif  // PREMIUMACCOUNT_H
