@@ -16,7 +16,7 @@
 
 using bms::BasicAccount;
 #include "forgotpwd.h"
-#include"sourchange.h"
+#include "sourchange.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LoginWindow) {
@@ -99,10 +99,10 @@ void MainWindow::login_click() {
         return;
     }
     // 获取用户输入的账号和密码
-    // QString phone = ui->phoneEdit->text();
-    // QString password = ui->passwdEdit->text();
-    QString phone = "18823231622";
-    QString password = "Ricky4881";
+    QString phone = ui->phoneEdit->text();
+    QString password = ui->passwdEdit->text();
+    // QString phone = "18823231622";
+    // QString password = "Ricky4881";
 
     BasicAccount *user = new BasicAccount(phone.toStdString(), ".");
     // 拼接用户信息文件的路径
@@ -116,18 +116,15 @@ void MainWindow::login_click() {
         // 比对密码
         if (user->passwd().toStdString() !=
             bms::Encryptable::hashSHA256(password.toStdString())) {
-            QMessageBox::information(
-                this, "Title", __FILE__ "登录失败，请检查手机号和密码是否正确");
+            QMessageBox::information(this, __FUNCTION__,
+                                     "登录失败，请检查手机号和密码是否正确");
             delete user;
             return;
         }
         // QML engine setup
         QQmlApplicationEngine *engine = new QQmlApplicationEngine;
         if (!engine) {
-            QMessageBox::information(this, "Title",
-                                     __FILE__
-                                     ":"
-                                     "QML引擎初始化失败");
+            QMessageBox::information(this, __FUNCTION__, "QML引擎初始化失败");
             delete user;
             return;
         }
@@ -143,20 +140,20 @@ void MainWindow::login_click() {
             Qt::QueuedConnection);
 
         // 注册 Sourchange 类到 QML
-        qmlRegisterType<Sourchange>("Sourchange",1,0,"Sourchange");
+        qmlRegisterType<Sourchange>("Sourchange", 1, 0, "Sourchange");
 
         engine->load(url);
 
         if (engine->rootObjects().isEmpty()) {
-            QMessageBox::information(this, "Title", __FILE__ "加载QML文件失败");
+            QMessageBox::information(this, __FUNCTION__, "加载QML文件失败");
             delete user;
             delete engine;
             return;
         }
     } else {
         // 文件不存在，登录失败
-        QMessageBox::information(
-            this, "Title", __FILE__ "登录失败，请检查手机号和密码是否正确");
+        QMessageBox::information(this, __FUNCTION__,
+                                 "登录失败，请检查手机号和密码是否正确");
         delete user;
         return;
     }
@@ -176,8 +173,8 @@ void MainWindow::fogotpw_click() {
     this->hide();
 }
 
-//用于连接qml中修改密码的
-void MainWindow::cppConnection(){
+// 用于连接qml中修改密码的
+void MainWindow::cppConnection() {
     forgotpwd *changePasswd = new forgotpwd;
     changePasswd->show();
     changePasswd->ui->backBtn->hide();

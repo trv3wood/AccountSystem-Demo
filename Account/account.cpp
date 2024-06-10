@@ -2,6 +2,8 @@
 
 #include <gmp.h>
 #include <gmpxx.h>
+#include <qchar.h>
+#include <qglobal.h>
 
 #include <QString>
 #include <QtWidgets/QMessageBox>
@@ -39,9 +41,7 @@ QString Account::cardNumber() const {
 
 void Account::setName(const std::string& name) { m_name = name; }
 
-void Account::setPasswd(const std::string& passwd) {
-    m_passwd = passwd;
-}
+void Account::setPasswd(const std::string& passwd) { m_passwd = passwd; }
 
 void Account::setLocation(const std::string& location) {
     m_phonenumber = location;
@@ -78,8 +78,7 @@ void Account::transfer(Account* to, const mpf_class& amount) {
         QMessageBox::information(nullptr, "转账", "转账成功！");
 
         // 记录日志
-        Log logSelf(LogType::TRANSFEROUT,
-                    m_phonenumber,
+        Log logSelf(LogType::TRANSFEROUT, m_phonenumber,
                     Serializable::mpf_class2str(amount),
                     balance_f().toStdString(), to->phoneNum().toStdString());
         logSelf.write_with(*this);
@@ -170,9 +169,9 @@ void Account::display() const {
 
 void Account::deposit(const mpf_class& amount) {
 #if ACCOUNT_DEBUG == 1
-    std::cout << "Deposit amount: " << amount << std::endl;
-    std::cout << "write_with" << Serializable::mpf_class2str(amount)
-              << std::endl;
+    qDebug() << "Deposit amount: "
+             << BasicAccount::mpf_class2str(amount).c_str() << " to "
+             << m_phonenumber.c_str();
 #endif
     // 存款
     m_balance += amount;
@@ -181,8 +180,8 @@ void Account::deposit(const mpf_class& amount) {
     // 发送信号
     emit balanceChanged();
     // 记录日志
-    Log log(LogType::DEPOSIT, m_phonenumber, Serializable::mpf_class2str(amount),
-            balance_f().toStdString());
+    Log log(LogType::DEPOSIT, m_phonenumber,
+            Serializable::mpf_class2str(amount), balance_f().toStdString());
     log.write_with(*this);
 
 #if ACCOUNT_DEBUG == 1
@@ -222,7 +221,9 @@ void Account::withdraw(const mpf_class& amount) {
                 Serializable::mpf_class2str(amount), balance_f().toStdString());
         log.write_with(*this);
     } else {
+#if ACCOUNT_DEBUG == 1
         qDebug() << "Insufficient balance!";
+#endif
         QMessageBox::warning(nullptr, "取款", "余额不足！");
     }
 }

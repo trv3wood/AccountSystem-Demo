@@ -89,7 +89,8 @@ Item {
                 anchors.fill: parent
             }
             onClicked: {
-                user.transfer(receiver.text, amountField.text)
+                var Receiver = receiverBox.currentText
+                user.transfer(Receiver, amountField.text)
             }
         }
     }
