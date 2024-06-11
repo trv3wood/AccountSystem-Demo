@@ -138,7 +138,7 @@ void MainWindow::login_click() {
 
         engine->rootContext()->setContextProperty("user", user);
 
-        const QUrl url(QStringLiteral("qrc:/qml/dashboard.qml"));
+        const QUrl url(QStringLiteral("qrc:/qml/Dashboard.qml"));
         QObject::connect(
             engine, &QQmlApplicationEngine::objectCreated, this,
             [url](QObject *obj, const QUrl &objUrl) {

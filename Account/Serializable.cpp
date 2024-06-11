@@ -34,24 +34,10 @@ std::string Serializable::mpf_class2str(const mpf_class& number, int precision) 
     size_t dot_pos = result.find('.');
     if (dot_pos != std::string::npos) {
         // 如果小数点后的位数超过精度，截断
-        result = result.substr(0, dot_pos + precision + 2);
+        result = result.substr(0, dot_pos + precision + 1);
         // 不足的补0
         while (static_cast<int>(result.size() - dot_pos) < precision + 1) {
             result += "0";
-        }
-        // 四舍五入
-        if (result.back() >= '5') {
-            for (int i = result.size() - 2; i >= static_cast<int>(dot_pos); --i) {
-                if (result[i] == '.') {
-                    continue;
-                }
-                if (result[i] == '9') {
-                    result[i] = '0';
-                } else {
-                    ++result[i];
-                    break;
-                }
-            }
         }
     }
     if (result.back() == '.') {
@@ -65,14 +51,14 @@ QString Serializable::mpf2str(const mpf_class& number) {
     std::string s = number.get_str(exp);
     QString result = QString::fromStdString(s);
     // xxe+yy
+    if (result.isEmpty()) {
+        return "0";
+    }
     if (exp != 0) {
         result += "e" + QString::number(exp);
     }
     if (exp == 0) {
         result = "0." + result;
-    }
-    if (result.isEmpty()) {
-        result = "0";
     }
     return result;
 }

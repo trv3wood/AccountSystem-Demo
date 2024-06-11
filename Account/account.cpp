@@ -238,7 +238,7 @@ void Account::withdraw(const mpf_class& amount) {
 #if ACCOUNT_DEBUG == 1
         qDebug() << "Withdraw successful!";
 #endif
-        QMessageBox::information(nullptr, "Withdraw", "Withdraw successful!");
+        QMessageBox::information(nullptr, "Withdraw", "取款成功");
         Log log(LogType::WITHDRAW, m_phonenumber,
                 Serializable::mpf_class2str(amount), balance_f().toStdString());
         log.write_with(*this);
