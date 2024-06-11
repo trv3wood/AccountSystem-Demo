@@ -11,6 +11,7 @@ Item {
         anchors.centerIn: parent
         spacing: 30
         Row {
+            id:roww
             ColumnLayout{
                 id:first
 
@@ -36,7 +37,7 @@ Item {
         Button{
             id:changebutton
             flat: true
-            width: 200
+            width: roww.width / 3
             height: 80
             anchors.horizontalCenter: parent.horizontalCenter
     //        anchors.horizontalCenter: parent.horizontalCenter
@@ -44,20 +45,20 @@ Item {
                 anchors.fill: changebutton
                 color:
                     if(changebutton.pressed)return "#999999"
-                    else return "#738e95"
-                radius: 10
+                    else return "lightblue"
+                radius: height / 2 - 10
             }
             Text {
                 text: "修改密码"
 
                 font.family : "Microsoft Yahei"
-                font.pixelSize: 35
+                font.pixelSize: 30
                 color: "black"
                 anchors.centerIn: parent
             }
 
-            // x:480
-            // y:650
+//             x:20
+//             y:800
 
             onClicked: {
                 myobj.cppSlot();
