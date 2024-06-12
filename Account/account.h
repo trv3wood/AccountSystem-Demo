@@ -9,7 +9,7 @@
 
 #include "Serializable.h"
 
-#define ACCOUNT_DEBUG 0
+#define ACCOUNT_DEBUG 1
 #if ACCOUNT_DEBUG == 1
 #include <QtCore/QDebug>
 #include <QtCore/QTextCodec>
@@ -20,6 +20,7 @@
 namespace bms {
 class Account;
 const double defualtInterestRate = 0.01;
+const int PREC = 256;
 }  // namespace bms
 class bms::Account : public QObject {
     Q_OBJECT
