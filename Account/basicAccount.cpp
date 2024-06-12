@@ -85,7 +85,7 @@ void BasicAccount::store(const std::string& filename) {
     if (!outFile) {
         throw std::runtime_error(__FILE__ + std::string(":") +
                                  std::to_string(__LINE__) +
-                                 std::string(" on ") + __FUNCTION__ +
+                                 std::string(" on ") + __PRETTY_FUNCTION__ +
                                  "Cannot open file for writing");
     }
 

@@ -38,7 +38,7 @@ Item {
                 if (deposit.amount === "") {
                     return
                 }
-                var amount = parseFloat(deposit.amount)
+                var amount = deposit.amount
                 if (isNaN(amount)) {
                     return
                 }
@@ -85,7 +85,7 @@ Item {
                 if (withdraw.amount === "") {
                     return
                 }
-                var amount = parseFloat(withdraw.amount)
+                var amount = withdraw.amount
                 if (isNaN(amount)) {
                     return
                 }

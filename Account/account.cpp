@@ -54,8 +54,6 @@ void Account::setInterestRate(double rate) { m_interestRate = rate; }
 void Account::transfer(Account* to, const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
-        // 保留两位小数
-        m_balance.set_prec(3);
         // 四舍五入
         if (roundBalance()) {
             m_balance = 0.01;
@@ -120,7 +118,7 @@ Account::Account(const std::string& name, const std::string& passwd,
       m_phonenumber(phoneNum),
       m_id(id),
       m_cardNumber(generateCardNumber()),
-      m_balance("0.0"),
+      m_balance("0.0", PREC),
       m_interestRate("0.01") {}
 
 Account::Account(const std::string& phoneNum, const std::string& passwd,
@@ -131,7 +129,7 @@ Account::Account(const std::string& phoneNum, const std::string& passwd,
       m_phonenumber(phoneNum),
       m_id("0"),
       m_cardNumber("00000000"),
-      m_balance("0.0"),
+      m_balance("0.0", PREC),
       m_interestRate("0.01") {}
 
 std::string Account::generateCardNumber() {
@@ -187,7 +185,7 @@ void Account::display() const {
 
 void Account::deposit(const mpf_class& amount) {
 #if ACCOUNT_DEBUG == 1
-    qDebug() << "Deposit amount: "
+    qDebug() << __PRETTY_FUNCTION__ << "Deposit amount: "
              << BasicAccount::mpf_class2str(amount).c_str() << " to "
              << m_phonenumber.c_str();
 #endif
@@ -213,9 +211,9 @@ void Account::deposit(const mpf_class& amount) {
 }
 void Account::deposit(const QString& amount) {
 #if ACCOUNT_DEBUG == 1
-    qDebug() << "Deposit amount: " << amount;
+    qDebug() << __PRETTY_FUNCTION__ << "Deposit amount: " << amount;
 #endif
-    Account::deposit(mpf_class(amount.toStdString()));
+    Account::deposit(mpf_class(amount.toStdString(), PREC));
 }
 
 bool Account::roundBalance() const {
@@ -229,14 +227,13 @@ bool Account::roundBalance() const {
 void Account::withdraw(const mpf_class& amount) {
     if (m_balance >= amount) {
         m_balance -= amount;
-        m_balance.set_prec(3);
         if (roundBalance()) {
             m_balance = 0.01;
         }
         static_cast<BasicAccount*>(this)->store();
         emit balanceChanged();
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Withdraw successful!";
+        qDebug() << __PRETTY_FUNCTION__ << "Withdraw successful!";
 #endif
         QMessageBox::information(nullptr, "Withdraw", "取款成功");
         Log log(LogType::WITHDRAW, m_phonenumber,
@@ -244,7 +241,7 @@ void Account::withdraw(const mpf_class& amount) {
         log.write_with(*this);
     } else {
 #if ACCOUNT_DEBUG == 1
-        qDebug() << "Insufficient balance!";
+        qDebug() << __PRETTY_FUNCTION__ << "Insufficient balance!";
 #endif
         QMessageBox::warning(nullptr, "取款", "余额不足！");
     }
@@ -252,7 +249,7 @@ void Account::withdraw(const mpf_class& amount) {
 
 void Account::withdraw(const QString& amount) {
 #if ACCOUNT_DEBUG == 1
-    qDebug() << "Withdraw amount: " << amount;
+    qDebug() << __PRETTY_FUNCTION__ << "Withdraw amount: " << amount;
 #endif
-    Account::withdraw(mpf_class(amount.toStdString()));
+    Account::withdraw(mpf_class(amount.toStdString(), PREC));
 }
