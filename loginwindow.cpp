@@ -102,8 +102,6 @@ void MainWindow::login_click() {
     // 获取用户输入的账号和密码
     QString phone = ui->phoneEdit->text();
     QString password = ui->passwdEdit->text();
-    // QString phone = "18823231622";
-    // QString password = "Ricky4881";
 
     // 判断是否为高级用户
     BasicAccount *user = nullptr;
