@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QString>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -38,7 +39,7 @@ void BasicAccount::transfer(const QString& phone, const QString& amount) {
     }
     // 同步转入账户信息
     to.load();
-    transfer(&to, mpf_class(amount.toStdString()));
+    BasicAccount::transfer(&to, mpf_class(amount.toStdString()));
 }
 
 void BasicAccount::serialize(std::string& data) const {
@@ -62,25 +63,28 @@ void BasicAccount::deserialize(const std::string& data) {
     std::getline(iss, interestRate);
     m_balance = balance;
     m_interestRate = interestRate;
-    m_datafile = hash(m_phonenumber, 8) + ".dat";
-    m_logfile = hash(m_phonenumber, 8) + ".log";
+    m_datafile = "data/" + hash(m_phonenumber, 8) + ".dat";
+    m_logfile = "data/" + hash(m_phonenumber, 8) + ".log";
 }
 
 BasicAccount::BasicAccount(const std::string& name, const std::string& passwd,
                            const std::string& phoneNum, const std::string& id)
-    : Account(name, hashSHA256(passwd), phoneNum, id) {
-    m_datafile = hash(m_phonenumber, 8) + ".dat";
-    m_logfile = hash(m_phonenumber, 8) + ".log";
+    : Account(name, hashSHA256(passwd), phoneNum, id),
+      m_datafile("data/" + hash(m_phonenumber, 8) + ".dat"),
+      m_logfile("data/" + hash(m_phonenumber, 8) + ".log") {
+    if (!std::filesystem::exists("data")) {
+        std::filesystem::create_directory("data");
+    }
 }
 
 BasicAccount::BasicAccount(const std::string& phoneNum,
                            const std::string& passwd)
-    : Account(phoneNum, passwd) {
-    m_datafile = hash(m_phonenumber, 8) + ".dat";
-    m_logfile = hash(m_phonenumber, 8) + ".log";
-}
+    : Account(phoneNum, passwd),
+      m_datafile("data/" + hash(m_phonenumber, 8) + ".dat"),
+      m_logfile("data/" + hash(m_phonenumber, 8) + ".log") {}
 
 void BasicAccount::store(const std::string& filename) {
+    // 在data目录下存储加密后的数据
     std::ofstream outFile(filename, std::ios::binary | std::ios::trunc);
     if (!outFile) {
         throw std::runtime_error(__FILE__ + std::string(":") +
@@ -88,7 +92,6 @@ void BasicAccount::store(const std::string& filename) {
                                  std::string(" on ") + __PRETTY_FUNCTION__ +
                                  "Cannot open file for writing");
     }
-
     std::string data;
     serialize(data);
 
@@ -110,7 +113,10 @@ void BasicAccount::store() { store(m_datafile); }
 void BasicAccount::load(const std::string& filename) {
     std::ifstream inFile(filename, std::ios::binary);
     if (!inFile) {
-        throw std::runtime_error("Cannot open file for reading");
+        throw std::runtime_error(__FILE__ + std::string(":") +
+                                 std::to_string(__LINE__) +
+                                 std::string(" on ") + __PRETTY_FUNCTION__ +
+                                 "Cannot open file for reading");
     }
 
     int ciphertext_len;
@@ -164,9 +170,7 @@ QStringList BasicAccount::recentRecords() const {
         records = records.mid(n - 10);  // 取最后10条记录
     }
 #if ACCOUNT_DEBUG == 1
-    for (const auto& record : records) {
-        qDebug() << record;
-    }
+    qDebug() << records;
 #endif
     if (records.back() == "") {
         records.pop_back();  // 去掉最后一个空行
